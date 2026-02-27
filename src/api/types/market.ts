@@ -1,0 +1,42 @@
+import { z } from "zod";
+
+export const MoverSchema = z.object({
+  ticker: z.string(),
+  name: z.string().nullable(),
+  sector: z.string().nullable(),
+  close: z.number(),
+  prev_close: z.number(),
+  change_pct: z.number(),
+});
+
+export const SectorPerformanceSchema = z.object({
+  sector: z.string(),
+  ticker_count: z.number(),
+  avg_change_pct: z.number(),
+});
+
+export const MarketOverviewSchema = z.object({
+  total_tickers: z.number(),
+  total_prices: z.number(),
+  total_indicators: z.number(),
+  date_min: z.string().nullable(),
+  date_max: z.string().nullable(),
+  sectors: z.array(SectorPerformanceSchema),
+  top_gainers: z.array(MoverSchema),
+  top_losers: z.array(MoverSchema),
+});
+
+export const StatusResponseSchema = z.object({
+  total_tickers: z.number(),
+  total_prices: z.number(),
+  total_indicators: z.number(),
+  date_min: z.string().nullable(),
+  date_max: z.string().nullable(),
+  db_size_mb: z.number(),
+  last_update: z.string().nullable(),
+});
+
+export type Mover = z.infer<typeof MoverSchema>;
+export type SectorPerformance = z.infer<typeof SectorPerformanceSchema>;
+export type MarketOverview = z.infer<typeof MarketOverviewSchema>;
+export type StatusResponse = z.infer<typeof StatusResponseSchema>;
