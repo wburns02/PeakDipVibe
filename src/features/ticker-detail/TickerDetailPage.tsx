@@ -9,6 +9,7 @@ import { PriceChartPanel } from "./components/PriceChartPanel";
 import { IndicatorPanel } from "./components/IndicatorPanel";
 import { TechnicalSummary } from "./components/TechnicalSummary";
 import { BacktestPanel } from "./components/BacktestPanel";
+import { SignalHistoryCard } from "@/features/signals/components/SignalHistoryCard";
 
 export function TickerDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
@@ -80,6 +81,7 @@ export function TickerDetailPage() {
         <div className="space-y-6">
           <PriceChartPanel ticker={ticker.ticker} />
           <BacktestPanel ticker={ticker.ticker} />
+          <SignalHistoryCard ticker={ticker.ticker} />
         </div>
         <div className="space-y-6">
           <TechnicalSummary ticker={ticker} indicators={indicators} />

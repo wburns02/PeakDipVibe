@@ -6,6 +6,7 @@ import { TickerDetailPage } from "@/features/ticker-detail/TickerDetailPage";
 import { ScreenerPage } from "@/features/screener/ScreenerPage";
 import { ComparePage } from "@/features/compare/ComparePage";
 import { WatchlistPage } from "@/features/watchlist/WatchlistPage";
+import { SignalsPage } from "@/features/signals/SignalsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +25,7 @@ export default function App() {
         <Routes>
           <Route element={<AppShell />}>
             <Route index element={<DashboardPage />} />
+            <Route path="/signals" element={<SignalsPage />} />
             <Route path="/ticker/:symbol" element={<TickerDetailPage />} />
             <Route path="/screener" element={<ScreenerPage />} />
             <Route path="/compare" element={<ComparePage />} />

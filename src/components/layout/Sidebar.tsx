@@ -6,10 +6,12 @@ import {
   BarChart3,
   Star,
   Activity,
+  Zap,
 } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
+  { to: "/signals", icon: Zap, label: "Signals" },
   { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
   { to: "/compare", icon: BarChart3, label: "Compare" },
   { to: "/watchlist", icon: Star, label: "Watchlist" },
