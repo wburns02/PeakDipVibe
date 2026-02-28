@@ -2,13 +2,17 @@ import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   TrendingUp,
-  Search,
+  SlidersHorizontal,
+  BarChart3,
+  Star,
   Activity,
 } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/search", icon: Search, label: "Search" },
+  { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
+  { to: "/compare", icon: BarChart3, label: "Compare" },
+  { to: "/watchlist", icon: Star, label: "Watchlist" },
 ];
 
 export function Sidebar() {

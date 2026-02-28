@@ -1,17 +1,20 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Star } from "lucide-react";
 import { useTicker } from "@/api/hooks/useTickers";
 import { useLatestIndicators } from "@/api/hooks/useIndicators";
+import { useWatchlist } from "@/hooks/useWatchlist";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { CompanyInfoCard } from "./components/CompanyInfoCard";
 import { PriceChartPanel } from "./components/PriceChartPanel";
 import { IndicatorPanel } from "./components/IndicatorPanel";
 import { TechnicalSummary } from "./components/TechnicalSummary";
+import { BacktestPanel } from "./components/BacktestPanel";
 
 export function TickerDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
   const { data: ticker, isLoading, error } = useTicker(symbol ?? "");
   const { data: indicators } = useLatestIndicators(symbol ?? "");
+  const { toggle, isWatched } = useWatchlist();
 
   if (isLoading) {
     return (
@@ -47,14 +50,27 @@ export function TickerDetailPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      {/* Back button */}
-      <Link
-        to="/"
-        className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Dashboard
-      </Link>
+      {/* Back button + watchlist */}
+      <div className="flex items-center justify-between">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Link>
+        <button
+          onClick={() => toggle(ticker.ticker)}
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary transition-colors hover:border-amber hover:text-amber"
+        >
+          <Star
+            className={`h-4 w-4 ${
+              isWatched(ticker.ticker) ? "fill-amber text-amber" : ""
+            }`}
+          />
+          {isWatched(ticker.ticker) ? "Watching" : "Watch"}
+        </button>
+      </div>
 
       {/* Company info */}
       <CompanyInfoCard ticker={ticker} />
@@ -63,6 +79,7 @@ export function TickerDetailPage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-6">
           <PriceChartPanel ticker={ticker.ticker} />
+          <BacktestPanel ticker={ticker.ticker} />
         </div>
         <div className="space-y-6">
           <TechnicalSummary ticker={ticker} indicators={indicators} />
