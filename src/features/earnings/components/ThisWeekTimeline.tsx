@@ -200,6 +200,50 @@ function EventCard({ event }: { event: WeekEvent }) {
           Simulate →
         </Link>
       </div>
+
+      {/* Similar Past Events */}
+      {event.analogs && event.analogs.length > 0 && (
+        <div className="mt-2 border-t border-border/50 pt-2">
+          <p className="mb-1 text-[10px] font-medium text-text-muted/70">
+            Similar past events:
+          </p>
+          <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+            {event.analogs.map((a) => {
+              const o = a.outcome_1d ?? 0;
+              return (
+                <span
+                  key={`${a.ticker}-${a.signal_date}`}
+                  className="text-[10px] text-text-muted"
+                >
+                  <span className="font-medium text-text-secondary">
+                    {a.ticker}
+                  </span>{" "}
+                  +{(a.gap_up_pct ?? 0).toFixed(0)}% →{" "}
+                  <span
+                    className={
+                      o > 0 ? "text-emerald-400" : o < 0 ? "text-red-400" : ""
+                    }
+                  >
+                    {o >= 0 ? "+" : ""}
+                    {o.toFixed(1)}%
+                  </span>{" "}
+                  <span
+                    className={`rounded px-1 py-px text-[8px] font-bold ${
+                      a.status === "confirmed"
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : a.status === "failed"
+                          ? "bg-red-500/15 text-red-400"
+                          : "bg-amber-500/15 text-amber-400"
+                    }`}
+                  >
+                    {a.status}
+                  </span>
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </Card>
   );
 }

@@ -52,6 +52,16 @@ export type PriceJourney = z.infer<typeof PriceJourneySchema>;
 export type PriceStage = z.infer<typeof PriceStageSchema>;
 
 // This Week Events
+export const WeekAnalogSchema = z.object({
+  ticker: z.string(),
+  name: z.string().nullable(),
+  signal_date: z.string(),
+  gap_up_pct: z.number().nullable(),
+  selloff_pct: z.number().nullable(),
+  outcome_1d: z.number().nullable(),
+  status: z.string().nullable(),
+});
+
 export const WeekEventSchema = z.object({
   ticker: z.string(),
   name: z.string().nullable(),
@@ -76,6 +86,7 @@ export const WeekEventSchema = z.object({
   verdict: z.string(),
   verdict_label: z.string(),
   verdict_emoji: z.string(),
+  analogs: z.array(WeekAnalogSchema).optional(),
 });
 
 export const ThisWeekSchema = z.object({
