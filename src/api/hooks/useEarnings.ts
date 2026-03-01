@@ -10,6 +10,7 @@ import {
   IntradaySimulationSchema,
   EventLibrarySchema,
   RandomEventSchema,
+  EventAnalysisSchema,
 } from "../types/earnings";
 
 export function useImpactSummary() {
@@ -122,6 +123,20 @@ export function useEventLibrary(params: {
       return EventLibrarySchema.parse(data);
     },
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useEventAnalysis(ticker: string, signalDate: string) {
+  return useQuery({
+    queryKey: ["earnings", "events", ticker, signalDate, "analysis"],
+    queryFn: async () => {
+      const { data } = await api.get(
+        `/earnings/events/${ticker}/${signalDate}/analysis`,
+      );
+      return EventAnalysisSchema.parse(data);
+    },
+    enabled: !!ticker && !!signalDate,
+    staleTime: 10 * 60 * 1000,
   });
 }
 

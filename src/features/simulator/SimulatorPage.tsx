@@ -14,6 +14,7 @@ import {
   useIntradaySimulation,
   useEventLibrary,
   useRandomEvent,
+  useEventAnalysis,
 } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
 import type { LibraryEvent, IntradayBar } from "@/api/types/earnings";
@@ -34,6 +35,11 @@ import {
   RotateCcw,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
+  FileText,
+  Zap,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -145,6 +151,10 @@ export function SimulatorPage() {
     barInterval,
     simDays,
   );
+
+  const { data: analysis } = useEventAnalysis(activeTicker, activeDate);
+
+  const [analysisExpanded, setAnalysisExpanded] = useState(false);
 
   const bars = intradaySim?.bars ?? [];
   const totalBars = bars.length;
@@ -604,6 +614,94 @@ export function SimulatorPage() {
               </div>
             </div>
           </Card>
+
+          {/* Analysis Panel (if enriched) */}
+          {analysis?.found && (
+            <Card className="border-indigo-500/20">
+              <button
+                onClick={() => setAnalysisExpanded(!analysisExpanded)}
+                className="flex w-full items-center justify-between text-left"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/15">
+                    <FileText className="h-4 w-4 text-indigo-400" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm font-semibold text-text-primary">
+                        Why It Moved
+                      </h3>
+                      {analysis.catalyst_type && (
+                        <span className="rounded-full bg-indigo-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-400">
+                          {analysis.catalyst_type.replace(/_/g, " ")}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-0.5 line-clamp-1 text-xs text-text-muted">
+                      {analysis.catalyst_headline}
+                    </p>
+                  </div>
+                </div>
+                {analysisExpanded ? (
+                  <ChevronUp className="h-4 w-4 shrink-0 text-text-muted" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 shrink-0 text-text-muted" />
+                )}
+              </button>
+
+              {analysisExpanded && (
+                <div className="mt-4 space-y-4">
+                  {/* Catalyst Detail */}
+                  {analysis.catalyst_detail && (
+                    <div>
+                      <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-indigo-400">
+                        <Zap className="h-3 w-3" />
+                        What Happened
+                      </h4>
+                      <p className="text-xs leading-relaxed text-text-secondary">
+                        {analysis.catalyst_detail}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Post-Mortem */}
+                  {analysis.post_mortem && (
+                    <div>
+                      <h4 className="mb-1.5 text-xs font-semibold text-amber-400">
+                        Post-Mortem Analysis
+                      </h4>
+                      <p className="text-xs leading-relaxed text-text-secondary">
+                        {analysis.post_mortem}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Sources */}
+                  {analysis.sources && analysis.sources.length > 0 && (
+                    <div>
+                      <h4 className="mb-1.5 text-xs font-semibold text-text-muted">
+                        Sources
+                      </h4>
+                      <div className="space-y-1">
+                        {analysis.sources.map((src, i) => (
+                          <a
+                            key={i}
+                            href={src.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 text-[11px] text-accent hover:underline"
+                          >
+                            <ExternalLink className="h-3 w-3 shrink-0" />
+                            {src.title}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </Card>
+          )}
 
           {/* Portfolio + Controls */}
           <Card>
@@ -1075,9 +1173,17 @@ function EventBrowserCard({
       </div>
 
       <div className="mt-2">
-        <p className="text-sm font-semibold text-text-primary group-hover:text-accent">
-          {ev.ticker}
-        </p>
+        <div className="flex items-center gap-1.5">
+          <p className="text-sm font-semibold text-text-primary group-hover:text-accent">
+            {ev.ticker}
+          </p>
+          {ev.has_analysis && (
+            <span className="flex items-center gap-0.5 rounded bg-indigo-500/15 px-1.5 py-0.5 text-[9px] font-bold text-indigo-400">
+              <FileText className="h-2.5 w-2.5" />
+              ANALYZED
+            </span>
+          )}
+        </div>
         <p className="truncate text-xs text-text-muted">
           {ev.name ?? ev.ticker}
           {ev.sector && (
@@ -1086,7 +1192,7 @@ function EventBrowserCard({
         </p>
       </div>
 
-      <p className="mt-2 line-clamp-2 flex-1 text-[11px] leading-relaxed text-text-muted/80">
+      <p className={`mt-2 flex-1 text-[11px] leading-relaxed ${ev.has_analysis ? "line-clamp-3 text-text-secondary" : "line-clamp-2 text-text-muted/80"}`}>
         {ev.summary}
       </p>
 

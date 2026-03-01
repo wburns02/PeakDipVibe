@@ -238,6 +238,26 @@ export const IntradaySimulationSchema = z.object({
 export type IntradayBar = z.infer<typeof IntradayBarSchema>;
 export type IntradaySimulation = z.infer<typeof IntradaySimulationSchema>;
 
+// Event Analysis (Post-Mortem)
+export const SourceRefSchema = z.object({
+  title: z.string(),
+  url: z.string(),
+});
+
+export const EventAnalysisSchema = z.object({
+  found: z.boolean(),
+  ticker: z.string(),
+  signal_date: z.string(),
+  catalyst_type: z.string().nullable().optional(),
+  catalyst_headline: z.string().nullable().optional(),
+  catalyst_detail: z.string().nullable().optional(),
+  post_mortem: z.string().nullable().optional(),
+  sources: z.array(SourceRefSchema).optional(),
+});
+
+export type EventAnalysis = z.infer<typeof EventAnalysisSchema>;
+export type SourceRef = z.infer<typeof SourceRefSchema>;
+
 // Event Library
 export const LibraryEventSchema = z.object({
   ticker: z.string(),
@@ -256,6 +276,7 @@ export const LibraryEventSchema = z.object({
   gap_size: z.string(),
   outcome_label: z.string(),
   summary: z.string(),
+  has_analysis: z.boolean().optional(),
 });
 
 export const EventLibrarySchema = z.object({
