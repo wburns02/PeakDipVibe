@@ -108,3 +108,94 @@ export const SectorBreakdownSchema = z.object({
 
 export type SectorBreakdown = z.infer<typeof SectorBreakdownSchema>;
 export type SectorData = z.infer<typeof SectorDataSchema>;
+
+// Forward Look
+export const ForwardLookEventSchema = z.object({
+  ticker: z.string(),
+  name: z.string().nullable(),
+  sector: z.string().nullable(),
+  past_events: z.number(),
+  avg_gap: z.number().nullable(),
+  avg_selloff: z.number().nullable(),
+  avg_return_1d: z.number().nullable(),
+  avg_return_5d: z.number().nullable(),
+  avg_return_10d: z.number().nullable(),
+  bounce_rate: z.number().nullable(),
+  avg_strength: z.number().nullable(),
+  last_signal_date: z.string().nullable(),
+  last_gap: z.number().nullable(),
+  last_outcome_1d: z.number().nullable(),
+  last_catalyst: z.string().nullable(),
+  outlook: z.string(),
+  outlook_label: z.string(),
+  outlook_emoji: z.string(),
+});
+
+export const ForwardLookSchema = z.object({
+  months: z.number(),
+  total_tracked: z.number(),
+  events: z.array(ForwardLookEventSchema),
+});
+
+export type ForwardLook = z.infer<typeof ForwardLookSchema>;
+export type ForwardLookEvent = z.infer<typeof ForwardLookEventSchema>;
+
+// Event Simulator
+const SimTimelineEntrySchema = z.object({
+  date: z.string(),
+  day: z.number(),
+  open: z.number().nullable(),
+  high: z.number().nullable(),
+  low: z.number().nullable(),
+  close: z.number().nullable(),
+  volume: z.number().nullable(),
+  pct_from_prev_close: z.number(),
+});
+
+const SimAnalogPathSchema = z.object({
+  stage: z.string(),
+  value: z.number(),
+});
+
+const SimAnalogSchema = z.object({
+  ticker: z.string(),
+  name: z.string().nullable(),
+  signal_date: z.string(),
+  gap_up_pct: z.number().nullable(),
+  selloff_pct: z.number().nullable(),
+  outcome_1d: z.number().nullable(),
+  outcome_5d: z.number().nullable(),
+  outcome_10d: z.number().nullable(),
+  status: z.string().nullable(),
+  path: z.array(SimAnalogPathSchema),
+});
+
+const SimStrategySchema = z.object({
+  name: z.string(),
+  entry_price: z.number(),
+  description: z.string(),
+  return_1d: z.number().optional(),
+  return_5d: z.number().optional(),
+  return_10d: z.number().optional(),
+});
+
+export const SimulationSchema = z.object({
+  ticker: z.string(),
+  signal_date: z.string(),
+  name: z.string().nullable(),
+  sector: z.string().nullable(),
+  gap_up_pct: z.number().nullable(),
+  selloff_pct: z.number().nullable(),
+  signal_strength: z.number().nullable(),
+  status: z.string().nullable(),
+  catalyst_type: z.string().nullable(),
+  catalyst_headline: z.string().nullable(),
+  timeline: z.array(SimTimelineEntrySchema),
+  analogs: z.array(SimAnalogSchema),
+  strategies: z.array(SimStrategySchema),
+});
+
+export type Simulation = z.infer<typeof SimulationSchema>;
+export type SimTimelineEntry = z.infer<typeof SimTimelineEntrySchema>;
+export type SimAnalog = z.infer<typeof SimAnalogSchema>;
+export type SimStrategy = z.infer<typeof SimStrategySchema>;

@@ -5,6 +5,7 @@ import { PriceJourneyChart } from "./components/PriceJourneyChart";
 import { ImpactCards } from "./components/ImpactCards";
 import { ThisWeekTimeline } from "./components/ThisWeekTimeline";
 import { SectorChart } from "./components/SectorChart";
+import { ForwardLook } from "./components/ForwardLook";
 
 export function EarningsPage() {
   const { data: summary, isLoading: summaryLoading } = useImpactSummary();
@@ -154,7 +155,19 @@ export function EarningsPage() {
         <ThisWeekTimeline data={thisWeek} isLoading={weekLoading} />
       </section>
 
-      {/* ── Section 5: "Which Sectors Move the Most?" ── */}
+      {/* ── Section 5: "What's Coming Up?" — Forward Look ── */}
+      <section>
+        <h2 className="mb-1 text-xl font-bold text-text-primary">
+          Repeat Movers to Watch
+        </h2>
+        <p className="mb-4 text-sm text-text-muted">
+          Stocks that have gapped up multiple times before. When they move again,
+          here's what history says.
+        </p>
+        <ForwardLook />
+      </section>
+
+      {/* ── Section 6: "Which Sectors Move the Most?" ── */}
       <section>
         <h2 className="mb-1 text-xl font-bold text-text-primary">
           Which Sectors Move the Most?

@@ -5,6 +5,8 @@ import {
   PriceJourneySchema,
   ThisWeekSchema,
   SectorBreakdownSchema,
+  ForwardLookSchema,
+  SimulationSchema,
 } from "../types/earnings";
 
 export function useImpactSummary() {
@@ -52,5 +54,32 @@ export function useSectorBreakdown(days: number = 365) {
       return SectorBreakdownSchema.parse(data);
     },
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useForwardLook(months: number = 3) {
+  return useQuery({
+    queryKey: ["earnings", "forward-look", months],
+    queryFn: async () => {
+      const { data } = await api.get("/earnings/forward-look", {
+        params: { months },
+      });
+      return ForwardLookSchema.parse(data);
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useSimulation(ticker: string, signalDate: string) {
+  return useQuery({
+    queryKey: ["earnings", "simulate", ticker, signalDate],
+    queryFn: async () => {
+      const { data } = await api.get(
+        `/earnings/simulate/${ticker}/${signalDate}`,
+      );
+      return SimulationSchema.parse(data);
+    },
+    enabled: !!ticker && !!signalDate,
+    staleTime: 10 * 60 * 1000,
   });
 }

@@ -188,10 +188,18 @@ function EventCard({ event }: { event: WeekEvent }) {
         </div>
       </div>
 
-      {/* Explanation */}
-      <p className="mt-2 text-xs leading-relaxed text-text-muted">
-        {event.explanation}
-      </p>
+      {/* Explanation + Simulate link */}
+      <div className="mt-2 flex items-start justify-between gap-2">
+        <p className="text-xs leading-relaxed text-text-muted">
+          {event.explanation}
+        </p>
+        <Link
+          to={`/simulator?ticker=${event.ticker}&date=${event.signal_date}`}
+          className="shrink-0 rounded px-2 py-1 text-[10px] font-medium text-accent hover:bg-accent/10"
+        >
+          Simulate →
+        </Link>
+      </div>
     </Card>
   );
 }
