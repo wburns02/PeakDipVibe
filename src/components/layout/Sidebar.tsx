@@ -7,11 +7,13 @@ import {
   Star,
   Activity,
   Zap,
+  Newspaper,
 } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/signals", icon: Zap, label: "Signals" },
+  { to: "/earnings", icon: Newspaper, label: "Earnings" },
   { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
   { to: "/compare", icon: BarChart3, label: "Compare" },
   { to: "/watchlist", icon: Star, label: "Watchlist" },
