@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   AreaChart,
   Area,
@@ -12,46 +11,15 @@ import {
 import { usePriceJourney } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
 
-const SIZES = [
-  { value: "all", label: "All Sizes" },
-  { value: "Minor", label: "Minor (1.5-3%)" },
-  { value: "Medium", label: "Medium (3-5%)" },
-  { value: "Large", label: "Large (5-10%)" },
-  { value: "Major", label: "Major (10%+)" },
-];
-
 export function PriceJourneyChart() {
-  const [moveSize, setMoveSize] = useState("all");
-  const { data: journey, isLoading } = usePriceJourney(moveSize);
+  const { data: journey, isLoading } = usePriceJourney("all");
 
   return (
     <Card>
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-text-primary">
-          The Price Journey
-        </h2>
-        <p className="mt-0.5 text-xs text-text-muted">
-          Follow the average stock from before the news to one week later. Each
-          dot shows what happens at each stage. Start at 100 = the closing price
-          before the news dropped.
+      <div className="mb-2">
+        <p className="text-xs text-text-muted">
+          If the stock started at $100 before the news...
         </p>
-      </div>
-
-      {/* Size selector */}
-      <div className="mb-4 flex flex-wrap gap-1.5">
-        {SIZES.map((s) => (
-          <button
-            key={s.value}
-            onClick={() => setMoveSize(s.value)}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-              moveSize === s.value
-                ? "bg-accent text-white"
-                : "bg-bg-hover text-text-secondary hover:text-text-primary"
-            }`}
-          >
-            {s.label}
-          </button>
-        ))}
       </div>
 
       {isLoading ? (
@@ -76,7 +44,10 @@ export function PriceJourneyChart() {
                     <stop offset="95%" stopColor="#14b8a6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.06)"
+                />
                 <XAxis
                   dataKey="stage"
                   tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }}
@@ -92,7 +63,7 @@ export function PriceJourneyChart() {
                   axisLine={false}
                   tickLine={false}
                   domain={["dataMin - 2", "dataMax + 2"]}
-                  tickFormatter={(v: number) => `${v}`}
+                  tickFormatter={(v: number) => `$${v}`}
                 />
                 <Tooltip content={<JourneyTooltip />} />
                 <ReferenceLine
@@ -100,7 +71,7 @@ export function PriceJourneyChart() {
                   stroke="rgba(255,255,255,0.2)"
                   strokeDasharray="3 3"
                   label={{
-                    value: "Starting Price",
+                    value: "$100 start",
                     position: "left",
                     fill: "rgba(255,255,255,0.4)",
                     fontSize: 10,
@@ -157,7 +128,9 @@ function JourneyTooltip({
   payload,
 }: {
   active?: boolean;
-  payload?: Array<{ payload: { stage: string; value: number; label: string; explanation: string } }>;
+  payload?: Array<{
+    payload: { stage: string; value: number; label: string; explanation: string };
+  }>;
 }) {
   if (!active || !payload?.[0]) return null;
   const d = payload[0].payload;

@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowUpRight,
   ArrowDownRight,
   Minus,
   Clock,
-  ExternalLink,
+  ChevronDown,
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import type { ThisWeek, WeekEvent } from "@/api/types/earnings";
@@ -13,13 +14,6 @@ interface Props {
   data: ThisWeek | undefined;
   isLoading: boolean;
 }
-
-const SIZE_BADGE: Record<string, string> = {
-  Minor: "bg-blue-500/20 text-blue-400",
-  Medium: "bg-amber-500/20 text-amber-400",
-  Large: "bg-orange-500/20 text-orange-400",
-  Major: "bg-red-500/20 text-red-400",
-};
 
 const VERDICT_ICON: Record<string, typeof ArrowUpRight> = {
   bounce_back: ArrowUpRight,
@@ -35,13 +29,24 @@ const VERDICT_COLOR: Record<string, string> = {
   pending: "text-amber-400",
 };
 
+const VERDICT_BG: Record<string, string> = {
+  bounce_back: "bg-emerald-500/10 border-emerald-500/20",
+  kept_falling: "bg-red-500/10 border-red-500/20",
+  flat: "bg-bg-hover border-border",
+  pending: "bg-amber-500/10 border-amber-500/20",
+};
+
+const INITIAL_COUNT = 8;
+
 export function ThisWeekTimeline({ data, isLoading }: Props) {
+  const [showAll, setShowAll] = useState(false);
+
   if (isLoading) {
     return (
       <div className="space-y-3">
-        {[1, 2, 3, 4, 5].map((i) => (
+        {[1, 2, 3, 4].map((i) => (
           <Card key={i}>
-            <div className="h-20 animate-pulse rounded-lg bg-bg-hover" />
+            <div className="h-16 animate-pulse rounded-lg bg-bg-hover" />
           </Card>
         ))}
       </div>
@@ -50,31 +55,37 @@ export function ThisWeekTimeline({ data, isLoading }: Props) {
 
   if (!data) return null;
 
-  const grouped = groupByDate(data.events);
+  // Sort by gap_up_pct descending (biggest movers first)
+  const sorted = [...data.events].sort(
+    (a, b) => (b.gap_up_pct ?? 0) - (a.gap_up_pct ?? 0),
+  );
+
+  const visible = showAll ? sorted : sorted.slice(0, INITIAL_COUNT);
+  const hasMore = sorted.length > INITIAL_COUNT;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Week summary */}
       <Card className="border-accent/20 bg-accent/5">
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-6">
           <div>
             <p className="text-xs text-text-muted">
               Week of{" "}
               {new Date(data.week_start + "T12:00:00").toLocaleDateString(
                 "en-US",
-                { month: "short", day: "numeric" }
+                { month: "short", day: "numeric" },
               )}{" "}
               –{" "}
               {new Date(data.week_end + "T12:00:00").toLocaleDateString(
                 "en-US",
-                { month: "short", day: "numeric", year: "numeric" }
+                { month: "short", day: "numeric", year: "numeric" },
               )}
             </p>
             <p className="mt-1 text-lg font-bold text-text-primary">
               {data.total_events} big moves this week
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <div>
               <p className="text-xs text-text-muted">Major/Large</p>
               <p className="text-lg font-bold text-orange-400">
@@ -93,26 +104,30 @@ export function ThisWeekTimeline({ data, isLoading }: Props) {
         </div>
       </Card>
 
-      {/* Beginner note */}
-      <p className="text-xs text-text-muted">
-        Each card below shows a stock that had a big price jump this week. The
-        verdict tells you what happened next — did the stock keep going up
-        ("Bounced Back") or did sellers push it down ("Kept Falling")?
-      </p>
+      {/* Events list */}
+      <div className="space-y-2">
+        {visible.map((event) => (
+          <EventCard
+            key={`${event.ticker}-${event.signal_date}`}
+            event={event}
+          />
+        ))}
+      </div>
 
-      {/* Timeline grouped by date */}
-      {Object.entries(grouped).map(([dateStr, events]) => (
-        <div key={dateStr}>
-          <h3 className="mb-2 text-sm font-medium text-text-secondary">
-            {formatDate(dateStr)}
-          </h3>
-          <div className="space-y-2">
-            {events.map((event) => (
-              <EventCard key={`${event.ticker}-${event.signal_date}`} event={event} />
-            ))}
-          </div>
-        </div>
-      ))}
+      {/* Show all / Show less */}
+      {hasMore && (
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
+        >
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${showAll ? "rotate-180" : ""}`}
+          />
+          {showAll
+            ? "Show less"
+            : `Show all ${sorted.length} events`}
+        </button>
+      )}
     </div>
   );
 }
@@ -120,24 +135,19 @@ export function ThisWeekTimeline({ data, isLoading }: Props) {
 function EventCard({ event }: { event: WeekEvent }) {
   const VerdictIcon = VERDICT_ICON[event.verdict] ?? Clock;
   const verdictColor = VERDICT_COLOR[event.verdict] ?? "text-text-muted";
+  const verdictBg = VERDICT_BG[event.verdict] ?? "bg-bg-hover border-border";
   const gap = event.gap_up_pct ?? 0;
 
   return (
     <Card className="transition-colors hover:border-accent/20">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {/* Left: Ticker info */}
+        {/* Left: Ticker + gap */}
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-center">
-            <span
-              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                SIZE_BADGE[event.move_size]
-              }`}
-            >
-              {event.move_size}
-            </span>
-            <span className="mt-1 text-lg font-bold text-accent">
+            <span className="text-lg font-bold text-accent">
               +{gap.toFixed(1)}%
             </span>
+            <span className="text-[10px] text-text-muted">{event.move_size}</span>
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
@@ -147,83 +157,41 @@ function EventCard({ event }: { event: WeekEvent }) {
               >
                 {event.ticker}
               </Link>
-              <ExternalLink className="h-3 w-3 text-text-muted" />
             </div>
             <p className="truncate text-xs text-text-muted">
               {event.name ?? event.ticker}
               {event.sector && (
-                <span className="ml-1 text-text-muted/50">· {event.sector}</span>
+                <span className="ml-1 text-text-muted/50">
+                  · {event.sector}
+                </span>
               )}
             </p>
           </div>
         </div>
 
-        {/* Right: Verdict */}
-        <div className="flex items-center gap-3">
-          {/* Price bars */}
-          <div className="hidden text-right text-xs text-text-muted sm:block">
-            {event.prev_close && (
-              <p>
-                Before: ${event.prev_close.toFixed(2)}
+        {/* Right: Big verdict badge */}
+        <div
+          className={`flex items-center gap-2 rounded-lg border px-4 py-2 ${verdictBg}`}
+        >
+          <VerdictIcon className={`h-5 w-5 ${verdictColor}`} />
+          <div>
+            <p className={`text-sm font-bold ${verdictColor}`}>
+              {event.verdict_label}
+            </p>
+            {event.outcome_1d !== null && (
+              <p className="text-xs text-text-muted">
+                {event.outcome_1d >= 0 ? "+" : ""}
+                {event.outcome_1d.toFixed(2)}% next day
               </p>
             )}
-            {event.day0_close && (
-              <p>
-                Close: ${event.day0_close.toFixed(2)}
-              </p>
-            )}
-          </div>
-
-          {/* Verdict badge */}
-          <div
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 ${
-              event.verdict === "bounce_back"
-                ? "bg-emerald-500/10"
-                : event.verdict === "kept_falling"
-                  ? "bg-red-500/10"
-                  : event.verdict === "flat"
-                    ? "bg-bg-hover"
-                    : "bg-amber-500/10"
-            }`}
-          >
-            <VerdictIcon className={`h-4 w-4 ${verdictColor}`} />
-            <div>
-              <p className={`text-xs font-medium ${verdictColor}`}>
-                {event.verdict_label}
-              </p>
-              {event.outcome_1d !== null && (
-                <p className="text-[10px] text-text-muted">
-                  {event.outcome_1d >= 0 ? "+" : ""}
-                  {event.outcome_1d.toFixed(2)}% next day
-                </p>
-              )}
-            </div>
           </div>
         </div>
       </div>
 
       {/* Explanation */}
-      <p className="mt-2 text-xs text-text-muted leading-relaxed">
+      <p className="mt-2 text-xs leading-relaxed text-text-muted">
         {event.explanation}
       </p>
     </Card>
   );
-}
-
-function groupByDate(events: WeekEvent[]): Record<string, WeekEvent[]> {
-  const grouped: Record<string, WeekEvent[]> = {};
-  for (const e of events) {
-    if (!grouped[e.signal_date]) grouped[e.signal_date] = [];
-    grouped[e.signal_date].push(e);
-  }
-  return grouped;
-}
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T12:00:00");
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-  });
 }
