@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   LineChart,
@@ -8,224 +8,97 @@ import {
   CartesianGrid,
   Tooltip as ReTooltip,
   ResponsiveContainer,
-  Legend,
+  ReferenceLine,
 } from "recharts";
 import {
-  useSimulation,
+  useIntradaySimulation,
   useEventLibrary,
   useRandomEvent,
 } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
-import type { SimStrategy, LibraryEvent } from "@/api/types/earnings";
+import type { LibraryEvent, IntradayBar } from "@/api/types/earnings";
 import {
   Shuffle,
   Search,
   Play,
-  SkipForward,
-  HelpCircle,
+  Pause,
   ArrowLeft,
   TrendingUp,
   TrendingDown,
   Minus,
   Clock,
-  Info,
-  X,
+  DollarSign,
+  ShoppingCart,
+  BarChart3,
+  Trophy,
+  RotateCcw,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
-// ─── Educational Definitions ─────────────────────────────────────────────────
+// ─── Types ──────────────────────────────────────────────────────────────────
 
-const DEFINITIONS: Record<string, { term: string; explanation: string }> = {
-  earnings: {
-    term: "Earnings",
-    explanation:
-      "A company's profits over a period (usually 3 months). Companies report these publicly, and if they earn more than expected, the stock often jumps.",
-  },
-  "gap-up": {
-    term: "Gap Up",
-    explanation:
-      "When a stock opens much higher than it closed the day before. Like if a toy was $10 yesterday and suddenly costs $12 today at opening.",
-  },
-  "profit-taking": {
-    term: "Profit-Taking",
-    explanation:
-      "When people who already own the stock sell it to lock in their gains after a big jump. This often causes the price to dip during the day.",
-  },
-  selloff: {
-    term: "Sell-Off",
-    explanation:
-      "When the price drops because many people are selling at the same time. After a big jump, profit-takers often cause a sell-off.",
-  },
-  bounce: {
-    term: "Bounce Back",
-    explanation:
-      "When the stock goes back up after dropping. Like a ball that falls and bounces — the price recovers some or all of what it lost.",
-  },
-  volatility: {
-    term: "Volatility",
-    explanation:
-      "How much the price moves up and down. High volatility means big swings, low volatility means the price is calm and steady.",
-  },
-  catalyst: {
-    term: "Catalyst",
-    explanation:
-      "The event or news that caused the stock to move. Like earnings reports, analyst upgrades, new products, or big deals.",
-  },
-};
-
-function DefinitionTooltip({ id }: { id: string }) {
-  const [open, setOpen] = useState(false);
-  const def = DEFINITIONS[id];
-  if (!def) return null;
-
-  return (
-    <span className="relative inline-block">
-      <button
-        onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-0.5 border-b border-dashed border-accent/40 text-accent hover:border-accent"
-      >
-        {def.term}
-        <Info className="inline h-3 w-3" />
-      </button>
-      {open && (
-        <span className="absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-lg border border-border bg-bg-card p-3 text-xs leading-relaxed text-text-secondary shadow-xl">
-          <span className="mb-1 block font-bold text-text-primary">
-            {def.term}
-          </span>
-          {def.explanation}
-          <button
-            onClick={() => setOpen(false)}
-            className="absolute right-1.5 top-1.5 text-text-muted hover:text-text-primary"
-          >
-            <X className="h-3 w-3" />
-          </button>
-        </span>
-      )}
-    </span>
-  );
+interface Trade {
+  type: "buy" | "sell";
+  price: number;
+  shares: number;
+  barIndex: number;
+  datetime: string;
 }
 
-// ─── Step-by-Step Replay Data ────────────────────────────────────────────────
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
-interface ReplayStep {
-  id: string;
-  label: string;
-  value: number | null;
-  explanation: string;
-  color: string;
+function formatTime(dt: string): string {
+  // "2026-02-25T10:30:00" → "10:30 AM"
+  const match = dt.match(/T(\d{2}):(\d{2})/);
+  if (!match) return dt;
+  const h = parseInt(match[1]);
+  const m = match[2];
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${h12}:${m} ${ampm}`;
 }
 
-function buildReplaySteps(sim: {
-  gap_up_pct: number | null;
-  selloff_pct: number | null;
-  timeline: Array<{
-    day: number;
-    close: number | null;
-    open: number | null;
-    high: number | null;
-    pct_from_prev_close: number;
-  }>;
-}): ReplayStep[] {
-  const t = sim.timeline;
-  const prevDay = t.find((d) => d.day === -1);
-  const day0 = t.find((d) => d.day === 0);
-  const day1 = t.find((d) => d.day === 1);
-  const day5 = t.find((d) => d.day === 5) ?? t.find((d) => d.day === 4);
-  const day10 = t.find((d) => d.day === 10) ?? t.find((d) => d.day === 9);
-
-  const gap = sim.gap_up_pct ?? 0;
-  const selloff = sim.selloff_pct ?? 0;
-  const closePct = day0?.pct_from_prev_close ?? 0;
-  const day1Pct = day1?.pct_from_prev_close ?? null;
-
-  const steps: ReplayStep[] = [
-    {
-      id: "prev",
-      label: "The Day Before",
-      value: 0,
-      explanation:
-        "This is where the stock closed yesterday. Nothing special yet. Tomorrow, big news will drop.",
-      color: "text-text-muted",
-    },
-    {
-      id: "open",
-      label: "Market Opens!",
-      value: gap,
-      explanation: `The news is out! Buyers rush in and the stock jumps +${gap.toFixed(1)}% right at the opening bell. Everyone is excited.`,
-      color: "text-emerald-400",
-    },
-    {
-      id: "peak",
-      label: "The Peak",
-      value: prevDay
-        ? ((day0?.high ?? 0) - (prevDay.close ?? 0)) /
-          (prevDay.close ?? 1) *
-          100
-        : gap + 2,
-      explanation:
-        "The price hits its highest point of the day, usually within the first couple hours. This is where the excitement maxes out.",
-      color: "text-emerald-400",
-    },
-    {
-      id: "close",
-      label: "Profit-Takers Sell",
-      value: closePct,
-      explanation: `People who bought earlier decide to sell and lock in their gains. The price drops ${selloff.toFixed(1)}% from the peak. This is called "profit-taking."`,
-      color: selloff > 3 ? "text-red-400" : "text-amber-400",
-    },
-  ];
-
-  if (day1Pct !== null) {
-    steps.push({
-      id: "day1",
-      label: "Next Day",
-      value: day1Pct,
-      explanation:
-        day1Pct > closePct
-          ? "The next day, the stock bounced back! New buyers came in, seeing the dip as a buying opportunity."
-          : "The next day, the selling continued. More people decided to take profits or cut losses.",
-      color: day1Pct > closePct ? "text-emerald-400" : "text-red-400",
+function formatDate(dt: string): string {
+  // "2026-02-25T10:30:00" → "Feb 25"
+  const d = dt.split("T")[0];
+  try {
+    return new Date(d + "T12:00:00").toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
     });
+  } catch {
+    return d;
   }
-
-  const day5Pct = day5?.pct_from_prev_close ?? null;
-  if (day5Pct !== null) {
-    steps.push({
-      id: "day5",
-      label: "One Week Later",
-      value: day5Pct,
-      explanation:
-        "A full trading week has passed. The initial excitement has faded — this is where the stock usually settles into its new normal.",
-      color: day5Pct > 0 ? "text-emerald-400" : "text-red-400",
-    });
-  }
-
-  const day10Pct = day10?.pct_from_prev_close ?? null;
-  if (day10Pct !== null) {
-    steps.push({
-      id: "day10",
-      label: "Two Weeks Later",
-      value: day10Pct,
-      explanation:
-        day10Pct > gap * 0.5
-          ? "Two weeks out, the stock held most of its gains. The big move was real!"
-          : day10Pct > 0
-            ? "Two weeks later, some gains remain but the excitement has faded."
-            : "Two weeks later, the stock has given back all its gains. The big jump was temporary.",
-      color: day10Pct > 0 ? "text-emerald-400" : "text-red-400",
-    });
-  }
-
-  return steps;
 }
 
-// ─── Main Component ──────────────────────────────────────────────────────────
+function formatDayLabel(dt: string, signalDate: string): string {
+  const barDate = dt.split("T")[0];
+  if (barDate < signalDate) return "Day -1";
+  if (barDate === signalDate) return "Day 0";
+  // Count trading days (approximate)
+  const sig = new Date(signalDate + "T12:00:00");
+  const bar = new Date(barDate + "T12:00:00");
+  const diff = Math.round((bar.getTime() - sig.getTime()) / (1000 * 60 * 60 * 24));
+  return `Day ${diff}`;
+}
+
+function fmtCurrency(n: number): string {
+  return n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+// ─── Main Component ─────────────────────────────────────────────────────────
 
 export function SimulatorPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const ticker = searchParams.get("ticker") || "";
   const signalDate = searchParams.get("date") || "";
 
-  // Modes: "browse" (landing) or "replay" (step-by-step)
   const [mode, setMode] = useState<"browse" | "replay">(
     ticker && signalDate ? "replay" : "browse",
   );
@@ -247,28 +120,71 @@ export function SimulatorPage() {
 
   const { refetch: fetchRandom, isFetching: randomLoading } = useRandomEvent();
 
-  // Simulation state
+  // Replay state
   const [activeTicker, setActiveTicker] = useState(ticker);
   const [activeDate, setActiveDate] = useState(signalDate);
-  const { data: sim, isLoading: simLoading } = useSimulation(
+  const [barInterval, setBarInterval] = useState<"15m" | "30m" | "60m">("60m");
+  const [simDays] = useState(5);
+
+  // Portfolio state
+  const [startingCash, setStartingCash] = useState(5000);
+  const [cash, setCash] = useState(5000);
+  const [shares, setShares] = useState(0);
+  const [avgCost, setAvgCost] = useState(0);
+  const [trades, setTrades] = useState<Trade[]>([]);
+
+  // Playback state
+  const [currentBarIndex, setCurrentBarIndex] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const autoPlayRef = useRef(false);
+
+  const { data: intradaySim, isLoading: simLoading } = useIntradaySimulation(
     activeTicker,
     activeDate,
+    barInterval,
+    simDays,
   );
 
-  // Step-by-step replay
-  const [currentStep, setCurrentStep] = useState(0);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const bars = intradaySim?.bars ?? [];
+  const totalBars = bars.length;
+
+  // Auto-play timer
+  useEffect(() => {
+    autoPlayRef.current = autoPlay;
+  }, [autoPlay]);
+
+  useEffect(() => {
+    if (!autoPlay || totalBars === 0) return;
+    const timer = setInterval(() => {
+      if (!autoPlayRef.current) return;
+      setCurrentBarIndex((prev) => {
+        if (prev >= totalBars - 1) {
+          setAutoPlay(false);
+          setFinished(true);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1500);
+    return () => clearInterval(timer);
+  }, [autoPlay, totalBars]);
 
   const selectEvent = useCallback(
     (t: string, d: string) => {
       setActiveTicker(t);
       setActiveDate(d);
-      setCurrentStep(0);
-      setShowExplanation(false);
+      setCurrentBarIndex(0);
+      setAutoPlay(false);
+      setFinished(false);
+      setCash(startingCash);
+      setShares(0);
+      setAvgCost(0);
+      setTrades([]);
       setMode("replay");
       setSearchParams({ ticker: t, date: d });
     },
-    [setSearchParams],
+    [setSearchParams, startingCash],
   );
 
   const handleSurpriseMe = useCallback(async () => {
@@ -293,14 +209,154 @@ export function SimulatorPage() {
     setMode("browse");
     setActiveTicker("");
     setActiveDate("");
+    setAutoPlay(false);
+    setFinished(false);
     setSearchParams({});
   };
 
-  // Build replay steps from sim data
-  const steps = sim && !("error" in sim) ? buildReplaySteps(sim) : [];
-  const visibleSteps = steps.slice(0, currentStep + 1);
+  const resetSim = () => {
+    setCurrentBarIndex(0);
+    setAutoPlay(false);
+    setFinished(false);
+    setCash(startingCash);
+    setShares(0);
+    setAvgCost(0);
+    setTrades([]);
+  };
 
-  // ─── BROWSE MODE ─────────────────────────────────────────────────────────
+  const changeStartingCash = (amount: number) => {
+    setStartingCash(amount);
+    setCash(amount);
+    setShares(0);
+    setAvgCost(0);
+    setTrades([]);
+    setCurrentBarIndex(0);
+    setAutoPlay(false);
+    setFinished(false);
+  };
+
+  // Current bar
+  const currentBar: IntradayBar | null = bars[currentBarIndex] ?? null;
+  const currentPrice = currentBar?.close ?? 0;
+
+  // Portfolio value
+  const portfolioValue = cash + shares * currentPrice;
+  const pnl = portfolioValue - startingCash;
+  const pnlPct = startingCash > 0 ? (pnl / startingCash) * 100 : 0;
+
+  // Buy handler
+  const handleBuy = () => {
+    if (cash <= 0 || currentPrice <= 0) return;
+    const sharesToBuy = Math.floor(cash / currentPrice);
+    if (sharesToBuy <= 0) return;
+    const cost = sharesToBuy * currentPrice;
+    const newTotalShares = shares + sharesToBuy;
+    const newAvgCost =
+      shares > 0
+        ? (avgCost * shares + cost) / newTotalShares
+        : currentPrice;
+    setCash((c) => c - cost);
+    setShares(newTotalShares);
+    setAvgCost(newAvgCost);
+    setTrades((t) => [
+      ...t,
+      {
+        type: "buy",
+        price: currentPrice,
+        shares: sharesToBuy,
+        barIndex: currentBarIndex,
+        datetime: currentBar?.datetime ?? "",
+      },
+    ]);
+  };
+
+  // Sell handler
+  const handleSell = () => {
+    if (shares <= 0 || currentPrice <= 0) return;
+    const proceeds = shares * currentPrice;
+    setCash((c) => c + proceeds);
+    setTrades((t) => [
+      ...t,
+      {
+        type: "sell",
+        price: currentPrice,
+        shares,
+        barIndex: currentBarIndex,
+        datetime: currentBar?.datetime ?? "",
+      },
+    ]);
+    setShares(0);
+    setAvgCost(0);
+  };
+
+  // Step handlers
+  const stepBack = () => {
+    setCurrentBarIndex((i) => Math.max(0, i - 1));
+    setFinished(false);
+  };
+
+  const stepForward = () => {
+    if (currentBarIndex >= totalBars - 1) {
+      setFinished(true);
+      return;
+    }
+    setCurrentBarIndex((i) => Math.min(totalBars - 1, i + 1));
+  };
+
+  // Detect day boundaries for reference lines
+  const dayBoundaries: number[] = [];
+  if (bars.length > 0) {
+    let prevDate = bars[0].datetime.split("T")[0];
+    for (let i = 1; i < bars.length; i++) {
+      const d = bars[i].datetime.split("T")[0];
+      if (d !== prevDate) {
+        dayBoundaries.push(i);
+        prevDate = d;
+      }
+    }
+  }
+
+  // Build chart data (only visible bars up to currentBarIndex)
+  const visibleBars = bars.slice(0, currentBarIndex + 1);
+  const chartData = visibleBars.map((bar, i) => ({
+    idx: i,
+    price: bar.close,
+    label: formatTime(bar.datetime),
+    datetime: bar.datetime,
+  }));
+
+  // Trade markers on chart
+  const buyMarkers = trades
+    .filter((t) => t.type === "buy" && t.barIndex <= currentBarIndex)
+    .map((t) => t.barIndex);
+  const sellMarkers = trades
+    .filter((t) => t.type === "sell" && t.barIndex <= currentBarIndex)
+    .map((t) => t.barIndex);
+
+  // Summary stats
+  const totalBuys = trades.filter((t) => t.type === "buy").length;
+  const totalSells = trades.filter((t) => t.type === "sell").length;
+  const bestTrade = trades.reduce(
+    (best, t, i) => {
+      if (t.type !== "sell") return best;
+      // Find matching buy
+      const buys = trades.slice(0, i).filter((b) => b.type === "buy");
+      if (buys.length === 0) return best;
+      const lastBuy = buys[buys.length - 1];
+      const profit = (t.price - lastBuy.price) * t.shares;
+      if (profit > best.profit) {
+        return {
+          profit,
+          buyPrice: lastBuy.price,
+          sellPrice: t.price,
+        };
+      }
+      return best;
+    },
+    { profit: 0, buyPrice: 0, sellPrice: 0 },
+  );
+
+  // ─── BROWSE MODE ──────────────────────────────────────────────────────────
 
   if (mode === "browse") {
     return (
@@ -308,16 +364,13 @@ export function SimulatorPage() {
         {/* Hero */}
         <section className="text-center">
           <h1 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            Stock Market Science Lab
+            Trading Simulator
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-text-muted">
-            When a company reports great{" "}
-            <DefinitionTooltip id="earnings" />, the stock price often{" "}
-            <DefinitionTooltip id="gap-up" />. But what happens next?
-            Pick any event and replay it step by step.
+            Pick a real stock event, step through it in 15/30/60-minute
+            intervals, and practice buying and selling with virtual money.
           </p>
 
-          {/* Big action buttons */}
           <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={handleSurpriseMe}
@@ -330,7 +383,7 @@ export function SimulatorPage() {
           </div>
 
           <p className="mt-2 text-xs text-text-muted">
-            Picks a random big stock jump for you to explore
+            Picks a random big stock jump for you to trade
           </p>
         </section>
 
@@ -347,7 +400,9 @@ export function SimulatorPage() {
                   <input
                     type="text"
                     value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
+                    onChange={(e) =>
+                      setSearchInput(e.target.value.toUpperCase())
+                    }
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     placeholder="AAPL, TSLA, NVDA..."
                     className="w-full rounded-lg border border-border bg-bg-secondary py-2 pl-9 pr-3 text-sm text-text-primary outline-none focus:border-accent"
@@ -363,9 +418,7 @@ export function SimulatorPage() {
             </div>
           </div>
 
-          {/* Filter chips */}
           <div className="mt-3 flex flex-wrap gap-2">
-            {/* Gap size */}
             {["Small", "Medium", "Big", "Huge"].map((s) => (
               <button
                 key={s}
@@ -394,7 +447,6 @@ export function SimulatorPage() {
 
             <span className="mx-1 self-center text-border">|</span>
 
-            {/* Outcome */}
             {["Bounced", "Faded", "Kept Falling"].map((o) => (
               <button
                 key={o}
@@ -447,12 +499,14 @@ export function SimulatorPage() {
               ))}
             </div>
 
-            {/* Pagination */}
             {library.total_pages > 1 && (
               <div className="flex items-center justify-center gap-2">
                 <button
                   onClick={() =>
-                    setFilters((f) => ({ ...f, page: Math.max(1, f.page - 1) }))
+                    setFilters((f) => ({
+                      ...f,
+                      page: Math.max(1, f.page - 1),
+                    }))
                   }
                   disabled={library.page <= 1}
                   className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-30"
@@ -488,17 +542,17 @@ export function SimulatorPage() {
     );
   }
 
-  // ─── REPLAY MODE ─────────────────────────────────────────────────────────
+  // ─── REPLAY / TRADING MODE ────────────────────────────────────────────────
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 pb-12">
+    <div className="mx-auto max-w-5xl space-y-4 pb-12">
       {/* Back button */}
       <button
         onClick={goBack}
         className="flex items-center gap-1.5 text-sm text-text-muted hover:text-accent"
       >
         <ArrowLeft className="h-4 w-4" />
-        Browse More Events
+        Browse Events
       </button>
 
       {simLoading && (
@@ -507,139 +561,269 @@ export function SimulatorPage() {
             <div className="text-center">
               <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
               <p className="mt-3 text-sm text-text-muted">
-                Loading event replay...
+                Loading intraday data...
               </p>
             </div>
           </div>
         </Card>
       )}
 
-      {sim && !("error" in sim) && (
+      {intradaySim && !("error" in intradaySim) && (
         <>
-          {/* Event Header */}
+          {/* Event Header (compact) */}
           <Card className="border-accent/20 bg-accent/5">
-            <div className="text-center">
-              <h2 className="text-xl font-bold text-text-primary sm:text-2xl">
-                What happened here?
-              </h2>
-              <p className="mt-2 text-sm text-text-muted">
-                {sim.name || sim.ticker} · {sim.sector} ·{" "}
-                {new Date(sim.signal_date + "T12:00:00").toLocaleDateString(
-                  "en-US",
-                  { month: "long", day: "numeric", year: "numeric" },
-                )}
-              </p>
-              {sim.catalyst_headline && (
-                <p className="mt-1 text-xs italic text-text-muted/70">
-                  "{sim.catalyst_headline}"
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
+              <div className="text-center sm:text-left">
+                <h2 className="text-lg font-bold text-text-primary">
+                  {intradaySim.name || intradaySim.ticker}
+                </h2>
+                <p className="text-xs text-text-muted">
+                  {intradaySim.sector} ·{" "}
+                  {new Date(
+                    intradaySim.signal_date + "T12:00:00",
+                  ).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </p>
-              )}
-              <div className="mt-4 flex justify-center gap-6">
-                <div>
-                  <p className="text-2xl font-bold text-emerald-400">
-                    +{(sim.gap_up_pct ?? 0).toFixed(1)}%
+              </div>
+              <div className="flex gap-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-emerald-400">
+                    +{(intradaySim.gap_up_pct ?? 0).toFixed(1)}%
                   </p>
-                  <p className="text-[10px] text-text-muted">
-                    <DefinitionTooltip id="gap-up" />
-                  </p>
+                  <p className="text-[10px] text-text-muted">Gap Up</p>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-red-400">
-                    -{(sim.selloff_pct ?? 0).toFixed(1)}%
+                <div className="text-center">
+                  <p className="text-xl font-bold text-red-400">
+                    -{(intradaySim.selloff_pct ?? 0).toFixed(1)}%
                   </p>
-                  <p className="text-[10px] text-text-muted">
-                    <DefinitionTooltip id="selloff" />
-                  </p>
+                  <p className="text-[10px] text-text-muted">Selloff</p>
                 </div>
               </div>
             </div>
           </Card>
 
-          {/* Step-by-Step Replay */}
+          {/* Portfolio + Controls */}
           <Card>
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-text-primary">
-                Step-by-Step Replay
-              </h3>
-              <div className="flex gap-2">
-                {currentStep > 0 && (
-                  <button
-                    onClick={() => {
-                      setCurrentStep(0);
-                      setShowExplanation(false);
-                    }}
-                    className="flex items-center gap-1 rounded-lg bg-bg-hover px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary"
-                  >
-                    <Play className="h-3 w-3" />
-                    Restart
-                  </button>
-                )}
-                {currentStep < steps.length - 1 && (
-                  <button
-                    onClick={() => {
-                      setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
-                      setShowExplanation(false);
-                    }}
-                    className="flex items-center gap-1 rounded-lg bg-accent px-3 py-1.5 text-xs font-bold text-white hover:bg-accent/80"
-                  >
-                    <SkipForward className="h-3 w-3" />
-                    {currentStep === 0 ? "Start" : "Next Step"}
-                  </button>
-                )}
+            {/* Starting Cash Selector */}
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-text-muted">
+                Starting Cash:
+              </span>
+              {[1000, 5000, 10000].map((amt) => (
                 <button
-                  onClick={() => setShowExplanation(!showExplanation)}
-                  className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium ${
-                    showExplanation
-                      ? "bg-amber-500/20 text-amber-400"
-                      : "bg-bg-hover text-text-secondary hover:text-text-primary"
+                  key={amt}
+                  onClick={() => changeStartingCash(amt)}
+                  className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
+                    startingCash === amt
+                      ? "bg-accent text-white"
+                      : "bg-bg-hover text-text-secondary hover:bg-bg-hover/80"
                   }`}
                 >
-                  <HelpCircle className="h-3 w-3" />
-                  Explain
+                  {fmtCurrency(amt)}
                 </button>
-              </div>
-            </div>
-
-            {/* Visual progress bar */}
-            <div className="mb-4 flex gap-1">
-              {steps.map((step, i) => (
-                <div
-                  key={step.id}
-                  className={`h-1.5 flex-1 rounded-full transition-all ${
-                    i <= currentStep ? "bg-accent" : "bg-bg-hover"
-                  }`}
-                />
               ))}
             </div>
 
-            {/* Chart showing revealed steps */}
-            <div className="h-52 sm:h-64">
+            {/* Portfolio Display */}
+            <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="rounded-lg bg-bg-hover/50 p-2.5">
+                <p className="text-[10px] font-medium text-text-muted">Cash</p>
+                <p className="text-sm font-bold text-text-primary">
+                  {fmtCurrency(cash)}
+                </p>
+              </div>
+              <div className="rounded-lg bg-bg-hover/50 p-2.5">
+                <p className="text-[10px] font-medium text-text-muted">
+                  Shares
+                </p>
+                <p className="text-sm font-bold text-text-primary">{shares}</p>
+              </div>
+              <div className="rounded-lg bg-bg-hover/50 p-2.5">
+                <p className="text-[10px] font-medium text-text-muted">
+                  Portfolio
+                </p>
+                <p className="text-sm font-bold text-text-primary">
+                  {fmtCurrency(portfolioValue)}
+                </p>
+              </div>
+              <div className="rounded-lg bg-bg-hover/50 p-2.5">
+                <p className="text-[10px] font-medium text-text-muted">P&L</p>
+                <p
+                  className={`text-sm font-bold ${pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}
+                >
+                  {pnl >= 0 ? "+" : ""}
+                  {fmtCurrency(pnl)} ({pnlPct >= 0 ? "+" : ""}
+                  {pnlPct.toFixed(1)}%)
+                </p>
+              </div>
+            </div>
+
+            {/* Buy / Sell Buttons */}
+            {!finished && (
+              <div className="mb-3 flex gap-2">
+                <button
+                  onClick={handleBuy}
+                  disabled={cash < currentPrice || currentPrice <= 0}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 py-2.5 text-sm font-bold text-white transition-colors hover:bg-emerald-500 disabled:opacity-30 disabled:hover:bg-emerald-600"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  BUY at {fmtCurrency(currentPrice)}
+                </button>
+                <button
+                  onClick={handleSell}
+                  disabled={shares <= 0}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-red-600 py-2.5 text-sm font-bold text-white transition-colors hover:bg-red-500 disabled:opacity-30 disabled:hover:bg-red-600"
+                >
+                  <DollarSign className="h-4 w-4" />
+                  SELL ALL
+                </button>
+              </div>
+            )}
+
+            {/* Interval + Playback Controls */}
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              {/* Interval selector */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-text-muted">Interval:</span>
+                {(["15m", "30m", "60m"] as const).map((iv) => (
+                  <button
+                    key={iv}
+                    onClick={() => {
+                      setBarInterval(iv);
+                      resetSim();
+                    }}
+                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                      barInterval === iv
+                        ? "bg-accent text-white"
+                        : "bg-bg-hover text-text-secondary hover:bg-bg-hover/80"
+                    }`}
+                  >
+                    {iv === "15m"
+                      ? "15 min"
+                      : iv === "30m"
+                        ? "30 min"
+                        : "60 min"}
+                  </button>
+                ))}
+              </div>
+
+              {/* Playback controls */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={stepBack}
+                  disabled={currentBarIndex <= 0}
+                  className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
+                  title="Back"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    if (finished) {
+                      resetSim();
+                      return;
+                    }
+                    setAutoPlay(!autoPlay);
+                  }}
+                  className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                    autoPlay
+                      ? "bg-amber-500/20 text-amber-400"
+                      : "bg-accent text-white hover:bg-accent/80"
+                  }`}
+                >
+                  {autoPlay ? (
+                    <>
+                      <Pause className="h-3 w-3" /> Pause
+                    </>
+                  ) : finished ? (
+                    <>
+                      <RotateCcw className="h-3 w-3" /> Restart
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3 w-3" /> Auto-play
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={stepForward}
+                  disabled={currentBarIndex >= totalBars - 1}
+                  className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
+                  title="Forward"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+                <span className="ml-2 text-[10px] tabular-nums text-text-muted">
+                  {currentBarIndex + 1} / {totalBars}
+                </span>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-2 h-1 overflow-hidden rounded-full bg-bg-hover">
+              <div
+                className="h-full rounded-full bg-accent transition-all duration-300"
+                style={{
+                  width: `${totalBars > 0 ? ((currentBarIndex + 1) / totalBars) * 100 : 0}%`,
+                }}
+              />
+            </div>
+
+            {/* Current time display */}
+            {currentBar && (
+              <div className="mt-2 flex items-center justify-between text-xs text-text-muted">
+                <span>
+                  {formatDayLabel(currentBar.datetime, activeDate)} ·{" "}
+                  {formatDate(currentBar.datetime)} ·{" "}
+                  {formatTime(currentBar.datetime)}
+                </span>
+                <span className="tabular-nums">
+                  O:{fmtCurrency(currentBar.open ?? 0)} H:
+                  {fmtCurrency(currentBar.high ?? 0)} L:
+                  {fmtCurrency(currentBar.low ?? 0)} C:
+                  {fmtCurrency(currentBar.close ?? 0)}
+                </span>
+              </div>
+            )}
+          </Card>
+
+          {/* Chart */}
+          <Card>
+            <div className="h-64 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={visibleSteps.map((s) => ({
-                    step: s.label,
-                    value: s.value,
-                  }))}
-                  margin={{ top: 10, right: 10, left: -10, bottom: 5 }}
+                  data={chartData}
+                  margin={{ top: 10, right: 10, left: 5, bottom: 5 }}
                 >
                   <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="rgba(255,255,255,0.06)"
                   />
                   <XAxis
-                    dataKey="step"
-                    tick={{ fontSize: 9, fill: "rgba(255,255,255,0.5)" }}
+                    dataKey="idx"
+                    tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
+                    tickFormatter={(idx: number) => {
+                      const bar = visibleBars[idx];
+                      if (!bar) return "";
+                      // Show day boundary labels
+                      if (idx === 0 || dayBoundaries.includes(idx)) {
+                        return formatDate(bar.datetime);
+                      }
+                      // Show time for every Nth bar
+                      const step = barInterval === "15m" ? 4 : barInterval === "30m" ? 2 : 1;
+                      if (idx % step === 0) return formatTime(bar.datetime);
+                      return "";
+                    }}
                     interval={0}
-                    angle={-20}
-                    textAnchor="end"
-                    height={50}
+                    height={30}
                   />
                   <YAxis
                     tick={{ fontSize: 10, fill: "rgba(255,255,255,0.5)" }}
-                    tickFormatter={(v: number) =>
-                      `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`
-                    }
-                    domain={["dataMin - 1", "dataMax + 1"]}
+                    tickFormatter={(v: number) => `$${v.toFixed(0)}`}
+                    domain={["dataMin - 0.5", "dataMax + 0.5"]}
                   />
                   <ReTooltip
                     contentStyle={{
@@ -648,232 +832,180 @@ export function SimulatorPage() {
                       borderRadius: 8,
                       fontSize: 12,
                     }}
+                    labelFormatter={(idx) => {
+                      const bar = visibleBars[Number(idx)];
+                      if (!bar) return "";
+                      return `${formatDate(bar.datetime)} ${formatTime(bar.datetime)}`;
+                    }}
                     formatter={(v: number | undefined) =>
-                      v != null
-                        ? [`${v >= 0 ? "+" : ""}${v.toFixed(2)}%`, "Change"]
-                        : ["—", "Change"]
+                      v != null ? [fmtCurrency(v), "Price"] : ["—", "Price"]
                     }
                   />
+                  {/* Day separator lines */}
+                  {dayBoundaries
+                    .filter((i) => i <= currentBarIndex)
+                    .map((i) => (
+                      <ReferenceLine
+                        key={`day-${i}`}
+                        x={i}
+                        stroke="rgba(255,255,255,0.15)"
+                        strokeDasharray="4 4"
+                      />
+                    ))}
+                  {/* Buy markers as reference areas (small green zones) */}
+                  {buyMarkers.map((idx) => (
+                    <ReferenceLine
+                      key={`buy-${idx}`}
+                      x={idx}
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      label={{
+                        value: "B",
+                        position: "top",
+                        fill: "#10b981",
+                        fontSize: 10,
+                        fontWeight: 700,
+                      }}
+                    />
+                  ))}
+                  {/* Sell markers */}
+                  {sellMarkers.map((idx) => (
+                    <ReferenceLine
+                      key={`sell-${idx}`}
+                      x={idx}
+                      stroke="#ef4444"
+                      strokeWidth={2}
+                      label={{
+                        value: "S",
+                        position: "top",
+                        fill: "#ef4444",
+                        fontSize: 10,
+                        fontWeight: 700,
+                      }}
+                    />
+                  ))}
                   <Line
                     type="monotone"
-                    dataKey="value"
+                    dataKey="price"
                     stroke="#14b8a6"
-                    strokeWidth={3}
-                    dot={{
-                      r: 6,
-                      fill: "#14b8a6",
-                      stroke: "#0d1117",
-                      strokeWidth: 2,
-                    }}
-                    animationDuration={500}
+                    strokeWidth={2}
+                    dot={false}
+                    animationDuration={0}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
-
-            {/* Current step explanation */}
-            {visibleSteps.length > 0 && (
-              <div className="mt-4 rounded-lg border border-border bg-bg-hover/30 p-4">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-lg font-bold ${visibleSteps[currentStep].color}`}
-                  >
-                    {visibleSteps[currentStep].value !== null &&
-                      `${visibleSteps[currentStep].value! >= 0 ? "+" : ""}${visibleSteps[currentStep].value!.toFixed(1)}%`}
-                  </span>
-                  <span className="text-sm font-semibold text-text-primary">
-                    {visibleSteps[currentStep].label}
-                  </span>
-                </div>
-
-                {showExplanation && (
-                  <p className="mt-2 text-sm leading-relaxed text-text-muted">
-                    {visibleSteps[currentStep].explanation}
-                  </p>
-                )}
-
-                {/* Question prompt at step 1 */}
-                {currentStep === 1 && !showExplanation && (
-                  <p className="mt-2 text-sm font-medium text-amber-400">
-                    The stock just jumped. What do you think happens next?
-                  </p>
-                )}
-              </div>
-            )}
           </Card>
 
-          {/* Strategies - show after all steps revealed */}
-          {currentStep >= steps.length - 1 && sim.strategies.length > 0 && (
+          {/* Trade History */}
+          {trades.length > 0 && (
             <Card>
-              <h3 className="mb-1 text-sm font-semibold text-text-primary">
-                What If You Had Bought?
+              <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+                <BarChart3 className="h-4 w-4" />
+                Trade History
               </h3>
-              <p className="mb-3 text-xs text-text-muted">
-                Three different strategies — buy immediately, wait for the dip,
-                or skip the chaos entirely.
-              </p>
-              <div className="grid gap-3 sm:grid-cols-3">
-                {sim.strategies.map((s) => (
-                  <StrategyCard key={s.name} strategy={s} />
+              <div className="max-h-40 space-y-1 overflow-y-auto">
+                {trades.map((t, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between rounded-md bg-bg-hover/30 px-3 py-1.5 text-xs"
+                  >
+                    <span
+                      className={`font-bold ${t.type === "buy" ? "text-emerald-400" : "text-red-400"}`}
+                    >
+                      {t.type === "buy" ? "BOUGHT" : "SOLD"} {t.shares} shares @{" "}
+                      {fmtCurrency(t.price)}
+                    </span>
+                    <span className="text-text-muted">
+                      {formatDate(t.datetime)} {formatTime(t.datetime)}
+                    </span>
+                  </div>
                 ))}
               </div>
             </Card>
           )}
 
-          {/* Similar events - show after all steps */}
-          {currentStep >= steps.length - 1 && sim.analogs.length > 0 && (
-            <Card>
-              <h3 className="mb-1 text-sm font-semibold text-text-primary">
-                Similar Events in History
-              </h3>
-              <p className="mb-3 text-xs text-text-muted">
-                Other stocks that jumped about the same amount. Here's what
-                happened to them.
-              </p>
+          {/* Results Summary (shown when finished) */}
+          {finished && (
+            <Card className="border-accent/30 bg-gradient-to-r from-accent/5 to-transparent">
+              <div className="text-center">
+                <Trophy className="mx-auto h-8 w-8 text-amber-400" />
+                <h3 className="mt-2 text-lg font-bold text-text-primary">
+                  Your Results
+                </h3>
 
-              {/* Analog chart */}
-              {(() => {
-                const stages =
-                  sim.analogs[0]?.path.map((p) => p.stage) ?? [];
-                const chartData = stages.map((stage, idx) => {
-                  const point: Record<string, string | number> = { stage };
-                  sim.analogs.forEach((a, ai) => {
-                    point[`analog_${ai}`] = a.path[idx]?.value ?? 0;
-                  });
-                  return point;
-                });
-                const colors = ["#f59e0b", "#8b5cf6", "#ec4899"];
-                return (
-                  <div className="mb-4 h-48">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart
-                        data={chartData}
-                        margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
-                      >
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          stroke="rgba(255,255,255,0.06)"
-                        />
-                        <XAxis
-                          dataKey="stage"
-                          tick={{
-                            fontSize: 10,
-                            fill: "rgba(255,255,255,0.5)",
-                          }}
-                        />
-                        <YAxis
-                          tick={{
-                            fontSize: 10,
-                            fill: "rgba(255,255,255,0.5)",
-                          }}
-                          tickFormatter={(v: number) => `$${v}`}
-                          domain={["dataMin - 1", "dataMax + 1"]}
-                        />
-                        <ReTooltip
-                          contentStyle={{
-                            background: "#1a1e2e",
-                            border: "1px solid rgba(255,255,255,0.1)",
-                            borderRadius: 8,
-                            fontSize: 12,
-                          }}
-                        />
-                        <Legend wrapperStyle={{ fontSize: 10 }} />
-                        {sim.analogs.map((a, i) => (
-                          <Line
-                            key={a.ticker + a.signal_date}
-                            dataKey={`analog_${i}`}
-                            name={`${a.ticker} (${a.signal_date.slice(5)})`}
-                            stroke={colors[i % colors.length]}
-                            strokeWidth={1.5}
-                            dot={{ r: 3 }}
-                            type="monotone"
-                          />
-                        ))}
-                      </LineChart>
-                    </ResponsiveContainer>
+                <div className="mx-auto mt-4 grid max-w-md grid-cols-2 gap-3">
+                  <div className="rounded-lg bg-bg-hover/50 p-3">
+                    <p className="text-[10px] text-text-muted">Started With</p>
+                    <p className="text-sm font-bold text-text-primary">
+                      {fmtCurrency(startingCash)}
+                    </p>
                   </div>
-                );
-              })()}
-
-              <div className="space-y-2">
-                {sim.analogs.map((a) => {
-                  const outcome1d = a.outcome_1d ?? 0;
-                  return (
-                    <button
-                      key={a.ticker + a.signal_date}
-                      onClick={() => selectEvent(a.ticker, a.signal_date)}
-                      className="flex w-full items-center justify-between rounded-lg bg-bg-hover/50 p-2.5 text-left transition-colors hover:bg-bg-hover"
+                  <div className="rounded-lg bg-bg-hover/50 p-3">
+                    <p className="text-[10px] text-text-muted">Final Value</p>
+                    <p
+                      className={`text-sm font-bold ${pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}
                     >
-                      <div>
-                        <p className="text-xs font-medium text-text-primary">
-                          {a.ticker}{" "}
-                          <span className="text-text-muted">
-                            — {a.name} · {a.signal_date}
-                          </span>
-                        </p>
-                        <p className="text-[10px] text-text-muted">
-                          Gap: +{a.gap_up_pct?.toFixed(1)}% · Selloff:{" "}
-                          {a.selloff_pct?.toFixed(1)}%
-                        </p>
-                      </div>
-                      <div className="flex gap-3 text-xs">
-                        <span
-                          className={
-                            outcome1d >= 0
-                              ? "text-emerald-400"
-                              : "text-red-400"
-                          }
-                        >
-                          1d: {outcome1d >= 0 ? "+" : ""}
-                          {a.outcome_1d?.toFixed(1)}%
-                        </span>
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            a.status === "confirmed"
-                              ? "bg-emerald-500/15 text-emerald-400"
-                              : a.status === "failed"
-                                ? "bg-red-500/15 text-red-400"
-                                : "bg-amber-500/15 text-amber-400"
-                          }`}
-                        >
-                          {a.status}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
+                      {fmtCurrency(portfolioValue)}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-bg-hover/50 p-3">
+                    <p className="text-[10px] text-text-muted">P&L</p>
+                    <p
+                      className={`text-sm font-bold ${pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}
+                    >
+                      {pnl >= 0 ? "+" : ""}
+                      {fmtCurrency(pnl)} ({pnlPct >= 0 ? "+" : ""}
+                      {pnlPct.toFixed(1)}%)
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-bg-hover/50 p-3">
+                    <p className="text-[10px] text-text-muted">Trades</p>
+                    <p className="text-sm font-bold text-text-primary">
+                      {totalBuys} buy{totalBuys !== 1 && "s"}, {totalSells} sell
+                      {totalSells !== 1 && "s"}
+                    </p>
+                  </div>
+                </div>
+
+                {bestTrade.profit > 0 && (
+                  <p className="mt-3 text-xs text-text-muted">
+                    Best trade: Bought at {fmtCurrency(bestTrade.buyPrice)},
+                    sold at {fmtCurrency(bestTrade.sellPrice)} (+
+                    {fmtCurrency(bestTrade.profit)})
+                  </p>
+                )}
+
+                {trades.length === 0 && (
+                  <p className="mt-3 text-xs text-amber-400">
+                    You didn't make any trades! Try again and buy/sell during the
+                    simulation.
+                  </p>
+                )}
+
+                <div className="mt-4 flex justify-center gap-3">
+                  <button
+                    onClick={resetSim}
+                    className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-bold text-white hover:bg-accent/80"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Try Again
+                  </button>
+                  <button
+                    onClick={goBack}
+                    className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Pick Another
+                  </button>
+                </div>
               </div>
             </Card>
           )}
-
-          {/* Educational note at bottom */}
-          <Card className="border-amber-500/20 bg-amber-500/5">
-            <div className="flex gap-3">
-              <HelpCircle className="h-5 w-5 shrink-0 text-amber-400" />
-              <div className="space-y-1 text-xs leading-relaxed text-text-muted">
-                <p className="font-medium text-amber-400">
-                  Learn While You Explore
-                </p>
-                <p>
-                  This simulator replays real events from the stock market. It's
-                  not a prediction tool — it's a science lab for understanding
-                  patterns.
-                </p>
-                <p>
-                  Key concepts:{" "}
-                  <DefinitionTooltip id="earnings" /> ·{" "}
-                  <DefinitionTooltip id="profit-taking" /> ·{" "}
-                  <DefinitionTooltip id="bounce" /> ·{" "}
-                  <DefinitionTooltip id="volatility" /> ·{" "}
-                  <DefinitionTooltip id="catalyst" />
-                </p>
-              </div>
-            </div>
-          </Card>
         </>
       )}
 
-      {sim && "error" in sim && (
+      {intradaySim && "error" in intradaySim && (
         <Card>
           <p className="text-sm text-red-400">
             Event not found. Try browsing the event library instead.
@@ -890,7 +1022,7 @@ export function SimulatorPage() {
   );
 }
 
-// ─── Sub-Components ──────────────────────────────────────────────────────────
+// ─── Sub-Components ─────────────────────────────────────────────────────────
 
 function EventBrowserCard({
   event: ev,
@@ -966,49 +1098,5 @@ function EventBrowserCard({
         })}
       </p>
     </button>
-  );
-}
-
-function StrategyCard({ strategy: s }: { strategy: SimStrategy }) {
-  return (
-    <div className="rounded-lg border border-border bg-bg-hover/30 p-3">
-      <p className="text-xs font-bold text-text-primary">{s.name}</p>
-      <p className="mt-0.5 text-[10px] text-text-muted">{s.description}</p>
-      <p className="mt-1 text-[10px] text-text-muted">
-        Entry: ${s.entry_price.toFixed(2)}
-      </p>
-      <div className="mt-2 flex gap-3 text-xs">
-        {s.return_1d != null && (
-          <span
-            className={
-              s.return_1d >= 0 ? "text-emerald-400" : "text-red-400"
-            }
-          >
-            1d: {s.return_1d >= 0 ? "+" : ""}
-            {s.return_1d.toFixed(2)}%
-          </span>
-        )}
-        {s.return_5d != null && (
-          <span
-            className={
-              s.return_5d >= 0 ? "text-emerald-400" : "text-red-400"
-            }
-          >
-            5d: {s.return_5d >= 0 ? "+" : ""}
-            {s.return_5d.toFixed(2)}%
-          </span>
-        )}
-        {s.return_10d != null && (
-          <span
-            className={
-              s.return_10d >= 0 ? "text-emerald-400" : "text-red-400"
-            }
-          >
-            10d: {s.return_10d >= 0 ? "+" : ""}
-            {s.return_10d.toFixed(2)}%
-          </span>
-        )}
-      </div>
-    </div>
   );
 }

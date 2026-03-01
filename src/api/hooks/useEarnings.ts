@@ -7,6 +7,7 @@ import {
   SectorBreakdownSchema,
   ForwardLookSchema,
   SimulationSchema,
+  IntradaySimulationSchema,
   EventLibrarySchema,
   RandomEventSchema,
 } from "../types/earnings";
@@ -80,6 +81,26 @@ export function useSimulation(ticker: string, signalDate: string) {
         `/earnings/simulate/${ticker}/${signalDate}`,
       );
       return SimulationSchema.parse(data);
+    },
+    enabled: !!ticker && !!signalDate,
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useIntradaySimulation(
+  ticker: string,
+  signalDate: string,
+  interval: "15m" | "30m" | "60m" = "60m",
+  days: number = 5,
+) {
+  return useQuery({
+    queryKey: ["earnings", "simulate-intraday", ticker, signalDate, interval, days],
+    queryFn: async () => {
+      const { data } = await api.get(
+        `/earnings/simulate/${ticker}/${signalDate}/intraday`,
+        { params: { interval, days } },
+      );
+      return IntradaySimulationSchema.parse(data);
     },
     enabled: !!ticker && !!signalDate,
     staleTime: 10 * 60 * 1000,

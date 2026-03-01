@@ -211,6 +211,33 @@ export type SimTimelineEntry = z.infer<typeof SimTimelineEntrySchema>;
 export type SimAnalog = z.infer<typeof SimAnalogSchema>;
 export type SimStrategy = z.infer<typeof SimStrategySchema>;
 
+// Intraday Simulation (Trading Mode)
+export const IntradayBarSchema = z.object({
+  datetime: z.string(),
+  open: z.number().nullable(),
+  high: z.number().nullable(),
+  low: z.number().nullable(),
+  close: z.number().nullable(),
+  volume: z.number().nullable(),
+  pct_from_prev_close: z.number(),
+});
+
+export const IntradaySimulationSchema = z.object({
+  ticker: z.string(),
+  signal_date: z.string(),
+  name: z.string().nullable(),
+  sector: z.string().nullable(),
+  gap_up_pct: z.number().nullable(),
+  selloff_pct: z.number().nullable(),
+  interval: z.string(),
+  bars: z.array(IntradayBarSchema),
+  strategies: z.array(SimStrategySchema),
+  analogs: z.array(SimAnalogSchema),
+});
+
+export type IntradayBar = z.infer<typeof IntradayBarSchema>;
+export type IntradaySimulation = z.infer<typeof IntradaySimulationSchema>;
+
 // Event Library
 export const LibraryEventSchema = z.object({
   ticker: z.string(),
