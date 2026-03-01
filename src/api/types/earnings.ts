@@ -36,6 +36,7 @@ export type ImpactCategory = z.infer<typeof ImpactCategorySchema>;
 // Price Journey
 export const PriceStageSchema = z.object({
   stage: z.string(),
+  hour: z.number().optional(),
   value: z.number(),
   label: z.string(),
   explanation: z.string(),
