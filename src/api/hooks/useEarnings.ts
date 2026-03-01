@@ -7,6 +7,8 @@ import {
   SectorBreakdownSchema,
   ForwardLookSchema,
   SimulationSchema,
+  EventLibrarySchema,
+  RandomEventSchema,
 } from "../types/earnings";
 
 export function useImpactSummary() {
@@ -81,5 +83,36 @@ export function useSimulation(ticker: string, signalDate: string) {
     },
     enabled: !!ticker && !!signalDate,
     staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useEventLibrary(params: {
+  gap_size?: string;
+  sector?: string;
+  outcome?: string;
+  ticker?: string;
+  page?: number;
+  per_page?: number;
+}) {
+  return useQuery({
+    queryKey: ["earnings", "events", params],
+    queryFn: async () => {
+      const { data } = await api.get("/earnings/events", { params });
+      return EventLibrarySchema.parse(data);
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useRandomEvent() {
+  return useQuery({
+    queryKey: ["earnings", "events", "random"],
+    queryFn: async () => {
+      const { data } = await api.get("/earnings/events/random");
+      return RandomEventSchema.parse(data);
+    },
+    enabled: false, // Only fetch on demand
+    staleTime: 0,
+    gcTime: 0,
   });
 }

@@ -210,3 +210,55 @@ export type Simulation = z.infer<typeof SimulationSchema>;
 export type SimTimelineEntry = z.infer<typeof SimTimelineEntrySchema>;
 export type SimAnalog = z.infer<typeof SimAnalogSchema>;
 export type SimStrategy = z.infer<typeof SimStrategySchema>;
+
+// Event Library
+export const LibraryEventSchema = z.object({
+  ticker: z.string(),
+  name: z.string().nullable(),
+  sector: z.string().nullable(),
+  signal_date: z.string(),
+  gap_up_pct: z.number().nullable(),
+  selloff_pct: z.number().nullable(),
+  outcome_1d: z.number().nullable(),
+  outcome_5d: z.number().nullable(),
+  outcome_10d: z.number().nullable(),
+  signal_strength: z.number().nullable(),
+  status: z.string().nullable(),
+  catalyst_type: z.string().nullable(),
+  catalyst_headline: z.string().nullable(),
+  gap_size: z.string(),
+  outcome_label: z.string(),
+  summary: z.string(),
+});
+
+export const EventLibrarySchema = z.object({
+  total: z.number(),
+  page: z.number(),
+  per_page: z.number(),
+  total_pages: z.number(),
+  filters: z.object({
+    gap_sizes: z.array(z.string()),
+    outcomes: z.array(z.string()),
+    sectors: z.array(z.string()),
+  }),
+  events: z.array(LibraryEventSchema),
+});
+
+export const RandomEventSchema = LibraryEventSchema.pick({
+  ticker: true,
+  name: true,
+  sector: true,
+  signal_date: true,
+  gap_up_pct: true,
+  selloff_pct: true,
+  outcome_1d: true,
+  catalyst_type: true,
+  signal_strength: true,
+  status: true,
+  gap_size: true,
+  summary: true,
+}).extend({ outcome_10d: z.number().nullable().optional() });
+
+export type LibraryEvent = z.infer<typeof LibraryEventSchema>;
+export type EventLibrary = z.infer<typeof EventLibrarySchema>;
+export type RandomEvent = z.infer<typeof RandomEventSchema>;
