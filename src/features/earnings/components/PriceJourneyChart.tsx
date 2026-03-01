@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   AreaChart,
   Area,
@@ -10,6 +11,22 @@ import {
 } from "recharts";
 import { usePriceJourney } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
+import type { PriceStage } from "@/api/types/earnings";
+
+const VIEWS = [
+  { id: "full", label: "Full Timeline" },
+  { id: "day0", label: "Day 0 Detail" },
+] as const;
+
+type View = (typeof VIEWS)[number]["id"];
+
+const SIZES = [
+  { value: "all", label: "All Sizes" },
+  { value: "Minor", label: "Minor" },
+  { value: "Medium", label: "Medium" },
+  { value: "Large", label: "Large" },
+  { value: "Major", label: "Major" },
+];
 
 /** Derive a short tick label from the stage name */
 function stageToTick(stage: string): string {
@@ -17,7 +34,6 @@ function stageToTick(stage: string): string {
   if (stage.includes("Open")) return "Open";
   if (stage.includes("Peak")) return "Peak";
   if (stage.includes("Day 0 Close") || stage === "Day 0 Close") return "Close";
-  // "Day 1 Close" → "Day 1", "Day 5 Close" → "Day 5", etc.
   const m = stage.match(/Day (\d+)/);
   if (m) return `Day ${m[1]}`;
   return stage;
@@ -34,34 +50,93 @@ function stageToTimeLabel(stage: string, hour: number): string {
   return stage;
 }
 
-export function PriceJourneyChart() {
-  const { data: journey, isLoading } = usePriceJourney("all");
+/** Day 0 Detail labels — approximate trading hours */
+function day0Tick(stage: string): string {
+  if (stage.includes("-1")) return "4:00 PM\nPrev Day";
+  if (stage.includes("Open")) return "9:30 AM";
+  if (stage.includes("Peak")) return "~11:00 AM";
+  if (stage.includes("Day 0 Close")) return "4:00 PM";
+  if (stage.includes("Day 1")) return "4:00 PM\nNext Day";
+  return stage;
+}
 
-  // Build chart data with hour as numeric X
-  const chartData = journey?.stages.map((s) => ({
+export function PriceJourneyChart() {
+  const [view, setView] = useState<View>("full");
+  const [moveSize, setMoveSize] = useState("all");
+  const { data: journey, isLoading } = usePriceJourney(moveSize);
+
+  // Filter stages based on view
+  const filteredStages: PriceStage[] = journey
+    ? view === "day0"
+      ? journey.stages.filter((s) => {
+          const h = s.hour ?? 0;
+          // Show: prev close, day 0 open/peak/close, day 1
+          return h <= 13;
+        })
+      : journey.stages
+    : [];
+
+  const chartData = filteredStages.map((s) => ({
     ...s,
     hour: s.hour ?? 0,
-    tickLabel: stageToTick(s.stage),
+    tickLabel: view === "day0" ? day0Tick(s.stage) : stageToTick(s.stage),
     timeLabel: stageToTimeLabel(s.stage, s.hour ?? 0),
   }));
 
   return (
     <Card>
-      <div className="mb-2">
-        <p className="text-xs text-text-muted">
-          Timeline starts at the previous day's close ($100), then shows each
-          trading day's key moments through Day 10.
-        </p>
+      {/* Controls row */}
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        {/* View toggle */}
+        <div className="flex rounded-lg border border-border bg-bg-secondary p-0.5">
+          {VIEWS.map((v) => (
+            <button
+              key={v.id}
+              onClick={() => setView(v.id)}
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                view === v.id
+                  ? "bg-accent text-white"
+                  : "text-text-secondary hover:text-text-primary"
+              }`}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Move size filter */}
+        <div className="flex flex-wrap gap-1">
+          {SIZES.map((s) => (
+            <button
+              key={s.value}
+              onClick={() => setMoveSize(s.value)}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                moveSize === s.value
+                  ? "bg-accent/20 text-accent"
+                  : "text-text-muted hover:text-text-secondary"
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
       </div>
+
+      <p className="mb-1 text-xs text-text-muted">
+        {view === "day0"
+          ? "Zoomed into the gap day — from previous close through next day close."
+          : "Full timeline from previous close through Day 10."}
+      </p>
 
       {isLoading ? (
         <div className="flex h-64 items-center justify-center">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
         </div>
-      ) : chartData ? (
+      ) : chartData.length > 0 ? (
         <>
           <p className="mb-2 text-xs text-text-muted">
             Based on {journey!.sample_size} events
+            {moveSize !== "all" && ` (${moveSize} moves only)`}
           </p>
 
           <div className="h-80">
@@ -124,9 +199,9 @@ export function PriceJourneyChart() {
             </ResponsiveContainer>
           </div>
 
-          {/* Stage explanations as a timeline */}
+          {/* Stage explanations */}
           <div className="mt-4 space-y-2">
-            {journey!.stages.map((stage, i) => {
+            {filteredStages.map((stage, i) => {
               const change = stage.value - 100;
               return (
                 <div
@@ -185,7 +260,7 @@ function JourneyTooltip({
   return (
     <div className="rounded-lg border border-border bg-bg-card p-3 shadow-lg">
       <p className="text-xs font-medium text-text-primary">{d.stage}</p>
-      <p className="text-[10px] text-text-muted whitespace-pre-line">
+      <p className="whitespace-pre-line text-[10px] text-text-muted">
         {d.timeLabel}
       </p>
       <p
