@@ -214,9 +214,9 @@ export function PriceJourneyChart() {
                   <div className="flex-1">
                     <p className="text-xs font-medium text-text-primary">
                       {stage.stage}{" "}
-                      <span className="text-text-muted">— {stage.label}</span>
+                      <span className="text-text-secondary">— {stage.label}</span>
                     </p>
-                    <p className="mt-0.5 text-xs text-text-muted">
+                    <p className="mt-0.5 text-xs text-text-secondary">
                       {stage.explanation}
                     </p>
                   </div>

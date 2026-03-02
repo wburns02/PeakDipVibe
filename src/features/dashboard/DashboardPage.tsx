@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Clock } from "lucide-react";
+import { Search, Clock, X } from "lucide-react";
 import { useMarketOverview, usePipelineStatus } from "@/api/hooks/useMarket";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -112,12 +112,32 @@ export function DashboardPage() {
           }}
           onFocus={() => setShowDropdown(true)}
           onKeyDown={handleKeyDown}
-          className="w-full rounded-xl border border-border bg-bg-card py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
+          aria-label="Search stocks by ticker or name"
+          aria-expanded={showDropdown && (showRecent || (searchInput.length > 0 && !!results?.length))}
+          aria-haspopup="listbox"
+          aria-controls="search-dropdown"
+          aria-autocomplete="list"
+          className="w-full rounded-xl border border-border bg-bg-card py-2.5 pl-10 pr-9 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
         />
+
+        {/* Clear button */}
+        {searchInput.length > 0 && (
+          <button
+            onClick={() => {
+              setSearchInput("");
+              inputRef.current?.focus();
+              setShowDropdown(true);
+            }}
+            aria-label="Clear search"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors hover:text-text-primary"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
 
         {/* Recent searches */}
         {showRecent && (
-          <div className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
+          <div id="search-dropdown" role="listbox" aria-label="Recent searches" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
             <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] text-text-muted">
               <Clock className="h-3 w-3" />
               Recent Searches
@@ -126,6 +146,7 @@ export function DashboardPage() {
               <button
                 key={t}
                 type="button"
+                role="option"
                 onClick={() => goToTicker(t)}
                 className="flex w-full items-center px-4 py-2 text-left text-sm text-accent transition-colors hover:bg-bg-hover"
               >
@@ -137,11 +158,13 @@ export function DashboardPage() {
 
         {/* Search results dropdown */}
         {searchInput.length > 0 && results && results.length > 0 && showDropdown && (
-          <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-xl">
+          <div id="search-dropdown" role="listbox" aria-label="Search results" className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-xl">
             {results.map((t, i) => (
               <button
                 key={t.ticker}
                 type="button"
+                role="option"
+                aria-selected={i === selectedIdx}
                 onClick={() => goToTicker(t.ticker)}
                 className={`flex w-full items-center justify-between px-4 py-2.5 text-left transition-colors hover:bg-bg-hover ${
                   i === selectedIdx ? "bg-bg-hover" : ""
