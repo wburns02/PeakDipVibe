@@ -105,6 +105,7 @@ export function ComparePage() {
                   placeholder="Add ticker..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => e.key === "Escape" && setSearchInput("")}
                   aria-label="Add ticker to compare"
                   className="w-24 bg-transparent text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
                 />
