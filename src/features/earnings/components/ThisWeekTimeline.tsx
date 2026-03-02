@@ -119,6 +119,8 @@ export function ThisWeekTimeline({ data, isLoading }: Props) {
         <button
           type="button"
           onClick={() => setShowAll(!showAll)}
+          aria-expanded={showAll}
+          aria-label={showAll ? "Show fewer events" : `Show all ${sorted.length} events`}
           className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
         >
           <ChevronDown

@@ -1,6 +1,7 @@
 import { Zap } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useTickerSignals } from "@/api/hooks/useSignals";
 import { formatPercent } from "@/lib/formatters";
 
@@ -11,7 +12,7 @@ interface SignalHistoryCardProps {
 export function SignalHistoryCard({ ticker }: SignalHistoryCardProps) {
   const { data: signals, isLoading } = useTickerSignals(ticker);
 
-  if (isLoading) return null;
+  if (isLoading) return <Skeleton className="h-48" />;
   if (!signals || signals.length === 0) return null;
 
   return (
