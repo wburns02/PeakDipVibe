@@ -1,6 +1,5 @@
 import { useState, useEffect, memo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ERROR_ALERT } from "@/lib/styles";
 import {
   Filter,
   ArrowUpDown,
@@ -8,8 +7,8 @@ import {
   TrendingDown,
   Star,
   ChevronDown,
-  AlertTriangle,
 } from "lucide-react";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { useScreener } from "@/api/hooks/useScreener";
 import { useSectors } from "@/api/hooks/useMarket";
 import { useWatchlist } from "@/hooks/useWatchlist";
@@ -64,7 +63,7 @@ export function ScreenerPage() {
     }
   }, [sectorParam]);
 
-  const { data: results, isLoading, isError } = useScreener(filters);
+  const { data: results, isLoading, isError, refetch } = useScreener(filters);
   const { data: sectors } = useSectors();
 
   const setFilter = (key: keyof ScreenerFilters, value: unknown) => {
@@ -236,10 +235,7 @@ export function ScreenerPage() {
             ))}
           </div>
         ) : isError ? (
-          <div className={ERROR_ALERT}>
-            <AlertTriangle className="h-4 w-4 shrink-0" />
-            Could not load screener results. The API may be offline.
-          </div>
+          <ErrorState message="Could not load screener results. The API may be offline." onRetry={refetch} />
         ) : !results || results.length === 0 ? (
           <p className="py-8 text-center text-sm text-text-muted">
             No stocks match your filters. Try adjusting the criteria.

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Filter, ChevronDown, AlertTriangle } from "lucide-react";
-import { ERROR_ALERT } from "@/lib/styles";
+import { Filter, ChevronDown } from "lucide-react";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { usePatternSignals, useSignalStats } from "@/api/hooks/useSignals";
 import { useSectors } from "@/api/hooks/useMarket";
 import { Card } from "@/components/ui/Card";
@@ -34,7 +34,7 @@ export function SignalsPage() {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: signals, isLoading, isError } = usePatternSignals(filters);
+  const { data: signals, isLoading, isError, refetch } = usePatternSignals(filters);
   const { data: stats, isLoading: statsLoading } = useSignalStats(filters.days);
   const { data: sectors } = useSectors();
 
@@ -177,10 +177,7 @@ export function SignalsPage() {
 
       {/* Signal table */}
       {isError ? (
-        <div className={ERROR_ALERT}>
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          Could not load signals. The API may be offline.
-        </div>
+        <ErrorState message="Could not load signals. The API may be offline." onRetry={refetch} />
       ) : (
         <SignalTable
           signals={signals}

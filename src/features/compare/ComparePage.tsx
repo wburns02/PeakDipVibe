@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { X, Plus, BarChart3, AlertTriangle } from "lucide-react";
-import { ERROR_ALERT } from "@/lib/styles";
+import { X, Plus, BarChart3 } from "lucide-react";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { useCompare } from "@/api/hooks/useCompare";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -37,7 +37,7 @@ export function ComparePage() {
   const [period, setPeriod] = useState(252);
   const debouncedSearch = useDebounce(searchInput, 200);
 
-  const { data: compareData, isLoading, isError } = useCompare(tickers, period);
+  const { data: compareData, isLoading, isError, refetch } = useCompare(tickers, period);
   const { data: searchResults } = useTickerList(debouncedSearch || undefined);
 
   const addTicker = (ticker: string) => {
@@ -170,10 +170,7 @@ export function ComparePage() {
       {isLoading ? (
         <Skeleton className="h-[400px]" />
       ) : isError ? (
-        <div className={ERROR_ALERT}>
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          Could not load comparison data. The API may be offline.
-        </div>
+        <ErrorState message="Could not load comparison data. The API may be offline." onRetry={refetch} />
       ) : compareData && chartData.length > 0 ? (
         <Card>
           <ComparisonChart
