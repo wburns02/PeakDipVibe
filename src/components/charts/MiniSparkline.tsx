@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -10,7 +11,7 @@ interface MiniSparklineProps {
   height?: number;
 }
 
-export function MiniSparkline({
+export const MiniSparkline = memo(function MiniSparkline({
   data,
   color = "#6366f1",
   height = 30,
@@ -31,4 +32,4 @@ export function MiniSparkline({
       </LineChart>
     </ResponsiveContainer>
   );
-}
+});

@@ -14,7 +14,19 @@ export function RecentSignalsCard() {
   });
 
   if (isLoading) return <Skeleton className="h-48" />;
-  if (!signals || signals.length === 0) return null;
+  if (!signals || signals.length === 0) {
+    return (
+      <Card>
+        <div className="flex items-center gap-2">
+          <Zap className="h-4 w-4 text-accent" />
+          <h3 className="text-sm font-semibold text-text-primary">Recent Signals</h3>
+        </div>
+        <p className="mt-3 text-center text-sm text-text-muted">
+          No recent signals detected yet.
+        </p>
+      </Card>
+    );
+  }
 
   return (
     <Card>

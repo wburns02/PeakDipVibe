@@ -206,7 +206,7 @@ export function CandlestickChart({
           )}
         </div>
       )}
-      <div ref={containerRef} />
+      <div ref={containerRef} role="img" aria-label="Candlestick price chart with volume" />
     </div>
   );
 }

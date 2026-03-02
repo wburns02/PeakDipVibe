@@ -18,6 +18,7 @@ interface ComparisonChartProps {
 
 export function ComparisonChart({ data, tickers, colors }: ComparisonChartProps) {
   return (
+    <div role="img" aria-label="Stock comparison chart showing relative performance">
     <ResponsiveContainer width="100%" height={400}>
       <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#2a2e45" />
@@ -63,5 +64,6 @@ export function ComparisonChart({ data, tickers, colors }: ComparisonChartProps)
         ))}
       </LineChart>
     </ResponsiveContainer>
+    </div>
   );
 }

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { TrendingUp, TrendingDown, Star } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -13,7 +14,7 @@ interface TopMoversCardProps {
   losers: Mover[];
 }
 
-function SparkCell({ ticker, isGain }: { ticker: string; isGain: boolean }) {
+const SparkCell = memo(function SparkCell({ ticker, isGain }: { ticker: string; isGain: boolean }) {
   const { data } = useSparkline(ticker, 7);
   if (!data) return <div className="h-[24px] w-14" />;
   return (
@@ -25,7 +26,7 @@ function SparkCell({ ticker, isGain }: { ticker: string; isGain: boolean }) {
       />
     </div>
   );
-}
+});
 
 function MoverRow({ mover }: { mover: Mover }) {
   const { toggle, isWatched } = useWatchlist();
@@ -39,6 +40,7 @@ function MoverRow({ mover }: { mover: Mover }) {
             e.preventDefault();
             toggle(mover.ticker);
           }}
+          aria-label={isWatched(mover.ticker) ? `Remove ${mover.ticker} from watchlist` : `Add ${mover.ticker} to watchlist`}
           className="text-text-muted hover:text-amber"
         >
           <Star className={`h-3 w-3 ${isWatched(mover.ticker) ? "fill-amber text-amber" : ""}`} />

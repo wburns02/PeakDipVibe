@@ -64,6 +64,8 @@ export function PriceChartPanel({ ticker }: PriceChartPanelProps) {
               key={r.label}
               type="button"
               onClick={() => setRange(i)}
+              aria-label={`Show ${r.label} time range`}
+              aria-pressed={i === range}
               className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                 i === range
                   ? "bg-accent text-white"
@@ -82,6 +84,8 @@ export function PriceChartPanel({ ticker }: PriceChartPanelProps) {
               key={key}
               type="button"
               onClick={() => toggleOverlay(key)}
+              aria-label={`Toggle ${label} overlay`}
+              aria-pressed={activeOverlays.has(key)}
               className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${
                 activeOverlays.has(key)
                   ? "bg-bg-hover text-text-primary"

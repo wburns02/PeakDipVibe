@@ -30,7 +30,7 @@ function WatchlistRow({ ticker, onRemove }: { ticker: string; onRemove: () => vo
   return (
     <div className="flex items-center justify-between rounded-lg px-3 py-3 transition-colors hover:bg-bg-hover">
       <div className="flex items-center gap-3">
-        <button onClick={onRemove} className="text-amber hover:text-amber/70">
+        <button onClick={onRemove} aria-label={`Remove ${ticker} from watchlist`} className="text-amber hover:text-amber/70">
           <Star className="h-4 w-4 fill-amber" />
         </button>
         <Link to={`/ticker/${ticker}`} className="flex items-center gap-3">
