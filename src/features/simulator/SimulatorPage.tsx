@@ -676,10 +676,12 @@ export function SimulatorPage() {
             )}
           </>
         ) : (
-          <Card className="text-center">
-            <p className="text-sm text-text-muted">
-              No events match your filters. Try adjusting them.
-            </p>
+          <Card>
+            <div className="flex flex-col items-center justify-center py-12 text-text-muted">
+              <Search className="mb-3 h-8 w-8 opacity-40" />
+              <p className="text-sm">No events match your filters</p>
+              <p className="mt-1 text-xs">Try a different ticker or widen the gap range</p>
+            </div>
           </Card>
         )}
       </div>

@@ -67,7 +67,7 @@ export function ImpactCards({ categories, isLoading }: Props) {
           <Card key={cat.move_size} className={verdict.bg}>
             {/* Traffic light verdict */}
             <div className="mb-3 flex items-center gap-2">
-              <span className={`h-3 w-3 rounded-full ${verdict.dot}`} />
+              <span role="img" aria-label={verdict.label} className={`h-3 w-3 rounded-full ${verdict.dot}`} />
               <span className={`text-xs font-bold tracking-wide ${verdict.color}`}>
                 {verdict.label}
               </span>

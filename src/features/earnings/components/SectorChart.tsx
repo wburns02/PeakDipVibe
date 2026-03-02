@@ -110,6 +110,8 @@ export function SectorChart() {
                   {/* Traffic light dot */}
                   <div className="flex justify-center">
                     <span
+                      role="img"
+                      aria-label={`${traffic.label} bounce rate`}
                       className={`h-2.5 w-2.5 rounded-full ${traffic.dot}`}
                       title={`${traffic.label} bounce rate`}
                     />

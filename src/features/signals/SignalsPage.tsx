@@ -93,6 +93,7 @@ export function SignalsPage() {
             onClick={() => downloadCSV(signals)}
             className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
             title="Export signals to CSV"
+            aria-label="Export signals to CSV"
           >
             <Download className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Export CSV</span>
@@ -153,7 +154,10 @@ export function SignalsPage() {
                 min={0}
                 max={100}
                 step={5}
-                aria-label={`Minimum signal strength: ${filters.min_strength ?? 0}`}
+                aria-label="Minimum signal strength"
+                aria-valuenow={filters.min_strength ?? 0}
+                aria-valuemin={0}
+                aria-valuemax={100}
                 className="w-full accent-accent"
               />
             </div>

@@ -7,6 +7,7 @@ import {
   TrendingDown,
   Star,
   ChevronDown,
+  SearchX,
 } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useScreener } from "@/api/hooks/useScreener";
@@ -244,9 +245,11 @@ export function ScreenerPage() {
         ) : isError ? (
           <ErrorState message="Could not load screener results. The API may be offline." onRetry={refetch} />
         ) : !results || results.length === 0 ? (
-          <p className="py-8 text-center text-sm text-text-muted">
-            No stocks match your filters. Try adjusting the criteria.
-          </p>
+          <div className="flex flex-col items-center justify-center py-12 text-text-muted">
+            <SearchX className="mb-3 h-8 w-8 opacity-40" />
+            <p className="text-sm">No stocks match your filters</p>
+            <p className="mt-1 text-xs">Try widening the criteria or resetting filters</p>
+          </div>
         ) : (
           <ScrollableTable className={`transition-opacity duration-300 ${isRefetching ? "opacity-50" : ""}`}>
             <table className="w-full text-sm">
