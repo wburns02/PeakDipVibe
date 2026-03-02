@@ -669,9 +669,9 @@ export function SimulatorPage() {
 
       {simLoading && (
         <Card>
-          <div className="flex h-60 items-center justify-center">
+          <div className="flex h-60 items-center justify-center" role="status" aria-label="Loading intraday data">
             <div className="text-center">
-              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" aria-hidden="true" />
               <p className="mt-3 text-sm text-text-muted">
                 Loading intraday data...
               </p>

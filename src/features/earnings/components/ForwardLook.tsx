@@ -9,8 +9,8 @@ export function ForwardLook() {
   if (isLoading) {
     return (
       <Card>
-        <div className="flex h-32 items-center justify-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+        <div className="flex h-32 items-center justify-center" role="status" aria-label="Loading forward-looking data">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" aria-hidden="true" />
         </div>
       </Card>
     );

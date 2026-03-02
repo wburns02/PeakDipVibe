@@ -129,8 +129,8 @@ export function PriceJourneyChart() {
       </p>
 
       {isLoading ? (
-        <div className="flex h-64 items-center justify-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+        <div className="flex h-64 items-center justify-center" role="status" aria-label="Loading price journey data">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" aria-hidden="true" />
         </div>
       ) : chartData.length > 0 ? (
         <>
