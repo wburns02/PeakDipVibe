@@ -3,6 +3,8 @@ export const CHART_COLORS = {
   candle_down: "#ef4444",
   volume_up: "rgba(34, 197, 94, 0.3)",
   volume_down: "rgba(239, 68, 68, 0.3)",
+  volume_anomaly_up: "rgba(34, 197, 94, 0.8)",
+  volume_anomaly_down: "rgba(239, 68, 68, 0.8)",
   sma10: "#f59e0b",
   sma20: "#3b82f6",
   sma50: "#8b5cf6",

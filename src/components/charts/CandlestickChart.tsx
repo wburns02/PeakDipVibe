@@ -39,6 +39,7 @@ export function CandlestickChart({
     l?: number;
     c?: number;
     v?: number;
+    volumeAnomaly?: boolean;
   }>({});
 
   useEffect(() => {
@@ -88,7 +89,19 @@ export function CandlestickChart({
       }))
     );
 
-    // Volume series
+    // Volume series — compute 20-bar rolling average for anomaly detection
+    const VOLUME_WINDOW = 20;
+    const ANOMALY_THRESHOLD = 2.0; // 2x average = anomaly
+    const volumes = sorted.map((d) => d.volume ?? 0);
+    const rollingAvg: number[] = [];
+    for (let i = 0; i < volumes.length; i++) {
+      const start = Math.max(0, i - VOLUME_WINDOW);
+      const window = volumes.slice(start, i + 1);
+      rollingAvg.push(window.reduce((a, b) => a + b, 0) / window.length);
+    }
+    // Track which dates are anomalies for legend
+    const anomalyDates = new Set<string>();
+
     const volumeSeries = chart.addSeries(HistogramSeries, {
       priceFormat: { type: "volume" },
       priceScaleId: "volume",
@@ -97,14 +110,18 @@ export function CandlestickChart({
       scaleMargins: { top: 0.85, bottom: 0 },
     });
     volumeSeries.setData(
-      sorted.map((d) => ({
-        time: d.date,
-        value: d.volume ?? 0,
-        color:
-          (d.close ?? 0) >= (d.open ?? 0)
-            ? CHART_COLORS.volume_up
-            : CHART_COLORS.volume_down,
-      }))
+      sorted.map((d, i) => {
+        const isUp = (d.close ?? 0) >= (d.open ?? 0);
+        const isAnomaly = volumes[i] > rollingAvg[i] * ANOMALY_THRESHOLD && i >= VOLUME_WINDOW;
+        if (isAnomaly) anomalyDates.add(d.date);
+        return {
+          time: d.date,
+          value: d.volume ?? 0,
+          color: isAnomaly
+            ? (isUp ? CHART_COLORS.volume_anomaly_up : CHART_COLORS.volume_anomaly_down)
+            : (isUp ? CHART_COLORS.volume_up : CHART_COLORS.volume_down),
+        };
+      })
     );
 
     // Overlay line series helper
@@ -156,6 +173,7 @@ export function CandlestickChart({
           l: candle.low,
           c: candle.close,
           v: vol?.value,
+          volumeAnomaly: anomalyDates.has(param.time as string),
         });
       }
     });
@@ -195,13 +213,16 @@ export function CandlestickChart({
             C <span className="text-text-primary">{legendData.c?.toFixed(2)}</span>
           </span>
           {legendData.v != null && (
-            <span>
+            <span className={legendData.volumeAnomaly ? "font-bold" : ""}>
               V{" "}
-              <span className="text-text-primary">
+              <span className={legendData.volumeAnomaly ? "text-amber" : "text-text-primary"}>
                 {legendData.v >= 1e6
                   ? `${(legendData.v / 1e6).toFixed(1)}M`
                   : legendData.v.toLocaleString()}
               </span>
+              {legendData.volumeAnomaly && (
+                <span className="ml-1 text-amber" title="Volume is 2x+ above 20-day average">HIGH</span>
+              )}
             </span>
           )}
         </div>
