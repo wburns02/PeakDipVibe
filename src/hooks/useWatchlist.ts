@@ -12,7 +12,12 @@ function load(): string[] {
 }
 
 function save(tickers: string[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tickers));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tickers));
+  } catch {
+    // QuotaExceededError or SecurityError (private browsing) — state
+    // is still held in memory, just won't persist across sessions.
+  }
 }
 
 export function useWatchlist() {

@@ -25,7 +25,11 @@ function loadRecent(): string[] {
 function saveRecent(ticker: string) {
   const recent = loadRecent().filter((t) => t !== ticker);
   recent.unshift(ticker);
-  localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, 8)));
+  try {
+    localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, 8)));
+  } catch {
+    // Silently ignore — quota exceeded or private browsing mode.
+  }
 }
 
 export function DashboardPage() {
