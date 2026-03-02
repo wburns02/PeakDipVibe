@@ -79,6 +79,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
+            <caption className="sr-only">Pattern signals showing gap-up and sell-off events with catalyst scoring</caption>
             <thead>
               <tr className="border-b border-border text-left text-xs text-text-muted">
                 <th className="pb-2">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Filter, ChevronDown } from "lucide-react";
+import { Filter, ChevronDown, AlertTriangle } from "lucide-react";
 import { usePatternSignals, useSignalStats } from "@/api/hooks/useSignals";
 import { useSectors } from "@/api/hooks/useMarket";
 import { Card } from "@/components/ui/Card";
@@ -33,7 +33,7 @@ export function SignalsPage() {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: signals, isLoading } = usePatternSignals(filters);
+  const { data: signals, isLoading, isError } = usePatternSignals(filters);
   const { data: stats, isLoading: statsLoading } = useSignalStats(filters.days);
   const { data: sectors } = useSectors();
 
@@ -175,12 +175,19 @@ export function SignalsPage() {
       </Card>
 
       {/* Signal table */}
-      <SignalTable
-        signals={signals}
-        isLoading={isLoading}
-        sortBy={filters.sort_by ?? "signal_date"}
-        onSort={handleSort}
-      />
+      {isError ? (
+        <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          Could not load signals. The API may be offline.
+        </div>
+      ) : (
+        <SignalTable
+          signals={signals}
+          isLoading={isLoading}
+          sortBy={filters.sort_by ?? "signal_date"}
+          onSort={handleSort}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Clock, X } from "lucide-react";
+import { Search, Clock, X, AlertTriangle } from "lucide-react";
 import { useMarketOverview, usePipelineStatus } from "@/api/hooks/useMarket";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -38,8 +38,8 @@ export function DashboardPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const debouncedSearch = useDebounce(searchInput, 200);
 
-  const { data: overview, isLoading: overviewLoading } = useMarketOverview();
-  const { data: status, isLoading: statusLoading } = usePipelineStatus();
+  const { data: overview, isLoading: overviewLoading, isError: overviewError } = useMarketOverview();
+  const { data: status, isLoading: statusLoading, isError: statusError } = usePipelineStatus();
   const { data: searchResults } = useTickerList(debouncedSearch || undefined);
 
   const recentSearches = loadRecent();
@@ -192,6 +192,11 @@ export function DashboardPage() {
             <Skeleton key={i} className="h-20" />
           ))}
         </div>
+      ) : statusError ? (
+        <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          Could not load market data. The API may be offline.
+        </div>
       ) : (
         status && <MarketOverviewCard status={status} />
       )}
@@ -205,6 +210,11 @@ export function DashboardPage() {
       {/* Sector heatmap */}
       {overviewLoading ? (
         <Skeleton className="h-72" />
+      ) : overviewError ? (
+        <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          Could not load sector data.
+        </div>
       ) : (
         overview && <SectorHeatmapCard sectors={overview.sectors} />
       )}

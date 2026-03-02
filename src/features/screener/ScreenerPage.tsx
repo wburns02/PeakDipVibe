@@ -7,6 +7,7 @@ import {
   TrendingDown,
   Star,
   ChevronDown,
+  AlertTriangle,
 } from "lucide-react";
 import { useScreener } from "@/api/hooks/useScreener";
 import { useSectors } from "@/api/hooks/useMarket";
@@ -62,7 +63,7 @@ export function ScreenerPage() {
     }
   }, [sectorParam]);
 
-  const { data: results, isLoading } = useScreener(filters);
+  const { data: results, isLoading, isError } = useScreener(filters);
   const { data: sectors } = useSectors();
 
   const setFilter = (key: keyof ScreenerFilters, value: unknown) => {
@@ -134,6 +135,9 @@ export function ScreenerPage() {
                   placeholder="Min"
                   value={filters.rsi_min ?? ""}
                   onChange={(e) => setFilter("rsi_min", e.target.value ? +e.target.value : undefined)}
+                  min={0}
+                  max={100}
+                  aria-label="Minimum RSI value"
                   className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
                 />
                 <input
@@ -141,6 +145,9 @@ export function ScreenerPage() {
                   placeholder="Max"
                   value={filters.rsi_max ?? ""}
                   onChange={(e) => setFilter("rsi_max", e.target.value ? +e.target.value : undefined)}
+                  min={0}
+                  max={100}
+                  aria-label="Maximum RSI value"
                   className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
                 />
               </div>
@@ -227,6 +234,11 @@ export function ScreenerPage() {
               <Skeleton key={i} className="h-10" />
             ))}
           </div>
+        ) : isError ? (
+          <div className="flex items-center gap-2 rounded-lg border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            Could not load screener results. The API may be offline.
+          </div>
         ) : !results || results.length === 0 ? (
           <p className="py-8 text-center text-sm text-text-muted">
             No stocks match your filters. Try adjusting the criteria.
@@ -234,6 +246,7 @@ export function ScreenerPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
+              <caption className="sr-only">S&amp;P 500 stock screener results sorted by technical indicators</caption>
               <thead>
                 <tr className="border-b border-border text-left text-xs text-text-muted">
                   <th className="w-8 pb-2" />

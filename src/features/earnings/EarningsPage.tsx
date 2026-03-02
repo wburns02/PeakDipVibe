@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, RefreshCw, ArrowRight } from "lucide-react";
+import { TrendingUp, TrendingDown, RefreshCw, ArrowRight, AlertTriangle } from "lucide-react";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useImpactSummary, usePriceJourney, useThisWeek } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
@@ -10,7 +10,7 @@ import { ForwardLook } from "./components/ForwardLook";
 
 export function EarningsPage() {
   usePageTitle("Earnings Events");
-  const { data: summary, isLoading: summaryLoading } = useImpactSummary();
+  const { data: summary, isLoading: summaryLoading, isError: summaryError } = useImpactSummary();
   const { data: journey } = usePriceJourney("all");
   const { data: thisWeek, isLoading: weekLoading } = useThisWeek();
 
@@ -140,10 +140,17 @@ export function EarningsPage() {
           We grouped every big move by how large the initial jump was. Here's
           the verdict for each group.
         </p>
-        <ImpactCards
-          categories={summary?.categories ?? []}
-          isLoading={summaryLoading}
-        />
+        {summaryError ? (
+          <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            Could not load earnings data. The API may be offline.
+          </div>
+        ) : (
+          <ImpactCards
+            categories={summary?.categories ?? []}
+            isLoading={summaryLoading}
+          />
+        )}
       </section>
 
       {/* ── Section 4: "What Happened This Week" ── */}
