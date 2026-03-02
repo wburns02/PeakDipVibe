@@ -63,34 +63,55 @@ interface Trade {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function formatTime(dt: string): string {
-  // "2026-02-25T10:30:00" → "10:30 AM"
-  const match = dt.match(/T(\d{2}):(\d{2})/);
-  if (!match) return dt;
-  const h = parseInt(match[1]);
-  const m = match[2];
-  const ampm = h >= 12 ? "PM" : "AM";
-  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-  return `${h12}:${m} ${ampm}`;
+  // Backend returns UTC timestamps — convert to US Eastern for market hours display
+  // "2026-02-25T14:30:00" (UTC) → "9:30 AM" (ET)
+  try {
+    const d = new Date(dt + "Z"); // treat as UTC
+    return d.toLocaleTimeString("en-US", {
+      timeZone: "America/New_York",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    // Fallback: raw UTC parse
+    const match = dt.match(/T(\d{2}):(\d{2})/);
+    if (!match) return dt;
+    const h = parseInt(match[1]);
+    const m = match[2];
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+    return `${h12}:${m} ${ampm}`;
+  }
 }
 
 function formatDate(dt: string): string {
-  // "2026-02-25T10:30:00" → "Feb 25"
-  const d = dt.split("T")[0];
+  // "2026-02-25T14:30:00" (UTC) → "Feb 25" (ET date)
   try {
-    return new Date(d + "T12:00:00").toLocaleDateString("en-US", {
+    const d = new Date(dt + "Z");
+    return d.toLocaleDateString("en-US", {
+      timeZone: "America/New_York",
       month: "short",
       day: "numeric",
     });
   } catch {
+    const d = dt.split("T")[0];
     return d;
   }
 }
 
 function formatDayLabel(dt: string, signalDate: string): string {
-  const barDate = dt.split("T")[0];
+  // Get the ET date from the UTC timestamp
+  let barDate: string;
+  try {
+    const d = new Date(dt + "Z");
+    const parts = d.toLocaleDateString("en-CA", { timeZone: "America/New_York" }); // YYYY-MM-DD
+    barDate = parts;
+  } catch {
+    barDate = dt.split("T")[0];
+  }
   if (barDate < signalDate) return "Day -1";
   if (barDate === signalDate) return "Day 0";
-  // Count trading days (approximate)
   const sig = new Date(signalDate + "T12:00:00");
   const bar = new Date(barDate + "T12:00:00");
   const diff = Math.round((bar.getTime() - sig.getTime()) / (1000 * 60 * 60 * 24));
@@ -362,7 +383,11 @@ export function SimulatorPage() {
       setFinished(true);
       return;
     }
-    setCurrentBarIndex((i) => Math.min(totalBars - 1, i + 1));
+    setCurrentBarIndex((i) => {
+      const next = Math.min(totalBars - 1, i + 1);
+      if (next >= totalBars - 1) setFinished(true);
+      return next;
+    });
   };
 
   // Detect day boundaries for reference lines
