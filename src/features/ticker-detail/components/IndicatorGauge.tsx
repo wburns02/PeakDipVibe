@@ -1,6 +1,8 @@
 import { getIndicatorMeta, getZone } from "@/lib/indicators";
-import { formatNumber } from "@/lib/formatters";
+import { formatNumber, formatVolume } from "@/lib/formatters";
 import { IndicatorExplainer } from "@/components/education/IndicatorExplainer";
+
+const LARGE_VALUE_INDICATORS = new Set(["OBV"]);
 
 interface IndicatorGaugeProps {
   indicatorKey: string;
@@ -39,7 +41,11 @@ export function IndicatorGauge({ indicatorKey, value }: IndicatorGaugeProps) {
           <IndicatorExplainer indicatorKey={indicatorKey} value={value} />
         </div>
         <span className="text-sm font-semibold text-text-primary">
-          {value != null ? formatNumber(value) : "—"}
+          {value != null
+            ? LARGE_VALUE_INDICATORS.has(indicatorKey)
+              ? formatVolume(value)
+              : formatNumber(value)
+            : "—"}
         </span>
       </div>
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Filter,
   ArrowUpDown,
@@ -41,12 +41,23 @@ function SparklineCell({ ticker }: { ticker: string }) {
 
 export function ScreenerPage() {
   const { toggle, isWatched } = useWatchlist();
+  const [searchParams] = useSearchParams();
+  const sectorParam = searchParams.get("sector");
   const [filters, setFilters] = useState<ScreenerFilters>({
     sort_by: "rsi",
     sort_dir: "asc",
     limit: 50,
+    ...(sectorParam ? { sector: sectorParam } : {}),
   });
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(!!sectorParam);
+
+  // Apply sector from URL when navigating from heatmap
+  useEffect(() => {
+    if (sectorParam && filters.sector !== sectorParam) {
+      setFilters((prev) => ({ ...prev, sector: sectorParam }));
+      setShowFilters(true);
+    }
+  }, [sectorParam]);
 
   const { data: results, isLoading } = useScreener(filters);
   const { data: sectors } = useSectors();

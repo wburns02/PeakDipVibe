@@ -16,8 +16,10 @@ import {
   useRandomEvent,
   useEventAnalysis,
 } from "@/api/hooks/useEarnings";
+import { useSectors } from "@/api/hooks/useMarket";
 import { Card } from "@/components/ui/Card";
 import type { LibraryEvent, IntradayBar } from "@/api/types/earnings";
+import { getCatalystConfig } from "@/lib/catalystTypes";
 import {
   Shuffle,
   Search,
@@ -125,6 +127,7 @@ export function SimulatorPage() {
   });
 
   const { refetch: fetchRandom, isFetching: randomLoading } = useRandomEvent();
+  const { data: sectors } = useSectors();
 
   // Replay state
   const [activeTicker, setActiveTicker] = useState(ticker);
@@ -480,7 +483,54 @@ export function SimulatorPage() {
                 {o}
               </button>
             ))}
+
+            <span className="mx-1 self-center text-border">|</span>
+
+            <select
+              value={filters.sector ?? ""}
+              onChange={(e) =>
+                setFilters((f) => ({
+                  ...f,
+                  sector: e.target.value || undefined,
+                  page: 1,
+                }))
+              }
+              className="rounded-full border border-border bg-bg-hover px-3 py-1 text-xs font-medium text-text-secondary focus:border-accent focus:outline-none"
+            >
+              <option value="">All Sectors</option>
+              {sectors?.map((s) => (
+                <option key={s.sector} value={s.sector}>
+                  {s.sector}
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* Enrichment progress */}
+          {library && (
+            <div className="mt-3 flex items-center gap-3">
+              <div className="flex-1">
+                <div className="h-1.5 rounded-full bg-bg-hover">
+                  <div
+                    className="h-full rounded-full bg-accent transition-all"
+                    style={{
+                      width: `${Math.round(
+                        ((library.events.filter((e) => e.has_analysis).length +
+                          (filters.page && filters.page > 1 ? (filters.page - 1) * 12 : 0)) /
+                          Math.max(library.total, 1)) *
+                          100,
+                      )}%`,
+                    }}
+                  />
+                </div>
+              </div>
+              <span className="shrink-0 text-[10px] text-text-muted">
+                {library.events.filter((e) => e.has_analysis).length > 0
+                  ? `${library.events.filter((e) => e.has_analysis).length}/${library.events.length} on this page analyzed`
+                  : "Analysis in progress..."}
+              </span>
+            </div>
+          )}
         </Card>
 
         {/* Event Grid */}
@@ -631,11 +681,21 @@ export function SimulatorPage() {
                       <h3 className="text-sm font-semibold text-text-primary">
                         Why It Moved
                       </h3>
-                      {analysis.catalyst_type && (
-                        <span className="rounded-full bg-indigo-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-400">
-                          {analysis.catalyst_type.replace(/_/g, " ")}
-                        </span>
-                      )}
+                      {analysis.catalyst_type && (() => {
+                        const cc = getCatalystConfig(analysis.catalyst_type);
+                        const colorMap: Record<string, string> = {
+                          green: "bg-green/15 text-green",
+                          accent: "bg-accent/15 text-accent",
+                          amber: "bg-amber/15 text-amber",
+                          red: "bg-red/15 text-red",
+                          default: "bg-bg-hover text-text-secondary",
+                        };
+                        return (
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${colorMap[cc.variant] ?? colorMap.default}`}>
+                            {cc.label}
+                          </span>
+                        );
+                      })()}
                     </div>
                     <p className="mt-0.5 line-clamp-1 text-xs text-text-muted">
                       {analysis.catalyst_headline}

@@ -19,6 +19,15 @@ const PERIOD_OPTIONS = [
   { label: "5Y", days: 1260 },
 ];
 
+const PRESET_GROUPS = [
+  { label: "Mag 7", tickers: ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA"] },
+  { label: "Banks", tickers: ["JPM", "BAC", "GS", "MS", "C"] },
+  { label: "Semis", tickers: ["NVDA", "AMD", "INTC", "AVGO", "QCOM"] },
+  { label: "FAANG", tickers: ["META", "AAPL", "AMZN", "NFLX", "GOOGL"] },
+  { label: "Defense", tickers: ["LMT", "RTX", "NOC", "GD", "BA"] },
+  { label: "Pharma", tickers: ["JNJ", "PFE", "MRK", "ABBV", "LLY"] },
+];
+
 export function ComparePage() {
   const [tickers, setTickers] = useState<string[]>(["AAPL", "MSFT"]);
   const [searchInput, setSearchInput] = useState("");
@@ -117,6 +126,19 @@ export function ComparePage() {
               )}
             </div>
           )}
+        </div>
+
+        {/* Preset groups */}
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {PRESET_GROUPS.map((g) => (
+            <button
+              key={g.label}
+              onClick={() => setTickers(g.tickers)}
+              className="rounded-lg border border-border bg-bg-primary px-2.5 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+            >
+              {g.label}
+            </button>
+          ))}
         </div>
 
         {/* Period selector */}

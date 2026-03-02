@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, PlayCircle } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { formatPercent } from "@/lib/formatters";
+import { getCatalystConfig } from "@/lib/catalystTypes";
 import type { PatternSignal } from "@/api/types/signals";
 import { PatternMiniChart } from "./PatternMiniChart";
 
@@ -16,15 +17,7 @@ interface SignalTableProps {
 
 function CatalystBadge({ type }: { type: string | null }) {
   if (!type) return <span className="text-text-muted">—</span>;
-
-  const variants: Record<string, { variant: "green" | "accent" | "amber" | "default"; label: string }> = {
-    earnings_beat: { variant: "green", label: "Earnings Beat" },
-    upgrade: { variant: "accent", label: "Upgrade" },
-    guidance: { variant: "amber", label: "Guidance" },
-    positive_news: { variant: "default", label: "News" },
-  };
-
-  const config = variants[type] ?? { variant: "default" as const, label: type };
+  const config = getCatalystConfig(type);
   return <Badge variant={config.variant}>{config.label}</Badge>;
 }
 
@@ -108,6 +101,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                   </button>
                 </th>
                 <th className="pb-2">Status</th>
+                <th className="pb-2"></th>
               </tr>
             </thead>
             <tbody>
@@ -154,6 +148,16 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                   </td>
                   <td className="py-2">
                     <StatusBadge status={s.status} />
+                  </td>
+                  <td className="py-2">
+                    <Link
+                      to={`/simulator?ticker=${s.ticker}&date=${s.signal_date}`}
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-accent hover:bg-accent/10 transition-colors"
+                      title="Simulate this event"
+                    >
+                      <PlayCircle className="h-3.5 w-3.5" />
+                      <span className="hidden lg:inline">Simulate</span>
+                    </Link>
                   </td>
                 </tr>
               ))}

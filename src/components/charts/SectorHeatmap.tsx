@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Treemap, ResponsiveContainer } from "recharts";
 import type { SectorPerformance } from "@/api/types/market";
 import { getSectorColor } from "@/lib/colors";
@@ -23,7 +24,7 @@ function CustomContent(props: TreemapContentProps) {
   const sign = avg_change_pct >= 0 ? "+" : "";
 
   return (
-    <g>
+    <g style={{ cursor: "pointer" }}>
       <rect
         x={x}
         y={y}
@@ -65,6 +66,7 @@ function CustomContent(props: TreemapContentProps) {
 }
 
 export function SectorHeatmap({ sectors }: SectorHeatmapProps) {
+  const navigate = useNavigate();
   const treeData = sectors.map((s) => ({
     name: s.sector,
     size: s.ticker_count,
@@ -80,6 +82,11 @@ export function SectorHeatmap({ sectors }: SectorHeatmapProps) {
         stroke="none"
         content={<CustomContent x={0} y={0} width={0} height={0} name="" avg_change_pct={0} fill="" />}
         isAnimationActive={false}
+        onClick={(node) => {
+          if (node?.name) {
+            navigate(`/screener?sector=${encodeURIComponent(node.name)}`);
+          }
+        }}
       />
     </ResponsiveContainer>
   );
