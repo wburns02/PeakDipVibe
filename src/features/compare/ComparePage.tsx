@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { X, Plus, BarChart3, AlertTriangle } from "lucide-react";
+import { ERROR_ALERT } from "@/lib/styles";
 import { useCompare } from "@/api/hooks/useCompare";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -169,7 +170,7 @@ export function ComparePage() {
       {isLoading ? (
         <Skeleton className="h-[400px]" />
       ) : isError ? (
-        <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+        <div className={ERROR_ALERT}>
           <AlertTriangle className="h-4 w-4 shrink-0" />
           Could not load comparison data. The API may be offline.
         </div>

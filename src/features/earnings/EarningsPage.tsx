@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, RefreshCw, ArrowRight, AlertTriangle } from "lucide-react";
+import { ERROR_ALERT } from "@/lib/styles";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useImpactSummary, usePriceJourney, useThisWeek } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
@@ -129,7 +130,7 @@ export function EarningsPage() {
         )}
 
         {journeyError ? (
-          <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+          <div className={ERROR_ALERT}>
             <AlertTriangle className="h-4 w-4 shrink-0" />
             Could not load price journey data.
           </div>
@@ -148,7 +149,7 @@ export function EarningsPage() {
           the verdict for each group.
         </p>
         {summaryError ? (
-          <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+          <div className={ERROR_ALERT}>
             <AlertTriangle className="h-4 w-4 shrink-0" />
             Could not load earnings data. The API may be offline.
           </div>
@@ -169,7 +170,7 @@ export function EarningsPage() {
           The biggest stock moves from this week and what happened next.
         </p>
         {weekError ? (
-          <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+          <div className={ERROR_ALERT}>
             <AlertTriangle className="h-4 w-4 shrink-0" />
             Could not load this week's data.
           </div>

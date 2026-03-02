@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Filter, ChevronDown, AlertTriangle } from "lucide-react";
+import { ERROR_ALERT } from "@/lib/styles";
 import { usePatternSignals, useSignalStats } from "@/api/hooks/useSignals";
 import { useSectors } from "@/api/hooks/useMarket";
 import { Card } from "@/components/ui/Card";
@@ -176,7 +177,7 @@ export function SignalsPage() {
 
       {/* Signal table */}
       {isError ? (
-        <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+        <div className={ERROR_ALERT}>
           <AlertTriangle className="h-4 w-4 shrink-0" />
           Could not load signals. The API may be offline.
         </div>

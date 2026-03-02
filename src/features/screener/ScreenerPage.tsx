@@ -1,5 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { ERROR_ALERT } from "@/lib/styles";
 import {
   Filter,
   ArrowUpDown,
@@ -235,7 +236,7 @@ export function ScreenerPage() {
             ))}
           </div>
         ) : isError ? (
-          <div className="flex items-center gap-2 rounded-lg border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+          <div className={ERROR_ALERT}>
             <AlertTriangle className="h-4 w-4 shrink-0" />
             Could not load screener results. The API may be offline.
           </div>
