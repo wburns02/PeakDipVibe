@@ -5,7 +5,9 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PageSpinner } from "@/components/ui/PageSpinner";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
-import { WatchlistPage } from "@/features/watchlist/WatchlistPage";
+const WatchlistPage = lazy(() =>
+  import("@/features/watchlist/WatchlistPage").then((m) => ({ default: m.WatchlistPage })),
+);
 import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 
 // Lazy-load heavier pages to reduce initial bundle
@@ -52,7 +54,7 @@ export default function App() {
             <Route path="/ticker/:symbol" element={<Suspense fallback={<PageSpinner />}><TickerDetailPage /></Suspense>} />
             <Route path="/screener" element={<Suspense fallback={<PageSpinner />}><ScreenerPage /></Suspense>} />
             <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
-            <Route path="/watchlist" element={<WatchlistPage />} />
+            <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
