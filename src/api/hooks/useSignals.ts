@@ -7,17 +7,13 @@ import {
   type SignalFilters,
 } from "../types/signals";
 import { z } from "zod";
+import { stripEmptyParams } from "@/lib/params";
 
 export function usePatternSignals(filters: SignalFilters) {
   return useQuery({
     queryKey: ["signals", "patterns", filters],
     queryFn: async () => {
-      const params: Record<string, string | number | boolean> = {};
-      for (const [k, v] of Object.entries(filters)) {
-        if (v !== undefined && v !== null && v !== "") {
-          params[k] = v;
-        }
-      }
+      const params = stripEmptyParams(filters);
       const { data } = await api.get("/signals/patterns", { params });
       return z.array(PatternSignalSchema).parse(data);
     },
