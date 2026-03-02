@@ -468,6 +468,7 @@ export function SimulatorPage() {
                       setSearchInput(e.target.value.toUpperCase())
                     }
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                    autoComplete="off"
                     placeholder="AAPL, TSLA, NVDA..."
                     className="w-full rounded-lg border border-border bg-bg-secondary py-2 pl-9 pr-3 text-sm text-text-primary outline-none focus:border-accent"
                   />

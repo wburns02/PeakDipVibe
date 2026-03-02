@@ -125,6 +125,7 @@ export function DashboardPage() {
         <input
           ref={inputRef}
           type="text"
+          autoComplete="off"
           placeholder="Search tickers... (e.g. AAPL, Microsoft)  Press /"
           value={searchInput}
           onChange={(e) => {

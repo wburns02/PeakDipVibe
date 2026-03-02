@@ -103,6 +103,7 @@ export function ComparePage() {
                 <Plus className="h-3.5 w-3.5 text-text-muted" />
                 <input
                   type="text"
+                  autoComplete="off"
                   placeholder="Add ticker..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
