@@ -3,8 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageSpinner } from "@/components/ui/PageSpinner";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { WatchlistPage } from "@/features/watchlist/WatchlistPage";
+import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 
 // Lazy-load heavier pages to reduce initial bundle
 const SignalsPage = lazy(() =>
@@ -40,6 +42,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route element={<AppShell />}>
             <Route index element={<DashboardPage />} />
@@ -50,6 +53,7 @@ export default function App() {
             <Route path="/screener" element={<Suspense fallback={<PageSpinner />}><ScreenerPage /></Suspense>} />
             <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
             <Route path="/watchlist" element={<WatchlistPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
