@@ -94,4 +94,24 @@ export const GLOSSARY: Record<string, { term: string; definition: string }> = {
     definition:
       "Testing a trading strategy on historical data to see if it would have worked in the past. It's like a practice run — if a strategy didn't work in the past, it probably won't work in the future.",
   },
+  earnings: {
+    term: "Earnings",
+    definition:
+      "The profit (or loss) a company made during a quarter — a 3-month period. Companies announce earnings on a specific day, and the results often cause big stock price moves if they're better or worse than expected.",
+  },
+  earnings_surprise: {
+    term: "Earnings Surprise",
+    definition:
+      "When a company's actual earnings are much better or worse than what Wall Street analysts predicted. A big positive surprise often causes the stock to gap up the next morning.",
+  },
+  gap_down: {
+    term: "Gap Down",
+    definition:
+      "The opposite of a gap up — a stock's opening price is much lower than yesterday's closing price, usually because of bad news like missed earnings or a downgrade.",
+  },
+  sp500: {
+    term: "S&P 500",
+    definition:
+      "A list of the 500 biggest companies in America by market value. It includes names like Apple, Amazon, and Google. When people say 'the market,' they usually mean the S&P 500.",
+  },
 };

@@ -81,7 +81,7 @@ export function Sidebar() {
                 key={to}
                 to={to}
                 onClick={() => setOpen(false)}
-                className={`mb-0.5 flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
+                className={`mb-0.5 flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
                   active
                     ? "bg-accent/10 text-accent font-medium"
                     : "text-text-secondary hover:bg-bg-hover hover:text-text-primary"

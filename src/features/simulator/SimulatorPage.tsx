@@ -45,6 +45,11 @@ import {
   ChevronUp,
 } from "lucide-react";
 
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+/** Auto-play advances one bar every 1.5s — fast enough to feel dynamic, slow enough to read */
+const AUTO_PLAY_INTERVAL_MS = 1500;
+
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 interface Trade {
@@ -181,7 +186,7 @@ export function SimulatorPage() {
         }
         return prev + 1;
       });
-    }, 1500);
+    }, AUTO_PLAY_INTERVAL_MS);
     return () => clearInterval(timer);
   }, [autoPlay, totalBars]);
 
@@ -921,6 +926,7 @@ export function SimulatorPage() {
                   disabled={currentBarIndex <= 0}
                   className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
                   title="Back"
+                  aria-label="Step back (← key)"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
@@ -932,6 +938,7 @@ export function SimulatorPage() {
                     }
                     setAutoPlay(!autoPlay);
                   }}
+                  aria-label={autoPlay ? "Pause auto-play (Space key)" : finished ? "Restart simulation" : "Start auto-play (Space key)"}
                   className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                     autoPlay
                       ? "bg-amber-500/20 text-amber-400"
@@ -957,6 +964,7 @@ export function SimulatorPage() {
                   disabled={currentBarIndex >= totalBars - 1}
                   className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
                   title="Forward"
+                  aria-label="Step forward (→ key)"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
