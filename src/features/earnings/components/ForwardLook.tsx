@@ -19,8 +19,8 @@ export function ForwardLook() {
   if (!data || data.events.length === 0) {
     return (
       <Card>
-        <p className="text-sm text-text-muted">
-          No forward-looking data available yet.
+        <p className="py-4 text-center text-sm text-text-muted">
+          No upcoming earnings events found in the next 3 months. Check back as new events are added from SEC filings.
         </p>
       </Card>
     );

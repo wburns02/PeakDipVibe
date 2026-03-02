@@ -61,7 +61,8 @@ export function SignalsPage() {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: signals, isLoading, isError, refetch } = usePatternSignals(filters);
+  const { data: signals, isLoading, isFetching, isError, refetch } = usePatternSignals(filters);
+  const isRefetching = isFetching && !isLoading;
   const { data: stats, isLoading: statsLoading } = useSignalStats(filters.days);
   const { data: sectors } = useSectors();
 
@@ -222,12 +223,14 @@ export function SignalsPage() {
       {isError ? (
         <ErrorState message="Could not load signals. The API may be offline." onRetry={refetch} />
       ) : (
-        <SignalTable
-          signals={signals}
-          isLoading={isLoading}
-          sortBy={filters.sort_by ?? "signal_date"}
-          onSort={handleSort}
-        />
+        <div className={`transition-opacity duration-300 ${isRefetching ? "opacity-50" : ""}`}>
+          <SignalTable
+            signals={signals}
+            isLoading={isLoading}
+            sortBy={filters.sort_by ?? "signal_date"}
+            onSort={handleSort}
+          />
+        </div>
       )}
     </div>
   );

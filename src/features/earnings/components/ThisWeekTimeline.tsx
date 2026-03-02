@@ -53,7 +53,16 @@ export function ThisWeekTimeline({ data, isLoading }: Props) {
     );
   }
 
-  if (!data) return null;
+  if (!data || data.events.length === 0) {
+    return (
+      <Card>
+        <div className="flex items-center gap-3 py-4 text-text-muted">
+          <Clock className="h-5 w-5 shrink-0 opacity-40" />
+          <p className="text-sm">No major earnings moves this week. Check back next week for upcoming events.</p>
+        </div>
+      </Card>
+    );
+  }
 
   // Sort by gap_up_pct descending (biggest movers first)
   const sorted = [...data.events].sort(

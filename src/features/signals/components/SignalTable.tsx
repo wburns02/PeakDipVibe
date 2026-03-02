@@ -8,6 +8,7 @@ import { GlossaryTerm } from "@/components/education/GlossaryTerm";
 import { formatPercent } from "@/lib/formatters";
 import { getCatalystConfig } from "@/lib/catalystTypes";
 import type { PatternSignal } from "@/api/types/signals";
+import { ScrollableTable } from "@/components/ui/ScrollableTable";
 import { PatternMiniChart } from "./PatternMiniChart";
 
 interface SignalTableProps {
@@ -104,7 +105,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <ScrollableTable>
           <table className="w-full text-sm">
             <caption className="sr-only">Pattern signals showing gap-up and sell-off events with catalyst scoring</caption>
             <thead>
@@ -203,7 +204,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollableTable>
       )}
     </Card>
   );

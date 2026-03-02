@@ -7,6 +7,7 @@ import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { ScrollableTable } from "@/components/ui/ScrollableTable";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ComparisonChart } from "@/components/charts/ComparisonChart";
 
@@ -37,7 +38,8 @@ export function ComparePage() {
   const [period, setPeriod] = useState(252);
   const debouncedSearch = useDebounce(searchInput, 200);
 
-  const { data: compareData, isLoading, isError, refetch } = useCompare(tickers, period);
+  const { data: compareData, isLoading, isFetching, isError, refetch } = useCompare(tickers, period);
+  const isRefetching = isFetching && !isLoading;
   const { data: searchResults } = useTickerList(debouncedSearch || undefined);
 
   const addTicker = (ticker: string) => {
@@ -211,11 +213,13 @@ export function ComparePage() {
         <ErrorState message="Could not load comparison data. The API may be offline." onRetry={refetch} />
       ) : compareData && chartData.length > 0 ? (
         <Card>
+          <div className={`transition-opacity duration-300 ${isRefetching ? "opacity-50" : ""}`}>
           <ComparisonChart
             data={chartData}
             tickers={tickers}
             colors={CHART_COLORS}
           />
+          </div>
         </Card>
       ) : tickers.length >= 2 ? (
         <Card>
@@ -262,7 +266,7 @@ export function ComparePage() {
       {/* Correlation matrix */}
       {correlations && tickers.length >= 2 && (
         <Card title="Correlation Matrix" subtitle="How closely these stocks move together (-1 to +1)">
-          <div className="overflow-x-auto">
+          <ScrollableTable>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-xs text-text-muted">
@@ -303,7 +307,7 @@ export function ComparePage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           <p className="mt-2 text-[10px] text-text-muted">
             Values near +1.0 mean stocks move together. Near -1.0 means they move opposite. Near 0 means little relationship.
           </p>

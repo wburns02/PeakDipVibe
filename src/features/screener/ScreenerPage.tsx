@@ -20,6 +20,7 @@ import { useSparkline } from "@/api/hooks/useCompare";
 import { formatCurrency, formatPercent } from "@/lib/formatters";
 import { GlossaryTerm } from "@/components/education/GlossaryTerm";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { ScrollableTable } from "@/components/ui/ScrollableTable";
 import type { ScreenerFilters } from "@/api/types/screener";
 
 const PRESETS = [
@@ -63,7 +64,8 @@ export function ScreenerPage() {
     }
   }, [sectorParam]);
 
-  const { data: results, isLoading, isError, refetch } = useScreener(filters);
+  const { data: results, isLoading, isFetching, isError, refetch } = useScreener(filters);
+  const isRefetching = isFetching && !isLoading;
   const { data: sectors } = useSectors();
 
   const setFilter = (key: keyof ScreenerFilters, value: unknown) => {
@@ -246,7 +248,7 @@ export function ScreenerPage() {
             No stocks match your filters. Try adjusting the criteria.
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <ScrollableTable className={`transition-opacity duration-300 ${isRefetching ? "opacity-50" : ""}`}>
             <table className="w-full text-sm">
               <caption className="sr-only">S&amp;P 500 stock screener results sorted by technical indicators</caption>
               <thead>
@@ -353,7 +355,7 @@ export function ScreenerPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
         )}
       </Card>
     </div>

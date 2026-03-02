@@ -52,7 +52,7 @@ export function ImpactCards({ categories, isLoading }: Props) {
     return (
       <Card>
         <p className="py-6 text-center text-sm text-text-muted">
-          No impact data available yet.
+          Impact categories are calculated from historical earnings events. Not enough data has been collected yet — check back after more earnings seasons.
         </p>
       </Card>
     );

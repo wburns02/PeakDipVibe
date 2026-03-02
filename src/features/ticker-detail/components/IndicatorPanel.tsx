@@ -43,7 +43,9 @@ export function IndicatorPanel({ ticker }: IndicatorPanelProps) {
   if (!data || Object.keys(data.indicators).length === 0) {
     return (
       <Card>
-        <p className="text-sm text-text-muted">No indicator data available</p>
+        <p className="py-4 text-center text-sm text-text-muted">
+          Technical indicators require at least 200 days of price history. This ticker may be newly added to the pipeline.
+        </p>
       </Card>
     );
   }
