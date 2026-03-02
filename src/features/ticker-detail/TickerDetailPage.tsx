@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { ArrowLeft, Star } from "lucide-react";
 import { useTicker } from "@/api/hooks/useTickers";
@@ -21,9 +21,11 @@ const SignalHistoryCard = lazy(() =>
 export function TickerDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
   usePageTitle(symbol ? `${symbol} — Stock Detail` : "Stock Detail");
+  const navigate = useNavigate();
   const { data: ticker, isLoading, error } = useTicker(symbol ?? "");
   const { data: indicators } = useLatestIndicators(symbol ?? "");
   const { toggle, isWatched } = useWatchlist();
+  const goBack = () => (window.history.length > 1 ? navigate(-1) : navigate("/"));
 
   if (isLoading) {
     return (
@@ -38,13 +40,14 @@ export function TickerDetailPage() {
   if (error || !ticker) {
     return (
       <div className="mx-auto max-w-6xl">
-        <Link
-          to="/"
+        <button
+          type="button"
+          onClick={goBack}
           className="mb-4 inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Link>
+          Back
+        </button>
         <div className="rounded-xl border border-border bg-bg-card p-12 text-center">
           <p className="text-lg font-semibold text-text-primary">
             Ticker not found
@@ -61,13 +64,14 @@ export function TickerDetailPage() {
     <div className="mx-auto max-w-6xl space-y-6">
       {/* Back button + watchlist */}
       <div className="flex items-center justify-between">
-        <Link
-          to="/"
+        <button
+          type="button"
+          onClick={goBack}
           className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Link>
+          Back
+        </button>
         <button
           type="button"
           onClick={() => toggle(ticker.ticker)}

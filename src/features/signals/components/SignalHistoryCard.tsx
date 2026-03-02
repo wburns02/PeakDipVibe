@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Zap } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -27,6 +28,11 @@ export function SignalHistoryCard({ ticker }: SignalHistoryCardProps) {
       }
     >
       <div className="space-y-3">
+        {signals.length > 5 && (
+          <p className="text-xs text-text-muted">
+            Showing latest 5 of {signals.length} signals
+          </p>
+        )}
         {signals.slice(0, 5).map((s) => (
           <div
             key={s.signal_date}
@@ -76,6 +82,14 @@ export function SignalHistoryCard({ ticker }: SignalHistoryCardProps) {
             </div>
           </div>
         ))}
+        {signals.length > 5 && (
+          <Link
+            to="/signals"
+            className="mt-2 block text-center text-xs font-medium text-accent hover:underline"
+          >
+            View all signals →
+          </Link>
+        )}
       </div>
     </Card>
   );

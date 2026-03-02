@@ -72,8 +72,12 @@ export function DashboardPage() {
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setSelectedIdx((prev) => Math.max(prev - 1, -1));
-      } else if (e.key === "Enter" && selectedIdx >= 0 && items[selectedIdx]) {
-        goToTicker(items[selectedIdx].ticker);
+      } else if (e.key === "Enter") {
+        if (selectedIdx >= 0 && items[selectedIdx]) {
+          goToTicker(items[selectedIdx].ticker);
+        } else if (items.length > 0) {
+          goToTicker(items[0].ticker);
+        }
       } else if (e.key === "Escape") {
         setShowDropdown(false);
         inputRef.current?.blur();
