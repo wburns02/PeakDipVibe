@@ -63,7 +63,7 @@ export function RecentSignalsCard() {
               <div className="flex items-center gap-2">
                 {s.gap_up_pct != null && (
                   <span className="text-xs text-text-muted">
-                    Gap {s.gap_up_pct >= 0 ? "+" : ""}{s.gap_up_pct.toFixed(1)}%
+                    Gap {formatPercent(s.gap_up_pct)}
                   </span>
                 )}
                 {outcome != null && (

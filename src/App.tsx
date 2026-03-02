@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageSpinner } from "@/components/ui/PageSpinner";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { ToastProvider } from "@/components/ui/Toast";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
 const WatchlistPage = lazy(() =>
   import("@/features/watchlist/WatchlistPage").then((m) => ({ default: m.WatchlistPage })),
@@ -54,20 +55,22 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route element={<AppShell />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="/signals" element={<Suspense fallback={<PageSpinner />}><SignalsPage /></Suspense>} />
-            <Route path="/earnings" element={<Suspense fallback={<PageSpinner />}><EarningsPage /></Suspense>} />
-            <Route path="/simulator" element={<Suspense fallback={<PageSpinner />}><SimulatorPage /></Suspense>} />
-            <Route path="/ticker/:symbol" element={<Suspense fallback={<PageSpinner />}><TickerDetailPage /></Suspense>} />
-            <Route path="/screener" element={<Suspense fallback={<PageSpinner />}><ScreenerPage /></Suspense>} />
-            <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
-            <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
+        <ToastProvider>
+          <ScrollToTop />
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="/signals" element={<Suspense fallback={<PageSpinner />}><SignalsPage /></Suspense>} />
+              <Route path="/earnings" element={<Suspense fallback={<PageSpinner />}><EarningsPage /></Suspense>} />
+              <Route path="/simulator" element={<Suspense fallback={<PageSpinner />}><SimulatorPage /></Suspense>} />
+              <Route path="/ticker/:symbol" element={<Suspense fallback={<PageSpinner />}><TickerDetailPage /></Suspense>} />
+              <Route path="/screener" element={<Suspense fallback={<PageSpinner />}><ScreenerPage /></Suspense>} />
+              <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
+              <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+        </ToastProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

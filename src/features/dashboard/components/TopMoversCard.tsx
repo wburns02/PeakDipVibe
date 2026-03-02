@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { MiniSparkline } from "@/components/charts/MiniSparkline";
 import { useSparkline } from "@/api/hooks/useCompare";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import { useToast } from "@/components/ui/Toast";
 import type { Mover } from "@/api/types/market";
 import { formatCurrency, formatPercent } from "@/lib/formatters";
 
@@ -30,6 +31,7 @@ const SparkCell = memo(function SparkCell({ ticker, isGain }: { ticker: string; 
 
 const MoverRow = memo(function MoverRow({ mover }: { mover: Mover }) {
   const { toggle, isWatched } = useWatchlist();
+  const { show: showToast } = useToast();
   const isGain = mover.change_pct >= 0;
 
   return (
@@ -39,7 +41,9 @@ const MoverRow = memo(function MoverRow({ mover }: { mover: Mover }) {
           type="button"
           onClick={(e) => {
             e.preventDefault();
+            const wasWatched = isWatched(mover.ticker);
             toggle(mover.ticker);
+            showToast(wasWatched ? `${mover.ticker} removed from watchlist` : `${mover.ticker} added to watchlist`);
           }}
           aria-label={isWatched(mover.ticker) ? `Remove ${mover.ticker} from watchlist` : `Add ${mover.ticker} to watchlist`}
           className="text-text-muted hover:text-amber"

@@ -5,6 +5,7 @@ import { ArrowLeft, Star } from "lucide-react";
 import { useTicker } from "@/api/hooks/useTickers";
 import { useLatestIndicators } from "@/api/hooks/useIndicators";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import { useToast } from "@/components/ui/Toast";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { CompanyInfoCard } from "./components/CompanyInfoCard";
 import { PriceChartPanel } from "./components/PriceChartPanel";
@@ -25,6 +26,7 @@ export function TickerDetailPage() {
   const { data: ticker, isLoading, error } = useTicker(symbol ?? "");
   const { data: indicators } = useLatestIndicators(symbol ?? "");
   const { toggle, isWatched } = useWatchlist();
+  const { show: showToast } = useToast();
   const goBack = () => (window.history.length > 1 ? navigate(-1) : navigate("/"));
 
   if (isLoading) {
@@ -74,7 +76,11 @@ export function TickerDetailPage() {
         </button>
         <button
           type="button"
-          onClick={() => toggle(ticker.ticker)}
+          onClick={() => {
+            const wasWatched = isWatched(ticker.ticker);
+            toggle(ticker.ticker);
+            showToast(wasWatched ? `${ticker.ticker} removed from watchlist` : `${ticker.ticker} added to watchlist`);
+          }}
           className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary transition-colors hover:border-amber hover:text-amber"
         >
           <Star

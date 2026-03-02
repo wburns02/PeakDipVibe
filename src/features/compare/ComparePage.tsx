@@ -143,7 +143,13 @@ export function ComparePage() {
                   placeholder="Add ticker..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
-                  onKeyDown={(e) => e.key === "Escape" && setSearchInput("")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") setSearchInput("");
+                    if (e.key === "Enter" && searchResults && searchResults.length > 0) {
+                      const first = searchResults.find((t) => !tickers.includes(t.ticker));
+                      if (first) addTicker(first.ticker);
+                    }
+                  }}
                   aria-label="Add ticker to compare"
                   className="w-24 bg-transparent text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
                 />
