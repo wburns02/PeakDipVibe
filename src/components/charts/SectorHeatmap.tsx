@@ -85,6 +85,7 @@ export const SectorHeatmap = memo(function SectorHeatmap({ sectors }: SectorHeat
   }));
 
   return (
+    <div role="img" aria-label="Sector heatmap — click a sector to filter the screener">
     <ResponsiveContainer width="100%" height={250}>
       <Treemap
         data={treeData}
@@ -99,5 +100,6 @@ export const SectorHeatmap = memo(function SectorHeatmap({ sectors }: SectorHeat
         }}
       />
     </ResponsiveContainer>
+    </div>
   );
 });

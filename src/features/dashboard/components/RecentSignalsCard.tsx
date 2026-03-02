@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { getCatalystConfig } from "@/lib/catalystTypes";
-import { formatPercent } from "@/lib/formatters";
+import { formatPercent, formatRelativeTime } from "@/lib/formatters";
 
 export function RecentSignalsCard() {
   const { data: signals, isLoading } = usePatternSignals({
@@ -56,8 +56,8 @@ export function RecentSignalsCard() {
               <div className="flex items-center gap-3">
                 <span className="text-sm font-semibold text-accent">{s.ticker}</span>
                 <Badge variant={config.variant}>{config.label}</Badge>
-                <span className="hidden text-xs text-text-muted sm:inline">
-                  {s.signal_date}
+                <span className="hidden text-xs text-text-muted sm:inline" title={s.signal_date}>
+                  {formatRelativeTime(s.signal_date)}
                 </span>
               </div>
               <div className="flex items-center gap-2">

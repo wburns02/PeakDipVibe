@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { GlossaryTerm } from "@/components/education/GlossaryTerm";
-import { formatPercent } from "@/lib/formatters";
+import { formatPercent, formatRelativeTime } from "@/lib/formatters";
 import { getCatalystConfig } from "@/lib/catalystTypes";
 import type { PatternSignal } from "@/api/types/signals";
 import { ScrollableTable } from "@/components/ui/ScrollableTable";
@@ -45,8 +45,8 @@ function CopySignalButton({ signal }: { signal: PatternSignal }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
     const parts = [`${signal.ticker} ${signal.signal_date}`];
-    if (signal.gap_up_pct != null) parts.push(`Gap +${signal.gap_up_pct.toFixed(1)}%`);
-    if (signal.selloff_pct != null) parts.push(`Selloff ${signal.selloff_pct.toFixed(1)}%`);
+    if (signal.gap_up_pct != null) parts.push(`Gap ${formatPercent(signal.gap_up_pct)}`);
+    if (signal.selloff_pct != null) parts.push(`Selloff ${formatPercent(signal.selloff_pct)}`);
     if (signal.catalyst_type) parts.push(getCatalystConfig(signal.catalyst_type).label);
     if (signal.outcome_1d != null) parts.push(`1d ${formatPercent(signal.outcome_1d)}`);
     if (signal.status) parts.push(signal.status);
@@ -145,7 +145,10 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
             <tbody>
               {signals.map((s) => (
                 <tr key={`${s.ticker}-${s.signal_date}`} className="border-b border-border/50 transition-colors hover:bg-bg-hover">
-                  <td className="py-2 text-text-secondary">{s.signal_date}</td>
+                  <td className="py-2 text-text-secondary" title={s.signal_date}>
+                    <span className="hidden sm:inline">{s.signal_date}</span>
+                    <span className="sm:hidden">{formatRelativeTime(s.signal_date)}</span>
+                  </td>
                   <td className="py-2">
                     <Link to={`/ticker/${s.ticker}`} className="font-medium text-accent hover:underline">
                       {s.ticker}
@@ -161,12 +164,12 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                   </td>
                   <td className="py-2">
                     {s.gap_up_pct != null ? (
-                      <Badge variant="green">+{s.gap_up_pct.toFixed(1)}%</Badge>
+                      <Badge variant="green">{formatPercent(s.gap_up_pct)}</Badge>
                     ) : "—"}
                   </td>
                   <td className="py-2">
                     {s.selloff_pct != null ? (
-                      <span className="text-red">{s.selloff_pct.toFixed(1)}%</span>
+                      <span className="text-red">{formatPercent(s.selloff_pct)}</span>
                     ) : "—"}
                   </td>
                   <td className="py-2">

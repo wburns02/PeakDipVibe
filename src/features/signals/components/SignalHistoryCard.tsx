@@ -71,7 +71,7 @@ export function SignalHistoryCard({ ticker }: SignalHistoryCardProps) {
             </div>
             <div className="text-right">
               <div className="flex items-center gap-2">
-                <Badge variant="green">+{s.gap_up_pct?.toFixed(1)}%</Badge>
+                <Badge variant="green">{formatPercent(s.gap_up_pct)}</Badge>
                 <span className="text-xs text-text-muted">gap</span>
               </div>
               {s.outcome_1d != null && (
