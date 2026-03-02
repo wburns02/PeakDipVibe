@@ -3,12 +3,14 @@ import { useSearchParams } from "react-router-dom";
 import {
   LineChart,
   Line,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip as ReTooltip,
   ResponsiveContainer,
   ReferenceLine,
+  ComposedChart,
 } from "recharts";
 import {
   useIntradaySimulation,
@@ -133,6 +135,75 @@ function fmtCurrency(n: number): string {
   });
 }
 
+// ─── Monte Carlo Simulation ─────────────────────────────────────────────────
+
+/**
+ * Generate probability cone boundaries using Monte Carlo simulation.
+ * Uses realized log-returns from visible bars to estimate volatility,
+ * then simulates N paths forward using geometric Brownian motion.
+ * Returns percentile boundaries (p10, p25, p75, p90) for each future bar.
+ */
+function computeMonteCarloCone(
+  visibleBars: IntradayBar[],
+  allBars: IntradayBar[],
+  currentIdx: number,
+): { idx: number; p10: number; p25: number; p75: number; p90: number }[] {
+  if (visibleBars.length < 5) return [];
+
+  // Compute log-returns from visible bars
+  const prices = visibleBars.map((b) => b.close).filter((p): p is number => p != null);
+  if (prices.length < 5) return [];
+
+  const logReturns: number[] = [];
+  for (let i = 1; i < prices.length; i++) {
+    if (prices[i - 1] > 0 && prices[i] > 0) {
+      logReturns.push(Math.log(prices[i] / prices[i - 1]));
+    }
+  }
+  if (logReturns.length < 3) return [];
+
+  const mean = logReturns.reduce((a, b) => a + b, 0) / logReturns.length;
+  const variance =
+    logReturns.reduce((a, r) => a + (r - mean) ** 2, 0) / logReturns.length;
+  const vol = Math.sqrt(variance);
+  if (vol === 0) return [];
+
+  const lastPrice = prices[prices.length - 1];
+  const stepsAhead = Math.min(allBars.length - currentIdx - 1, 30);
+  if (stepsAhead <= 0) return [];
+
+  // Run N simulations
+  const N = 500;
+  const paths: number[][] = [];
+  for (let n = 0; n < N; n++) {
+    const path: number[] = [lastPrice];
+    let p = lastPrice;
+    for (let s = 0; s < stepsAhead; s++) {
+      // Box-Muller for normal random
+      const u1 = Math.random();
+      const u2 = Math.random();
+      const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      p = p * Math.exp(mean + vol * z);
+      path.push(p);
+    }
+    paths.push(path);
+  }
+
+  // Compute percentiles at each future step
+  const result: { idx: number; p10: number; p25: number; p75: number; p90: number }[] = [];
+  for (let s = 1; s <= stepsAhead; s++) {
+    const vals = paths.map((path) => path[s]).sort((a, b) => a - b);
+    result.push({
+      idx: currentIdx + s,
+      p10: vals[Math.floor(N * 0.1)],
+      p25: vals[Math.floor(N * 0.25)],
+      p75: vals[Math.floor(N * 0.75)],
+      p90: vals[Math.floor(N * 0.9)],
+    });
+  }
+  return result;
+}
+
 // ─── Main Component ─────────────────────────────────────────────────────────
 
 export function SimulatorPage() {
@@ -181,6 +252,7 @@ export function SimulatorPage() {
   const [autoPlay, setAutoPlay] = useState(false);
   const [finished, setFinished] = useState(false);
   const [speedIndex, setSpeedIndex] = useState(1); // default 1x
+  const [showCone, setShowCone] = useState(false);
   const autoPlayRef = useRef(false);
 
   const { data: intradaySim, isLoading: simLoading } = useIntradaySimulation(
@@ -415,12 +487,51 @@ export function SimulatorPage() {
 
   // Build chart data (only visible bars up to currentBarIndex)
   const visibleBars = bars.slice(0, currentBarIndex + 1);
-  const chartData = visibleBars.map((bar, i) => ({
-    idx: i,
-    price: bar.close,
-    label: formatTime(bar.datetime),
-    datetime: bar.datetime,
-  }));
+
+  // Monte Carlo cone — compute probability boundaries ahead of current position
+  const coneData = showCone
+    ? computeMonteCarloCone(visibleBars, bars, currentBarIndex)
+    : [];
+
+  // Merge visible bars + cone projection into a single dataset for ComposedChart
+  const chartData = (() => {
+    const base = visibleBars.map((bar, i) => ({
+      idx: i,
+      price: bar.close,
+      label: formatTime(bar.datetime),
+      datetime: bar.datetime,
+      p10: undefined as number | undefined,
+      p25: undefined as number | undefined,
+      p75: undefined as number | undefined,
+      p90: undefined as number | undefined,
+    }));
+    // Append cone projection bars (no price line, just cone)
+    for (const c of coneData) {
+      const futureBar = bars[c.idx];
+      base.push({
+        idx: c.idx,
+        price: undefined as unknown as number | null,
+        label: futureBar ? formatTime(futureBar.datetime) : "",
+        datetime: futureBar?.datetime ?? "",
+        p10: c.p10,
+        p25: c.p25,
+        p75: c.p75,
+        p90: c.p90,
+      } as any);
+    }
+    // Also set cone values on the last visible bar (anchor point)
+    if (coneData.length > 0 && base.length > 0) {
+      const anchor = base[currentBarIndex];
+      const lastPrice = anchor.price as number;
+      if (lastPrice != null) {
+        anchor.p10 = lastPrice;
+        anchor.p25 = lastPrice;
+        anchor.p75 = lastPrice;
+        anchor.p90 = lastPrice;
+      }
+    }
+    return base;
+  })();
 
   // Trade markers on chart
   const buyMarkers = trades
@@ -1129,9 +1240,24 @@ export function SimulatorPage() {
 
           {/* Chart */}
           <Card>
+            <div className="mb-2 flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => setShowCone((v) => !v)}
+                className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors ${
+                  showCone
+                    ? "border-purple-500/50 bg-purple-500/10 text-purple-400"
+                    : "border-border bg-bg-hover text-text-muted hover:text-text-secondary"
+                }`}
+                title="Show Monte Carlo probability cone — predicted range based on realized volatility"
+              >
+                <Zap className="h-3 w-3" />
+                Probability Cone
+              </button>
+            </div>
             <div className="h-64 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart
+                <ComposedChart
                   data={chartData}
                   margin={{ top: 10, right: 10, left: 5, bottom: 5 }}
                   onClick={(e) => {
@@ -1153,7 +1279,7 @@ export function SimulatorPage() {
                     dataKey="idx"
                     tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
                     tickFormatter={(idx: number) => {
-                      const bar = visibleBars[idx];
+                      const bar = bars[idx];
                       if (!bar) return "";
                       // Show day boundary labels
                       if (idx === 0 || dayBoundaries.includes(idx)) {
@@ -1180,13 +1306,19 @@ export function SimulatorPage() {
                       fontSize: 12,
                     }}
                     labelFormatter={(idx) => {
-                      const bar = visibleBars[Number(idx)];
+                      const bar = bars[Number(idx)];
                       if (!bar) return "";
                       return `${formatDate(bar.datetime)} ${formatTime(bar.datetime)}`;
                     }}
-                    formatter={(v: number | undefined) =>
-                      v != null ? [fmtCurrency(v), "Price"] : ["—", "Price"]
-                    }
+                    formatter={(v: number | undefined, name: string) => {
+                      if (v == null) return ["—", name];
+                      if (name === "price") return [fmtCurrency(v), "Price"];
+                      if (name === "p90") return [fmtCurrency(v), "90th %ile"];
+                      if (name === "p75") return [fmtCurrency(v), "75th %ile"];
+                      if (name === "p25") return [fmtCurrency(v), "25th %ile"];
+                      if (name === "p10") return [fmtCurrency(v), "10th %ile"];
+                      return [fmtCurrency(v), name];
+                    }}
                   />
                   {/* Day separator lines */}
                   {dayBoundaries
@@ -1199,7 +1331,53 @@ export function SimulatorPage() {
                         strokeDasharray="4 4"
                       />
                     ))}
-                  {/* Buy markers as reference areas (small green zones) */}
+                  {/* Monte Carlo cone — outer (10th-90th) */}
+                  {showCone && coneData.length > 0 && (
+                    <Area
+                      type="monotone"
+                      dataKey="p90"
+                      stroke="none"
+                      fill="rgba(139, 92, 246, 0.08)"
+                      fillOpacity={1}
+                      animationDuration={0}
+                      connectNulls={false}
+                    />
+                  )}
+                  {showCone && coneData.length > 0 && (
+                    <Area
+                      type="monotone"
+                      dataKey="p10"
+                      stroke="none"
+                      fill="#0f1117"
+                      fillOpacity={1}
+                      animationDuration={0}
+                      connectNulls={false}
+                    />
+                  )}
+                  {/* Monte Carlo cone — inner (25th-75th) */}
+                  {showCone && coneData.length > 0 && (
+                    <Area
+                      type="monotone"
+                      dataKey="p75"
+                      stroke="none"
+                      fill="rgba(139, 92, 246, 0.15)"
+                      fillOpacity={1}
+                      animationDuration={0}
+                      connectNulls={false}
+                    />
+                  )}
+                  {showCone && coneData.length > 0 && (
+                    <Area
+                      type="monotone"
+                      dataKey="p25"
+                      stroke="none"
+                      fill="#0f1117"
+                      fillOpacity={1}
+                      animationDuration={0}
+                      connectNulls={false}
+                    />
+                  )}
+                  {/* Buy markers */}
                   {buyMarkers.map((idx) => (
                     <ReferenceLine
                       key={`buy-${idx}`}
@@ -1238,10 +1416,18 @@ export function SimulatorPage() {
                     strokeWidth={2}
                     dot={false}
                     animationDuration={0}
+                    connectNulls={false}
                   />
-                </LineChart>
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
+            {showCone && coneData.length > 0 && (
+              <p className="mt-1 text-center text-[10px] text-text-muted">
+                Purple cone = projected range from 500 Monte Carlo simulations
+                based on realized volatility. Inner band = 25th-75th percentile,
+                outer = 10th-90th.
+              </p>
+            )}
           </Card>
 
           {/* Trade History */}
