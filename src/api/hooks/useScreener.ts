@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
+import { STALE_FRESH } from "../queryConfig";
 import { ScreenerResultSchema, type ScreenerFilters } from "../types/screener";
 import { z } from "zod";
 
@@ -17,6 +18,6 @@ export function useScreener(filters: ScreenerFilters) {
       const { data } = await api.get("/screener", { params });
       return z.array(ScreenerResultSchema).parse(data);
     },
-    staleTime: 60 * 1000,
+    staleTime: STALE_FRESH,
   });
 }

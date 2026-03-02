@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
+import { STALE_FRESH, STALE_WARM, STALE_STABLE } from "../queryConfig";
 import {
   ImpactSummarySchema,
   PriceJourneySchema,
@@ -20,7 +21,7 @@ export function useImpactSummary() {
       const { data } = await api.get("/earnings/impact-summary");
       return ImpactSummarySchema.parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -33,7 +34,7 @@ export function usePriceJourney(moveSize: string) {
       });
       return PriceJourneySchema.parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -44,7 +45,7 @@ export function useThisWeek() {
       const { data } = await api.get("/earnings/this-week");
       return ThisWeekSchema.parse(data);
     },
-    staleTime: 60 * 1000,
+    staleTime: STALE_FRESH,
   });
 }
 
@@ -57,7 +58,7 @@ export function useSectorBreakdown(days: number = 365) {
       });
       return SectorBreakdownSchema.parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -70,7 +71,7 @@ export function useForwardLook(months: number = 3) {
       });
       return ForwardLookSchema.parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -84,7 +85,7 @@ export function useSimulation(ticker: string, signalDate: string) {
       return SimulationSchema.parse(data);
     },
     enabled: !!ticker && !!signalDate,
-    staleTime: 10 * 60 * 1000,
+    staleTime: STALE_STABLE,
   });
 }
 
@@ -104,7 +105,7 @@ export function useIntradaySimulation(
       return IntradaySimulationSchema.parse(data);
     },
     enabled: !!ticker && !!signalDate,
-    staleTime: 10 * 60 * 1000,
+    staleTime: STALE_STABLE,
   });
 }
 
@@ -122,7 +123,7 @@ export function useEventLibrary(params: {
       const { data } = await api.get("/earnings/events", { params });
       return EventLibrarySchema.parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -136,7 +137,7 @@ export function useEventAnalysis(ticker: string, signalDate: string) {
       return EventAnalysisSchema.parse(data);
     },
     enabled: !!ticker && !!signalDate,
-    staleTime: 10 * 60 * 1000,
+    staleTime: STALE_STABLE,
   });
 }
 

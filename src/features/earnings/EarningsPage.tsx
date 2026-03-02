@@ -11,8 +11,8 @@ import { ForwardLook } from "./components/ForwardLook";
 export function EarningsPage() {
   usePageTitle("Earnings Events");
   const { data: summary, isLoading: summaryLoading, isError: summaryError } = useImpactSummary();
-  const { data: journey } = usePriceJourney("all");
-  const { data: thisWeek, isLoading: weekLoading } = useThisWeek();
+  const { data: journey, isError: journeyError } = usePriceJourney("all");
+  const { data: thisWeek, isLoading: weekLoading, isError: weekError } = useThisWeek();
 
   // Build the callout sentence from journey data
   const openGain = journey?.stages.find((s) => s.stage === "Open")?.value;
@@ -128,7 +128,14 @@ export function EarningsPage() {
           </Card>
         )}
 
-        <PriceJourneyChart />
+        {journeyError ? (
+          <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            Could not load price journey data.
+          </div>
+        ) : (
+          <PriceJourneyChart />
+        )}
       </section>
 
       {/* ── Section 3: "Does Size Matter?" — Impact Cards ── */}
@@ -161,7 +168,14 @@ export function EarningsPage() {
         <p className="mb-4 text-sm text-text-muted">
           The biggest stock moves from this week and what happened next.
         </p>
-        <ThisWeekTimeline data={thisWeek} isLoading={weekLoading} />
+        {weekError ? (
+          <div className="flex items-center gap-2 rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-red">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            Could not load this week's data.
+          </div>
+        ) : (
+          <ThisWeekTimeline data={thisWeek} isLoading={weekLoading} />
+        )}
       </section>
 
       {/* ── Section 5: "What's Coming Up?" — Forward Look ── */}

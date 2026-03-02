@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
+import { STALE_FRESH, STALE_WARM } from "../queryConfig";
 import {
   CompareResponseSchema,
   SparklineResponseSchema,
@@ -16,7 +17,7 @@ export function useCompare(tickers: string[], limit = 252) {
       return CompareResponseSchema.parse(data);
     },
     enabled: tickers.length >= 2,
-    staleTime: 60 * 1000,
+    staleTime: STALE_FRESH,
   });
 }
 
@@ -30,7 +31,7 @@ export function useSparkline(ticker: string, days = 7) {
       return SparklineResponseSchema.parse(data);
     },
     enabled: !!ticker,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -52,6 +53,6 @@ export function useBacktest(
       return BacktestResponseSchema.parse(data);
     },
     enabled: !!ticker,
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }

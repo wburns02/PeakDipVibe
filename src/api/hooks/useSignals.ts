@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
+import { STALE_FRESH, STALE_WARM } from "../queryConfig";
 import {
   PatternSignalSchema,
   SignalStatsSchema,
@@ -20,7 +21,7 @@ export function usePatternSignals(filters: SignalFilters) {
       const { data } = await api.get("/signals/patterns", { params });
       return z.array(PatternSignalSchema).parse(data);
     },
-    staleTime: 60 * 1000,
+    staleTime: STALE_FRESH,
   });
 }
 
@@ -33,7 +34,7 @@ export function useSignalStats(days: number = 30) {
       });
       return SignalStatsSchema.parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -45,6 +46,6 @@ export function useTickerSignals(ticker: string) {
       return z.array(PatternSignalSchema).parse(data);
     },
     enabled: !!ticker,
-    staleTime: 60 * 1000,
+    staleTime: STALE_FRESH,
   });
 }

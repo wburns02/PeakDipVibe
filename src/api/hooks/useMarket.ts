@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
+import { STALE_FRESH, STALE_WARM } from "../queryConfig";
 import {
   MarketOverviewSchema,
   SectorPerformanceSchema,
@@ -14,7 +15,7 @@ export function useMarketOverview() {
       const { data } = await api.get("/market/overview");
       return MarketOverviewSchema.parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -25,7 +26,7 @@ export function useSectors() {
       const { data } = await api.get("/market/sectors");
       return z.array(SectorPerformanceSchema).parse(data);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE_WARM,
   });
 }
 
@@ -36,6 +37,6 @@ export function usePipelineStatus() {
       const { data } = await api.get("/status");
       return StatusResponseSchema.parse(data);
     },
-    staleTime: 60 * 1000,
+    staleTime: STALE_FRESH,
   });
 }
