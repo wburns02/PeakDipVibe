@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { preloadRoute } from "@/App";
 import {
   LayoutDashboard,
   Zap,
@@ -29,6 +30,8 @@ export function BottomNav() {
             to={to}
             aria-label={label}
             aria-current={active ? "page" : undefined}
+            onMouseEnter={() => preloadRoute[to]?.()}
+            onFocus={() => preloadRoute[to]?.()}
             className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] transition-colors ${
               active
                 ? "text-accent"

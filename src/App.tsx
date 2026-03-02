@@ -30,6 +30,16 @@ const ComparePage = lazy(() =>
   import("@/features/compare/ComparePage").then((m) => ({ default: m.ComparePage })),
 );
 
+/** Preload map — call on hover/focus for instant navigation. */
+export const preloadRoute: Record<string, () => void> = {
+  "/signals": () => { import("@/features/signals/SignalsPage"); },
+  "/earnings": () => { import("@/features/earnings/EarningsPage"); },
+  "/simulator": () => { import("@/features/simulator/SimulatorPage"); },
+  "/screener": () => { import("@/features/screener/ScreenerPage"); },
+  "/compare": () => { import("@/features/compare/ComparePage"); },
+  "/watchlist": () => { import("@/features/watchlist/WatchlistPage"); },
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

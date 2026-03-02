@@ -137,7 +137,7 @@ export function DashboardPage() {
           aria-label="Search stocks by ticker or name"
           aria-expanded={showDropdown && (showRecent || (searchInput.length > 0 && !!results?.length))}
           aria-haspopup="listbox"
-          aria-controls="search-dropdown"
+          aria-controls={showRecent ? "search-recent" : showPopular ? "search-popular" : "search-results"}
           aria-autocomplete="list"
           className="w-full rounded-xl border border-border bg-bg-card py-2.5 pl-10 pr-9 text-sm text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
         />
@@ -160,7 +160,7 @@ export function DashboardPage() {
 
         {/* Recent searches */}
         {showRecent && (
-          <div id="search-dropdown" role="listbox" aria-label="Recent searches" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
+          <div id="search-recent" role="listbox" aria-label="Recent searches" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
             <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] text-text-muted">
               <Clock className="h-3 w-3" />
               Recent Searches
@@ -181,7 +181,7 @@ export function DashboardPage() {
 
         {/* Popular tickers — shown for first-time users with no search history */}
         {showPopular && (
-          <div id="search-dropdown" role="listbox" aria-label="Popular stocks" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
+          <div id="search-popular" role="listbox" aria-label="Popular stocks" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
             <div className="px-4 pt-2 pb-1 text-[10px] text-text-muted">
               Popular Stocks
             </div>
@@ -208,7 +208,7 @@ export function DashboardPage() {
 
         {/* Search results dropdown */}
         {searchInput.length > 0 && results && results.length > 0 && showDropdown && (
-          <div id="search-dropdown" role="listbox" aria-label="Search results" className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-xl">
+          <div id="search-results" role="listbox" aria-label="Search results" className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-xl">
             {results.map((t, i) => (
               <button
                 key={t.ticker}

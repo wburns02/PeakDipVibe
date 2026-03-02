@@ -105,7 +105,7 @@ export function ScreenerPage() {
             type="button"
             key={p.label}
             onClick={() => applyPreset(p)}
-            className="rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+            className="rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
           >
             {p.label}
           </button>
@@ -117,6 +117,8 @@ export function ScreenerPage() {
         <button
           type="button"
           onClick={() => setShowFilters(!showFilters)}
+          aria-expanded={showFilters}
+          aria-controls="screener-filters"
           className="flex w-full items-center justify-between text-sm font-medium text-text-primary"
         >
           <span className="flex items-center gap-2">
@@ -127,7 +129,7 @@ export function ScreenerPage() {
         </button>
 
         {showFilters && (
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div id="screener-filters" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {/* RSI Range */}
             <div>
               <label className="mb-1 block text-xs text-text-muted">RSI Range</label>

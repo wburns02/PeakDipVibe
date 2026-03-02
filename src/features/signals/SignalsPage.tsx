@@ -67,6 +67,8 @@ export function SignalsPage() {
         <button
           type="button"
           onClick={() => setShowFilters(!showFilters)}
+          aria-expanded={showFilters}
+          aria-controls="signal-filters"
           className="flex w-full items-center justify-between text-sm font-medium text-text-primary"
         >
           <span className="flex items-center gap-2">
@@ -79,7 +81,7 @@ export function SignalsPage() {
         </button>
 
         {showFilters && (
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div id="signal-filters" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {/* Lookback days */}
             <div>
               <label className="mb-1 block text-xs text-text-muted">

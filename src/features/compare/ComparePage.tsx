@@ -142,7 +142,7 @@ export function ComparePage() {
               type="button"
               key={g.label}
               onClick={() => setTickers(g.tickers)}
-              className="rounded-lg border border-border bg-bg-primary px-2.5 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              className="rounded-lg border border-border bg-bg-primary px-2.5 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
             >
               {g.label}
             </button>
@@ -158,7 +158,7 @@ export function ComparePage() {
               onClick={() => setPeriod(p.days)}
               aria-pressed={period === p.days}
               aria-label={`Show ${p.label} performance`}
-              className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
                 period === p.days
                   ? "bg-accent text-white"
                   : "text-text-secondary hover:bg-bg-hover"

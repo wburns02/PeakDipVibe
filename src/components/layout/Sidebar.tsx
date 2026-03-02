@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { preloadRoute } from "@/App";
 import {
   LayoutDashboard,
   TrendingUp,
@@ -93,6 +94,9 @@ export function Sidebar() {
                 key={to}
                 to={to}
                 onClick={() => setOpen(false)}
+                onMouseEnter={() => preloadRoute[to]?.()}
+                onFocus={() => preloadRoute[to]?.()}
+                aria-current={active ? "page" : undefined}
                 className={`mb-0.5 flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
                   active
                     ? "bg-accent/10 text-accent font-medium"
