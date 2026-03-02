@@ -184,6 +184,13 @@ export function DashboardPage() {
           </div>
         )}
 
+        {/* Screen-reader announcement for search results */}
+        <div className="sr-only" aria-live="polite" aria-atomic="true">
+          {searchInput.length > 0 && results
+            ? `${results.length} result${results.length === 1 ? "" : "s"} found`
+            : ""}
+        </div>
+
         {/* Search results dropdown */}
         {searchInput.length > 0 && results && results.length > 0 && showDropdown && (
           <div id="search-dropdown" role="listbox" aria-label="Search results" className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-xl">

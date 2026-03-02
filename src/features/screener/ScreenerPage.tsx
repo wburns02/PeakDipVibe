@@ -159,6 +159,7 @@ export function ScreenerPage() {
               <select
                 value={filters.sector ?? ""}
                 onChange={(e) => setFilter("sector", e.target.value)}
+                aria-label="Filter by sector"
                 className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
               >
                 <option value="">All Sectors</option>
