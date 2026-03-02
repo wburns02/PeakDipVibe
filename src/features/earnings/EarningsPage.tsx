@@ -1,8 +1,8 @@
-import { TrendingUp, TrendingDown, RefreshCw, ArrowRight, AlertTriangle } from "lucide-react";
-import { ERROR_ALERT } from "@/lib/styles";
+import { TrendingUp, TrendingDown, RefreshCw, ArrowRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useImpactSummary, usePriceJourney, useThisWeek } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { PriceJourneyChart } from "./components/PriceJourneyChart";
 import { ImpactCards } from "./components/ImpactCards";
 import { ThisWeekTimeline } from "./components/ThisWeekTimeline";
@@ -11,9 +11,9 @@ import { ForwardLook } from "./components/ForwardLook";
 
 export function EarningsPage() {
   usePageTitle("Earnings Events");
-  const { data: summary, isLoading: summaryLoading, isError: summaryError } = useImpactSummary();
-  const { data: journey, isError: journeyError } = usePriceJourney("all");
-  const { data: thisWeek, isLoading: weekLoading, isError: weekError } = useThisWeek();
+  const { data: summary, isLoading: summaryLoading, isError: summaryError, refetch: refetchSummary } = useImpactSummary();
+  const { data: journey, isError: journeyError, refetch: refetchJourney } = usePriceJourney("all");
+  const { data: thisWeek, isLoading: weekLoading, isError: weekError, refetch: refetchWeek } = useThisWeek();
 
   // Build the callout sentence from journey data
   const openGain = journey?.stages.find((s) => s.stage === "Open")?.value;
@@ -130,10 +130,7 @@ export function EarningsPage() {
         )}
 
         {journeyError ? (
-          <div className={ERROR_ALERT}>
-            <AlertTriangle className="h-4 w-4 shrink-0" />
-            Could not load price journey data.
-          </div>
+          <ErrorState message="Could not load price journey data." onRetry={refetchJourney} />
         ) : (
           <PriceJourneyChart />
         )}
@@ -149,10 +146,7 @@ export function EarningsPage() {
           the verdict for each group.
         </p>
         {summaryError ? (
-          <div className={ERROR_ALERT}>
-            <AlertTriangle className="h-4 w-4 shrink-0" />
-            Could not load earnings data. The API may be offline.
-          </div>
+          <ErrorState message="Could not load earnings data. The API may be offline." onRetry={refetchSummary} />
         ) : (
           <ImpactCards
             categories={summary?.categories ?? []}
@@ -170,10 +164,7 @@ export function EarningsPage() {
           The biggest stock moves from this week and what happened next.
         </p>
         {weekError ? (
-          <div className={ERROR_ALERT}>
-            <AlertTriangle className="h-4 w-4 shrink-0" />
-            Could not load this week's data.
-          </div>
+          <ErrorState message="Could not load this week's data." onRetry={refetchWeek} />
         ) : (
           <ThisWeekTimeline data={thisWeek} isLoading={weekLoading} />
         )}

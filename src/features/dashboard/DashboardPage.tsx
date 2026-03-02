@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Clock, X, AlertTriangle } from "lucide-react";
-import { ERROR_ALERT } from "@/lib/styles";
+import { Search, Clock, X } from "lucide-react";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { useMarketOverview, usePipelineStatus } from "@/api/hooks/useMarket";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -43,8 +43,8 @@ export function DashboardPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const debouncedSearch = useDebounce(searchInput, 200);
 
-  const { data: overview, isLoading: overviewLoading, isError: overviewError } = useMarketOverview();
-  const { data: status, isLoading: statusLoading, isError: statusError } = usePipelineStatus();
+  const { data: overview, isLoading: overviewLoading, isError: overviewError, refetch: refetchOverview } = useMarketOverview();
+  const { data: status, isLoading: statusLoading, isError: statusError, refetch: refetchStatus } = usePipelineStatus();
   const { data: searchResults } = useTickerList(debouncedSearch || undefined);
 
   const recentSearches = loadRecent();
@@ -219,10 +219,7 @@ export function DashboardPage() {
           ))}
         </div>
       ) : statusError ? (
-        <div className={ERROR_ALERT}>
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          Could not load market data. The API may be offline.
-        </div>
+        <ErrorState message="Could not load market data. The API may be offline." onRetry={refetchStatus} />
       ) : (
         status && <MarketOverviewCard status={status} />
       )}
@@ -237,10 +234,7 @@ export function DashboardPage() {
       {overviewLoading ? (
         <Skeleton className="h-72" />
       ) : overviewError ? (
-        <div className={ERROR_ALERT}>
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          Could not load sector data.
-        </div>
+        <ErrorState message="Could not load sector data." onRetry={refetchOverview} />
       ) : (
         overview && <SectorHeatmapCard sectors={overview.sectors} />
       )}
