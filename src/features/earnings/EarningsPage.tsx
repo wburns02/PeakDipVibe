@@ -112,11 +112,11 @@ export function EarningsPage() {
                   during the day
                 </>
               )}
-              {nextDay != null && (
+              {nextDay != null && dayLow != null && (
                 <>
                   , then{" "}
                   <span className="font-bold text-accent">
-                    {nextDay > dayLow! ? "recovers" : "stays flat"}
+                    {nextDay > dayLow ? "recovers" : "stays flat"}
                   </span>{" "}
                   the next day
                 </>

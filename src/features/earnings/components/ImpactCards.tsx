@@ -48,6 +48,16 @@ export function ImpactCards({ categories, isLoading }: Props) {
     );
   }
 
+  if (!categories || categories.length === 0) {
+    return (
+      <Card>
+        <p className="py-6 text-center text-sm text-text-muted">
+          No impact data available yet.
+        </p>
+      </Card>
+    );
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {categories.map((cat) => {
@@ -77,7 +87,7 @@ export function ImpactCards({ categories, isLoading }: Props) {
             {/* One key stat */}
             <div className="mt-3 rounded-lg bg-bg-primary/50 p-2.5 text-center">
               <p className="text-2xl font-bold text-text-primary">
-                {cat.win_rate_1d ?? "—"}%
+                {cat.win_rate_1d != null ? `${cat.win_rate_1d}%` : "—"}
               </p>
               <p className="text-[11px] text-text-muted">
                 go up the next day

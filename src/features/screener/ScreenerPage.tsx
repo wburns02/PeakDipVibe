@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Filter,
@@ -29,7 +29,7 @@ const PRESETS = [
   { label: "Death Cross", filters: { death_cross: true, sort_by: "change", sort_dir: "asc" } },
 ];
 
-function SparklineCell({ ticker }: { ticker: string }) {
+const SparklineCell = memo(function SparklineCell({ ticker }: { ticker: string }) {
   const { data } = useSparkline(ticker, 7);
   if (!data) return <div className="h-[24px] w-16" />;
   const color = data.closes[data.closes.length - 1] >= data.closes[0] ? "#22c55e" : "#ef4444";
@@ -38,7 +38,7 @@ function SparklineCell({ ticker }: { ticker: string }) {
       <MiniSparkline data={data.closes.map((v) => ({ value: v }))} color={color} height={24} />
     </div>
   );
-}
+});
 
 export function ScreenerPage() {
   const { toggle, isWatched } = useWatchlist();
