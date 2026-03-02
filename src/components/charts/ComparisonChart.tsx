@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -16,7 +17,15 @@ interface ComparisonChartProps {
   colors: string[];
 }
 
-export function ComparisonChart({ data, tickers, colors }: ComparisonChartProps) {
+export const ComparisonChart = memo(function ComparisonChart({ data, tickers, colors }: ComparisonChartProps) {
+  if (!data || data.length === 0 || !tickers || tickers.length === 0) {
+    return (
+      <div className="flex h-[400px] items-center justify-center text-sm text-text-muted">
+        No comparison data available
+      </div>
+    );
+  }
+
   return (
     <div role="img" aria-label="Stock comparison chart showing relative performance">
     <ResponsiveContainer width="100%" height={400}>
@@ -66,4 +75,4 @@ export function ComparisonChart({ data, tickers, colors }: ComparisonChartProps)
     </ResponsiveContainer>
     </div>
   );
-}
+});

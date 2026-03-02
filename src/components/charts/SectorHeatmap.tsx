@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Treemap, ResponsiveContainer } from "recharts";
 import type { SectorPerformance } from "@/api/types/market";
@@ -65,8 +66,17 @@ function CustomContent(props: TreemapContentProps) {
   );
 }
 
-export function SectorHeatmap({ sectors }: SectorHeatmapProps) {
+export const SectorHeatmap = memo(function SectorHeatmap({ sectors }: SectorHeatmapProps) {
   const navigate = useNavigate();
+
+  if (!sectors || sectors.length === 0) {
+    return (
+      <div className="flex h-[250px] items-center justify-center text-sm text-text-muted">
+        No sector data available
+      </div>
+    );
+  }
+
   const treeData = sectors.map((s) => ({
     name: s.sector,
     size: s.ticker_count,
@@ -90,4 +100,4 @@ export function SectorHeatmap({ sectors }: SectorHeatmapProps) {
       />
     </ResponsiveContainer>
   );
-}
+});
