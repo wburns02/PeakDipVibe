@@ -49,6 +49,7 @@ export function DashboardPage() {
   const recentSearches = loadRecent();
   const results = searchInput.length > 0 ? searchResults?.slice(0, 12) : [];
   const showRecent = showDropdown && searchInput.length === 0 && recentSearches.length > 0;
+  const showPopular = showDropdown && searchInput.length === 0 && recentSearches.length === 0;
 
   const goToTicker = useCallback(
     (ticker: string) => {
@@ -149,6 +150,26 @@ export function DashboardPage() {
               Recent Searches
             </div>
             {recentSearches.map((t) => (
+              <button
+                key={t}
+                type="button"
+                role="option"
+                onClick={() => goToTicker(t)}
+                className="flex w-full items-center px-4 py-2 text-left text-sm text-accent transition-colors hover:bg-bg-hover"
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Popular tickers — shown for first-time users with no search history */}
+        {showPopular && (
+          <div id="search-dropdown" role="listbox" aria-label="Popular stocks" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
+            <div className="px-4 pt-2 pb-1 text-[10px] text-text-muted">
+              Popular Stocks
+            </div>
+            {["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "TSLA"].map((t) => (
               <button
                 key={t}
                 type="button"
