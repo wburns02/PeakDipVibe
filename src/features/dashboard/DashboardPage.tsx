@@ -96,6 +96,19 @@ export function DashboardPage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // "/" shortcut to focus search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "/" && !["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement).tagName)) {
+        e.preventDefault();
+        inputRef.current?.focus();
+        setShowDropdown(true);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
+
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       {/* Header */}
@@ -112,7 +125,7 @@ export function DashboardPage() {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search tickers... (e.g. AAPL, Microsoft, Technology)"
+          placeholder="Search tickers... (e.g. AAPL, Microsoft)  Press /"
           value={searchInput}
           onChange={(e) => {
             setSearchInput(e.target.value);
