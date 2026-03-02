@@ -183,6 +183,48 @@ export function SimulatorPage() {
     return () => clearInterval(timer);
   }, [autoPlay, totalBars]);
 
+  // Keyboard shortcuts (only active in replay mode)
+  useEffect(() => {
+    if (mode !== "replay" || totalBars === 0) return;
+    const handler = (e: KeyboardEvent) => {
+      // Ignore when typing in inputs
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      switch (e.key) {
+        case " ":
+          e.preventDefault();
+          setAutoPlay((prev) => !prev);
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          if (currentBarIndex < totalBars - 1) {
+            setCurrentBarIndex((i) => Math.min(totalBars - 1, i + 1));
+          } else {
+            setFinished(true);
+          }
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          setCurrentBarIndex((i) => Math.max(0, i - 1));
+          setFinished(false);
+          break;
+        case "b":
+        case "B":
+          handleBuy();
+          break;
+        case "s":
+        case "S":
+          handleSell();
+          break;
+        case "r":
+        case "R":
+          resetSim();
+          break;
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [mode, totalBars, currentBarIndex]);
+
   const selectEvent = useCallback(
     (t: string, d: string) => {
       setActiveTicker(t);
@@ -946,6 +988,16 @@ export function SimulatorPage() {
                 </span>
               </div>
             )}
+
+            {/* Keyboard shortcuts hint */}
+            <div className="mt-2 hidden items-center gap-3 text-[10px] text-text-muted md:flex">
+              <span>Shortcuts:</span>
+              <kbd className="rounded bg-bg-hover px-1.5 py-0.5 font-mono">Space</kbd><span>Play/Pause</span>
+              <kbd className="rounded bg-bg-hover px-1.5 py-0.5 font-mono">&larr;&rarr;</kbd><span>Step</span>
+              <kbd className="rounded bg-bg-hover px-1.5 py-0.5 font-mono">B</kbd><span>Buy</span>
+              <kbd className="rounded bg-bg-hover px-1.5 py-0.5 font-mono">S</kbd><span>Sell</span>
+              <kbd className="rounded bg-bg-hover px-1.5 py-0.5 font-mono">R</kbd><span>Reset</span>
+            </div>
           </Card>
 
           {/* Chart */}

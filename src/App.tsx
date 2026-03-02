@@ -1,14 +1,30 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
+import { PageSpinner } from "@/components/ui/PageSpinner";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
-import { TickerDetailPage } from "@/features/ticker-detail/TickerDetailPage";
-import { ScreenerPage } from "@/features/screener/ScreenerPage";
-import { ComparePage } from "@/features/compare/ComparePage";
 import { WatchlistPage } from "@/features/watchlist/WatchlistPage";
-import { SignalsPage } from "@/features/signals/SignalsPage";
-import { EarningsPage } from "@/features/earnings/EarningsPage";
-import { SimulatorPage } from "@/features/simulator/SimulatorPage";
+
+// Lazy-load heavier pages to reduce initial bundle
+const SignalsPage = lazy(() =>
+  import("@/features/signals/SignalsPage").then((m) => ({ default: m.SignalsPage })),
+);
+const EarningsPage = lazy(() =>
+  import("@/features/earnings/EarningsPage").then((m) => ({ default: m.EarningsPage })),
+);
+const SimulatorPage = lazy(() =>
+  import("@/features/simulator/SimulatorPage").then((m) => ({ default: m.SimulatorPage })),
+);
+const TickerDetailPage = lazy(() =>
+  import("@/features/ticker-detail/TickerDetailPage").then((m) => ({ default: m.TickerDetailPage })),
+);
+const ScreenerPage = lazy(() =>
+  import("@/features/screener/ScreenerPage").then((m) => ({ default: m.ScreenerPage })),
+);
+const ComparePage = lazy(() =>
+  import("@/features/compare/ComparePage").then((m) => ({ default: m.ComparePage })),
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,12 +43,12 @@ export default function App() {
         <Routes>
           <Route element={<AppShell />}>
             <Route index element={<DashboardPage />} />
-            <Route path="/signals" element={<SignalsPage />} />
-            <Route path="/earnings" element={<EarningsPage />} />
-            <Route path="/simulator" element={<SimulatorPage />} />
-            <Route path="/ticker/:symbol" element={<TickerDetailPage />} />
-            <Route path="/screener" element={<ScreenerPage />} />
-            <Route path="/compare" element={<ComparePage />} />
+            <Route path="/signals" element={<Suspense fallback={<PageSpinner />}><SignalsPage /></Suspense>} />
+            <Route path="/earnings" element={<Suspense fallback={<PageSpinner />}><EarningsPage /></Suspense>} />
+            <Route path="/simulator" element={<Suspense fallback={<PageSpinner />}><SimulatorPage /></Suspense>} />
+            <Route path="/ticker/:symbol" element={<Suspense fallback={<PageSpinner />}><TickerDetailPage /></Suspense>} />
+            <Route path="/screener" element={<Suspense fallback={<PageSpinner />}><ScreenerPage /></Suspense>} />
+            <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
             <Route path="/watchlist" element={<WatchlistPage />} />
           </Route>
         </Routes>
