@@ -67,6 +67,40 @@ export function ComparePage() {
     return lastRow.values;
   }, [compareData]);
 
+  // Correlation matrix between tickers
+  const correlations = useMemo(() => {
+    if (!compareData || compareData.rows.length < 10 || tickers.length < 2) return null;
+    const series: Record<string, number[]> = {};
+    for (const t of tickers) series[t] = [];
+    for (const row of compareData.rows) {
+      for (const t of tickers) {
+        series[t].push(row.values[t] ?? 0);
+      }
+    }
+    const corr = (a: number[], b: number[]): number => {
+      const n = a.length;
+      const meanA = a.reduce((s, v) => s + v, 0) / n;
+      const meanB = b.reduce((s, v) => s + v, 0) / n;
+      let num = 0, denA = 0, denB = 0;
+      for (let i = 0; i < n; i++) {
+        const da = a[i] - meanA, db = b[i] - meanB;
+        num += da * db;
+        denA += da * da;
+        denB += db * db;
+      }
+      const den = Math.sqrt(denA * denB);
+      return den === 0 ? 0 : num / den;
+    };
+    const matrix: Record<string, Record<string, number>> = {};
+    for (const t1 of tickers) {
+      matrix[t1] = {};
+      for (const t2 of tickers) {
+        matrix[t1][t2] = t1 === t2 ? 1 : corr(series[t1], series[t2]);
+      }
+    }
+    return matrix;
+  }, [compareData, tickers]);
+
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
@@ -222,6 +256,57 @@ export function ComparePage() {
               );
             })}
           </div>
+        </Card>
+      )}
+
+      {/* Correlation matrix */}
+      {correlations && tickers.length >= 2 && (
+        <Card title="Correlation Matrix" subtitle="How closely these stocks move together (-1 to +1)">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-xs text-text-muted">
+                  <th className="pb-2 pr-3 text-left" />
+                  {tickers.map((t) => (
+                    <th key={t} className="pb-2 px-2 text-center font-medium text-text-secondary">
+                      {t}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tickers.map((t1) => (
+                  <tr key={t1} className="border-b border-border/30">
+                    <td className="py-1.5 pr-3 text-xs font-medium text-text-secondary">{t1}</td>
+                    {tickers.map((t2) => {
+                      const v = correlations[t1]?.[t2] ?? 0;
+                      const abs = Math.abs(v);
+                      const bg = t1 === t2
+                        ? "bg-accent/10"
+                        : abs > 0.7
+                          ? v > 0 ? "bg-emerald-500/15" : "bg-red-500/15"
+                          : abs > 0.4
+                            ? v > 0 ? "bg-emerald-500/8" : "bg-red-500/8"
+                            : "";
+                      const color = t1 === t2
+                        ? "text-text-muted"
+                        : abs > 0.7
+                          ? v > 0 ? "text-emerald-400" : "text-red-400"
+                          : "text-text-secondary";
+                      return (
+                        <td key={t2} className={`py-1.5 px-2 text-center text-xs font-mono ${bg} ${color}`}>
+                          {t1 === t2 ? "1.00" : v.toFixed(2)}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-2 text-[10px] text-text-muted">
+            Values near +1.0 mean stocks move together. Near -1.0 means they move opposite. Near 0 means little relationship.
+          </p>
         </Card>
       )}
     </div>
