@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Filter, ChevronDown } from "lucide-react";
+import { Filter, ChevronDown, Download } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { usePatternSignals, useSignalStats } from "@/api/hooks/useSignals";
 import { useSectors } from "@/api/hooks/useMarket";
@@ -8,6 +8,7 @@ import { SignalStatsCards } from "./components/SignalStatsCards";
 import { SignalTable } from "./components/SignalTable";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import type { SignalFilters } from "@/api/types/signals";
+import type { PatternSignal } from "@/api/types/signals";
 
 const CATALYST_OPTIONS = [
   { value: "", label: "All Types" },
@@ -23,6 +24,32 @@ const STATUS_OPTIONS = [
   { value: "confirmed", label: "Confirmed" },
   { value: "failed", label: "Failed" },
 ];
+
+function downloadCSV(signals: PatternSignal[]) {
+  const headers = ["Ticker", "Name", "Date", "Gap %", "Selloff %", "Catalyst", "Strength", "1d Return", "5d Return", "10d Return", "Status", "Sector"];
+  const rows = signals.map((s) => [
+    s.ticker,
+    s.name ?? "",
+    s.signal_date,
+    s.gap_up_pct?.toFixed(2) ?? "",
+    s.selloff_pct?.toFixed(2) ?? "",
+    s.catalyst_type ?? "",
+    s.signal_strength?.toString() ?? "",
+    s.outcome_1d?.toFixed(2) ?? "",
+    s.outcome_5d?.toFixed(2) ?? "",
+    s.outcome_10d?.toFixed(2) ?? "",
+    s.status ?? "",
+    s.sector ?? "",
+  ]);
+  const csv = [headers, ...rows].map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `signals-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 export function SignalsPage() {
   usePageTitle("News Catalyst Scanner");
@@ -49,14 +76,27 @@ export function SignalsPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-text-primary">
-          News Catalyst Scanner
-        </h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Detect gap-up + sell-off patterns driven by earnings, upgrades, and
-          positive news
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-text-primary">
+            News Catalyst Scanner
+          </h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Detect gap-up + sell-off patterns driven by earnings, upgrades, and
+            positive news
+          </p>
+        </div>
+        {signals && signals.length > 0 && (
+          <button
+            type="button"
+            onClick={() => downloadCSV(signals)}
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+            title="Export signals to CSV"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Export CSV</span>
+          </button>
+        )}
       </div>
 
       {/* Stats cards */}

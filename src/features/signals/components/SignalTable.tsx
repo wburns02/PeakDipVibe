@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpDown, PlayCircle, Zap } from "lucide-react";
+import { ArrowUpDown, PlayCircle, Zap, Copy, Check } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -36,6 +37,32 @@ function StrengthBar({ score, max = 100 }: { score: number | null; max?: number 
       </div>
       <span className="text-xs text-text-secondary">{score}</span>
     </div>
+  );
+}
+
+function CopySignalButton({ signal }: { signal: PatternSignal }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    const parts = [`${signal.ticker} ${signal.signal_date}`];
+    if (signal.gap_up_pct != null) parts.push(`Gap +${signal.gap_up_pct.toFixed(1)}%`);
+    if (signal.selloff_pct != null) parts.push(`Selloff ${signal.selloff_pct.toFixed(1)}%`);
+    if (signal.catalyst_type) parts.push(getCatalystConfig(signal.catalyst_type).label);
+    if (signal.outcome_1d != null) parts.push(`1d ${formatPercent(signal.outcome_1d)}`);
+    if (signal.status) parts.push(signal.status);
+    navigator.clipboard.writeText(parts.join(" | "));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-text-secondary transition-colors"
+      title="Copy signal summary"
+      aria-label={`Copy ${signal.ticker} signal to clipboard`}
+    >
+      {copied ? <Check className="h-3.5 w-3.5 text-green" /> : <Copy className="h-3.5 w-3.5" />}
+    </button>
   );
 }
 
@@ -160,14 +187,17 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                     <StatusBadge status={s.status} />
                   </td>
                   <td className="py-2">
-                    <Link
-                      to={`/simulator?ticker=${s.ticker}&date=${s.signal_date}`}
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-accent hover:bg-accent/10 transition-colors"
-                      title="Simulate this event"
-                    >
-                      <PlayCircle className="h-3.5 w-3.5" />
-                      <span className="hidden lg:inline">Simulate</span>
-                    </Link>
+                    <div className="flex items-center gap-1">
+                      <CopySignalButton signal={s} />
+                      <Link
+                        to={`/simulator?ticker=${s.ticker}&date=${s.signal_date}`}
+                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-accent hover:bg-accent/10 transition-colors"
+                        title="Simulate this event"
+                      >
+                        <PlayCircle className="h-3.5 w-3.5" />
+                        <span className="hidden lg:inline">Simulate</span>
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
