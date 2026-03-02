@@ -82,14 +82,14 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
             <caption className="sr-only">Pattern signals showing gap-up and sell-off events with catalyst scoring</caption>
             <thead>
               <tr className="border-b border-border text-left text-xs text-text-muted">
-                <th scope="col" className="pb-2">
+                <th scope="col" className="pb-2" aria-sort={sortBy === "signal_date" ? "descending" : "none"}>
                   <button type="button" onClick={() => onSort("signal_date")} className="flex items-center gap-1">
                     Date {sortIcon("signal_date")}
                   </button>
                 </th>
                 <th scope="col" className="pb-2">Ticker</th>
                 <th scope="col" className="pb-2">Pattern</th>
-                <th scope="col" className="pb-2">
+                <th scope="col" className="pb-2" aria-sort={sortBy === "gap" ? "descending" : "none"}>
                   <button type="button" onClick={() => onSort("gap")} className="flex items-center gap-1">
                     Gap<GlossaryTerm term="gap_up" /> {sortIcon("gap")}
                   </button>
@@ -100,12 +100,12 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                 <th scope="col" className="pb-2">
                   <span className="flex items-center">Catalyst<GlossaryTerm term="catalyst" /></span>
                 </th>
-                <th scope="col" className="pb-2">
+                <th scope="col" className="pb-2" aria-sort={sortBy === "strength" ? "descending" : "none"}>
                   <button type="button" onClick={() => onSort("strength")} className="flex items-center gap-1">
                     Strength<GlossaryTerm term="signal_strength" /> {sortIcon("strength")}
                   </button>
                 </th>
-                <th scope="col" className="pb-2">
+                <th scope="col" className="pb-2" aria-sort={sortBy === "outcome" ? "descending" : "none"}>
                   <button type="button" onClick={() => onSort("outcome")} className="flex items-center gap-1">
                     1d Return {sortIcon("outcome")}
                   </button>

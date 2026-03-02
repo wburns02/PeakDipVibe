@@ -207,35 +207,41 @@ export function DashboardPage() {
         </div>
 
         {/* Search results dropdown */}
-        {searchInput.length > 0 && results && results.length > 0 && showDropdown && (
+        {searchInput.length > 0 && results && showDropdown && (
           <div id="search-results" role="listbox" aria-label="Search results" className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-xl">
-            {results.map((t, i) => (
-              <button
-                key={t.ticker}
-                type="button"
-                role="option"
-                aria-selected={i === selectedIdx}
-                onClick={() => goToTicker(t.ticker)}
-                className={`flex w-full items-center justify-between px-4 py-2.5 text-left transition-colors hover:bg-bg-hover ${
-                  i === selectedIdx ? "bg-bg-hover" : ""
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-accent">
-                    {t.ticker}
-                  </span>
-                  <span className="text-sm text-text-secondary">{t.name}</span>
-                </div>
-                <span className="text-xs text-text-muted">{t.sector}</span>
-              </button>
-            ))}
+            {results.length > 0 ? (
+              results.map((t, i) => (
+                <button
+                  key={t.ticker}
+                  type="button"
+                  role="option"
+                  aria-selected={i === selectedIdx}
+                  onClick={() => goToTicker(t.ticker)}
+                  className={`flex w-full items-center justify-between px-4 py-2.5 text-left transition-colors hover:bg-bg-hover ${
+                    i === selectedIdx ? "bg-bg-hover" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-accent">
+                      {t.ticker}
+                    </span>
+                    <span className="text-sm text-text-secondary">{t.name}</span>
+                  </div>
+                  <span className="text-xs text-text-muted">{t.sector}</span>
+                </button>
+              ))
+            ) : (
+              <div className="px-4 py-3 text-sm text-text-muted">
+                No results for &ldquo;{searchInput}&rdquo;
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* Stats cards */}
       {statusLoading ? (
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-20" />
           ))}
@@ -263,7 +269,7 @@ export function DashboardPage() {
 
       {/* Top movers */}
       {overviewLoading ? (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-4 lg:grid-cols-2">
           <Skeleton className="h-96" />
           <Skeleton className="h-96" />
         </div>

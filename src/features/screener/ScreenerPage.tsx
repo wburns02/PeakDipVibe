@@ -252,19 +252,19 @@ export function ScreenerPage() {
               <thead>
                 <tr className="border-b border-border text-left text-xs text-text-muted">
                   <th scope="col" className="w-8 pb-2" />
-                  <th scope="col" className="pb-2">
+                  <th scope="col" className="pb-2" aria-sort={filters.sort_by === "ticker" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
                     <button type="button" onClick={() => toggleSort("ticker")} className="flex items-center gap-1">
                       Ticker {sortIcon("ticker")}
                     </button>
                   </th>
                   <th scope="col" className="pb-2">7d</th>
                   <th scope="col" className="pb-2">Price</th>
-                  <th scope="col" className="pb-2">
+                  <th scope="col" className="pb-2" aria-sort={filters.sort_by === "change" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
                     <button type="button" onClick={() => toggleSort("change")} className="flex items-center gap-1">
                       Change {sortIcon("change")}
                     </button>
                   </th>
-                  <th scope="col" className="pb-2">
+                  <th scope="col" className="pb-2" aria-sort={filters.sort_by === "rsi" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
                     <button type="button" onClick={() => toggleSort("rsi")} className="flex items-center gap-1">
                       RSI<GlossaryTerm term="rsi" /> {sortIcon("rsi")}
                     </button>
