@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { MiniSparkline } from "@/components/charts/MiniSparkline";
 import { useSparkline } from "@/api/hooks/useCompare";
 import { formatCurrency, formatPercent } from "@/lib/formatters";
+import { GlossaryTerm } from "@/components/education/GlossaryTerm";
 import type { ScreenerFilters } from "@/api/types/screener";
 
 const PRESETS = [
@@ -196,7 +197,7 @@ export function ScreenerPage() {
                     onChange={(e) => setFilter("golden_cross", e.target.checked ? true : undefined)}
                     className="rounded border-border"
                   />
-                  Golden Cross (50 &gt; 200)
+                  Golden Cross (50 &gt; 200)<GlossaryTerm term="golden_cross" />
                 </label>
                 <label className="flex items-center gap-2 text-xs text-text-secondary">
                   <input
@@ -205,7 +206,7 @@ export function ScreenerPage() {
                     onChange={(e) => setFilter("death_cross", e.target.checked ? true : undefined)}
                     className="rounded border-border"
                   />
-                  Death Cross (50 &lt; 200)
+                  Death Cross (50 &lt; 200)<GlossaryTerm term="death_cross" />
                 </label>
               </div>
             </div>
@@ -248,10 +249,12 @@ export function ScreenerPage() {
                   </th>
                   <th className="pb-2">
                     <button onClick={() => toggleSort("rsi")} className="flex items-center gap-1">
-                      RSI {sortIcon("rsi")}
+                      RSI<GlossaryTerm term="rsi" /> {sortIcon("rsi")}
                     </button>
                   </th>
-                  <th className="pb-2">SMA 50</th>
+                  <th className="pb-2">
+                    <span className="flex items-center">SMA 50<GlossaryTerm term="sma" /></span>
+                  </th>
                   <th className="pb-2">SMA 200</th>
                   <th className="pb-2">Sector</th>
                 </tr>

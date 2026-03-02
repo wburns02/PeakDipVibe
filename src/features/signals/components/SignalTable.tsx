@@ -3,6 +3,7 @@ import { ArrowUpDown, PlayCircle } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { GlossaryTerm } from "@/components/education/GlossaryTerm";
 import { formatPercent } from "@/lib/formatters";
 import { getCatalystConfig } from "@/lib/catalystTypes";
 import type { PatternSignal } from "@/api/types/signals";
@@ -85,14 +86,18 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                 <th className="pb-2">Pattern</th>
                 <th className="pb-2">
                   <button onClick={() => onSort("gap")} className="flex items-center gap-1">
-                    Gap {sortIcon("gap")}
+                    Gap<GlossaryTerm term="gap_up" /> {sortIcon("gap")}
                   </button>
                 </th>
-                <th className="pb-2">Selloff</th>
-                <th className="pb-2">Catalyst</th>
+                <th className="pb-2">
+                  <span className="flex items-center">Selloff<GlossaryTerm term="selloff" /></span>
+                </th>
+                <th className="pb-2">
+                  <span className="flex items-center">Catalyst<GlossaryTerm term="catalyst" /></span>
+                </th>
                 <th className="pb-2">
                   <button onClick={() => onSort("strength")} className="flex items-center gap-1">
-                    Strength {sortIcon("strength")}
+                    Strength<GlossaryTerm term="signal_strength" /> {sortIcon("strength")}
                   </button>
                 </th>
                 <th className="pb-2">
