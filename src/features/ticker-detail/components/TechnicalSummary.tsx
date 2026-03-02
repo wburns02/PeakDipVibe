@@ -143,6 +143,89 @@ export function TechnicalSummary({
           </li>
         ))}
       </ul>
+
+      {/* Plain English summary */}
+      <PlainEnglishBlurb ticker={ticker} indicators={indicators} signal={label} />
     </Card>
+  );
+}
+
+function PlainEnglishBlurb({
+  ticker,
+  indicators,
+  signal,
+}: {
+  ticker: TickerDetail;
+  indicators?: IndicatorSnapshot;
+  signal: string;
+}) {
+  if (!indicators || Object.keys(indicators.indicators).length === 0) return null;
+
+  const ind = indicators.indicators;
+  const rsi = ind["RSI_14"];
+  const sma50 = ind["SMA_50"];
+  const price = ticker.latest_close ?? 0;
+  const name = ticker.name ?? ticker.ticker;
+
+  // Build a simple 2-3 sentence summary in plain English
+  const parts: string[] = [];
+
+  // Sentence 1: Overall mood
+  if (signal === "Bullish") {
+    parts.push(
+      `${name} is showing positive momentum right now — most indicators suggest the stock could keep moving up.`
+    );
+  } else if (signal === "Bearish") {
+    parts.push(
+      `${name} is under pressure — several warning signs suggest the stock may continue dropping.`
+    );
+  } else {
+    parts.push(
+      `${name} is in a wait-and-see zone — the signals are mixed, with no strong direction either way.`
+    );
+  }
+
+  // Sentence 2: RSI context
+  if (rsi != null) {
+    if (rsi < 30) {
+      parts.push(
+        `The stock has been sold heavily (RSI ${rsi.toFixed(0)}), which sometimes means it's due for a bounce.`
+      );
+    } else if (rsi > 70) {
+      parts.push(
+        `The stock has run up fast (RSI ${rsi.toFixed(0)}), which sometimes means a pullback is coming.`
+      );
+    } else if (rsi > 50) {
+      parts.push(`Buying interest is moderate (RSI ${rsi.toFixed(0)}).`);
+    } else {
+      parts.push(`Selling pressure is slightly winning (RSI ${rsi.toFixed(0)}).`);
+    }
+  }
+
+  // Sentence 3: Trend context
+  if (sma50 != null && price > 0) {
+    const pctAbove = ((price - sma50) / sma50) * 100;
+    if (pctAbove > 5) {
+      parts.push(
+        `The price is well above its 50-day average, showing a strong uptrend.`
+      );
+    } else if (pctAbove > 0) {
+      parts.push(`The price is slightly above its 50-day average — a mild positive sign.`);
+    } else if (pctAbove > -5) {
+      parts.push(`The price is slightly below its 50-day average — a mild negative sign.`);
+    } else {
+      parts.push(`The price is well below its 50-day average, showing a clear downtrend.`);
+    }
+  }
+
+  return (
+    <div className="mt-3 rounded-lg bg-bg-hover/50 px-3 py-2.5">
+      <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+        In plain English
+      </p>
+      <p className="text-xs leading-relaxed text-text-secondary">
+        {parts.join(" ")}
+      </p>
+    </div>
   );
 }

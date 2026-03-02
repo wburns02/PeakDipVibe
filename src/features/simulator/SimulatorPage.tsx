@@ -1209,6 +1209,13 @@ export function SimulatorPage() {
                     Pick Another
                   </button>
                 </div>
+
+                {/* What Did We Learn? */}
+                <WhatWeLearnedCard
+                  intradaySim={intradaySim}
+                  analysis={analysis}
+                  bars={bars}
+                />
               </div>
             </Card>
           )}
@@ -1243,6 +1250,20 @@ function EventBrowserCard({
 }) {
   const gap = ev.gap_up_pct ?? 0;
   const outcome = ev.outcome_label;
+
+  // Difficulty: small gaps with clear outcomes = easier
+  const difficulty =
+    gap < 3 && (outcome === "Bounced" || outcome === "Kept Falling")
+      ? "Easy"
+      : gap >= 10 || outcome === "Faded"
+        ? "Hard"
+        : "Medium";
+  const difficultyColor =
+    difficulty === "Easy"
+      ? "text-emerald-400"
+      : difficulty === "Hard"
+        ? "text-red-400"
+        : "text-amber-400";
 
   const outcomeBg =
     outcome === "Bounced"
@@ -1308,13 +1329,78 @@ function EventBrowserCard({
         {ev.summary}
       </p>
 
-      <p className="mt-2 text-[10px] text-text-muted/50">
-        {new Date(ev.signal_date + "T12:00:00").toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })}
-      </p>
+      <div className="mt-2 flex items-center justify-between">
+        <p className="text-[10px] text-text-muted/50">
+          {new Date(ev.signal_date + "T12:00:00").toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
+        <span className={`text-[10px] font-bold ${difficultyColor}`}>
+          {difficulty}
+        </span>
+      </div>
     </button>
+  );
+}
+
+function WhatWeLearnedCard({
+  intradaySim,
+  analysis,
+  bars,
+}: {
+  intradaySim: { ticker: string; gap_up_pct: number | null; selloff_pct: number | null } | undefined;
+  analysis: { catalyst_type?: string | null; catalyst_headline?: string | null; post_mortem?: string | null } | undefined;
+  bars: IntradayBar[];
+}) {
+  if (!intradaySim || bars.length < 2) return null;
+
+  const gap = intradaySim.gap_up_pct ?? 0;
+  const selloff = Math.abs(intradaySim.selloff_pct ?? 0);
+  const firstPrice = bars[0]?.close ?? 0;
+  const lastPrice = bars[bars.length - 1]?.close ?? 0;
+  const totalReturn = firstPrice > 0 ? ((lastPrice - firstPrice) / firstPrice) * 100 : 0;
+  const bounced = totalReturn > 1;
+  const faded = totalReturn < -1;
+
+  const lessons: string[] = [];
+
+  if (gap >= 10) {
+    lessons.push("Huge gap-ups (10%+) often see big sell-offs during the day as early buyers take profits. Patience matters.");
+  } else if (gap >= 5) {
+    lessons.push("Big gap-ups (5-10%) can go either way — some keep climbing, others give back most of the gain.");
+  } else {
+    lessons.push("Small gap-ups (under 5%) tend to be less volatile, making them easier to trade for beginners.");
+  }
+
+  if (selloff > 3) {
+    lessons.push(`This stock dropped ${selloff.toFixed(1)}% from its peak during the day — a reminder that even good news can trigger sell-offs.`);
+  }
+
+  if (bounced) {
+    lessons.push("The stock recovered after the initial sell-off. 'Buying the dip' would have worked here.");
+  } else if (faded) {
+    lessons.push("The stock kept falling after the gap. Sometimes the smart move is to wait and watch, not buy immediately.");
+  }
+
+  if (analysis?.catalyst_type === "earnings_beat") {
+    lessons.push("Earnings beats cause excitement, but the stock's reaction depends on whether the good news was already expected.");
+  }
+
+  return (
+    <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 text-left">
+      <h4 className="flex items-center gap-2 text-sm font-bold text-amber-400">
+        <Zap className="h-4 w-4" />
+        What Did We Learn?
+      </h4>
+      <ul className="mt-2 space-y-1.5">
+        {lessons.map((lesson, i) => (
+          <li key={i} className="text-xs leading-relaxed text-text-secondary">
+            {lesson}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
