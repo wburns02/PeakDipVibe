@@ -87,7 +87,7 @@ export function ComparePage() {
               />
               <span className="text-sm font-medium text-text-primary">{ticker}</span>
               {tickers.length > 2 && (
-                <button onClick={() => removeTicker(ticker)} className="text-text-muted hover:text-red">
+                <button onClick={() => removeTicker(ticker)} aria-label={`Remove ${ticker}`} className="text-text-muted hover:text-red">
                   <X className="h-3.5 w-3.5" />
                 </button>
               )}
@@ -103,6 +103,7 @@ export function ComparePage() {
                   placeholder="Add ticker..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
+                  aria-label="Add ticker to compare"
                   className="w-24 bg-transparent text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
                 />
               </div>
@@ -174,7 +175,10 @@ export function ComparePage() {
         <Card>
           <div className="flex flex-col items-center justify-center py-16 text-text-muted">
             <BarChart3 className="mb-3 h-10 w-10 opacity-40" />
-            <p className="text-sm">No overlapping data found for these tickers</p>
+            <p className="text-sm font-medium">No overlapping data found</p>
+            <p className="mt-1 max-w-xs text-center text-xs">
+              These tickers don't have matching price history. Try different tickers or a shorter time period.
+            </p>
           </div>
         </Card>
       ) : null}

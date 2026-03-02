@@ -89,6 +89,7 @@ export function SignalsPage() {
                 }
                 min={1}
                 max={365}
+                aria-label="Lookback period in days"
                 className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
               />
             </div>
@@ -105,6 +106,7 @@ export function SignalsPage() {
                 min={0}
                 max={100}
                 step={5}
+                aria-label={`Minimum signal strength: ${filters.min_strength ?? 0}`}
                 className="w-full accent-accent"
               />
             </div>
@@ -117,6 +119,7 @@ export function SignalsPage() {
               <select
                 value={filters.status ?? ""}
                 onChange={(e) => setFilter("status", e.target.value)}
+                aria-label="Filter by signal status"
                 className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
               >
                 {STATUS_OPTIONS.map((o) => (
@@ -135,6 +138,7 @@ export function SignalsPage() {
               <select
                 value={filters.catalyst_type ?? ""}
                 onChange={(e) => setFilter("catalyst_type", e.target.value)}
+                aria-label="Filter by catalyst type"
                 className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
               >
                 {CATALYST_OPTIONS.map((o) => (
@@ -153,6 +157,7 @@ export function SignalsPage() {
               <select
                 value={filters.sector ?? ""}
                 onChange={(e) => setFilter("sector", e.target.value)}
+                aria-label="Filter by sector"
                 className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
               >
                 <option value="">All Sectors</option>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowUpDown, PlayCircle } from "lucide-react";
+import { ArrowUpDown, PlayCircle, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -69,9 +69,13 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
           ))}
         </div>
       ) : !signals || signals.length === 0 ? (
-        <p className="py-8 text-center text-sm text-text-muted">
-          No signals found. Try adjusting the lookback period or filters.
-        </p>
+        <div className="flex flex-col items-center justify-center py-12 text-text-muted">
+          <Zap className="mb-3 h-10 w-10 opacity-40" />
+          <p className="text-sm font-medium">No signals found</p>
+          <p className="mt-1 max-w-xs text-center text-xs">
+            Try increasing the lookback period, lowering the minimum strength, or removing filters to see more results
+          </p>
+        </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
