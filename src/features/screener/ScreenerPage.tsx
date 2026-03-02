@@ -249,29 +249,29 @@ export function ScreenerPage() {
               <caption className="sr-only">S&amp;P 500 stock screener results sorted by technical indicators</caption>
               <thead>
                 <tr className="border-b border-border text-left text-xs text-text-muted">
-                  <th className="w-8 pb-2" />
-                  <th className="pb-2">
+                  <th scope="col" className="w-8 pb-2" />
+                  <th scope="col" className="pb-2">
                     <button onClick={() => toggleSort("ticker")} className="flex items-center gap-1">
                       Ticker {sortIcon("ticker")}
                     </button>
                   </th>
-                  <th className="pb-2">7d</th>
-                  <th className="pb-2">Price</th>
-                  <th className="pb-2">
+                  <th scope="col" className="pb-2">7d</th>
+                  <th scope="col" className="pb-2">Price</th>
+                  <th scope="col" className="pb-2">
                     <button onClick={() => toggleSort("change")} className="flex items-center gap-1">
                       Change {sortIcon("change")}
                     </button>
                   </th>
-                  <th className="pb-2">
+                  <th scope="col" className="pb-2">
                     <button onClick={() => toggleSort("rsi")} className="flex items-center gap-1">
                       RSI<GlossaryTerm term="rsi" /> {sortIcon("rsi")}
                     </button>
                   </th>
-                  <th className="pb-2">
+                  <th scope="col" className="pb-2">
                     <span className="flex items-center">SMA 50<GlossaryTerm term="sma" /></span>
                   </th>
-                  <th className="pb-2">SMA 200</th>
-                  <th className="pb-2">Sector</th>
+                  <th scope="col" className="pb-2">SMA 200</th>
+                  <th scope="col" className="pb-2">Sector</th>
                 </tr>
               </thead>
               <tbody>

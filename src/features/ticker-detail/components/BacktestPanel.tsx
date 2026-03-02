@@ -109,12 +109,13 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
           {/* Recent signals table */}
           <div className="max-h-48 overflow-y-auto">
             <table className="w-full text-xs">
+              <caption className="sr-only">Historical backtest signals with RSI, return, and drawdown data</caption>
               <thead>
                 <tr className="border-b border-border text-text-muted">
-                  <th className="pb-1 text-left">Date</th>
-                  <th className="pb-1 text-right">RSI</th>
-                  <th className="pb-1 text-right">Return</th>
-                  <th className="pb-1 text-right">Drawdown</th>
+                  <th scope="col" className="pb-1 text-left">Date</th>
+                  <th scope="col" className="pb-1 text-right">RSI</th>
+                  <th scope="col" className="pb-1 text-right">Return</th>
+                  <th scope="col" className="pb-1 text-right">Drawdown</th>
                 </tr>
               </thead>
               <tbody>
