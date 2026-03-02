@@ -437,6 +437,7 @@ export function SimulatorPage() {
             <button
               onClick={handleSurpriseMe}
               disabled={randomLoading}
+              aria-label="Pick a random stock event to simulate"
               className="flex items-center gap-2 rounded-xl bg-accent px-8 py-4 text-lg font-bold text-white shadow-lg shadow-accent/20 transition-all hover:scale-105 hover:bg-accent/90 disabled:opacity-50"
             >
               <Shuffle className="h-5 w-5" />
@@ -825,6 +826,8 @@ export function SimulatorPage() {
                 <button
                   key={amt}
                   onClick={() => changeStartingCash(amt)}
+                  aria-pressed={startingCash === amt}
+                  aria-label={`Set starting cash to ${fmtCurrency(amt)}`}
                   className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
                     startingCash === amt
                       ? "bg-accent text-white"
@@ -904,6 +907,8 @@ export function SimulatorPage() {
                       setBarInterval(iv);
                       resetSim();
                     }}
+                    aria-pressed={barInterval === iv}
+                    aria-label={`Set interval to ${iv === "15m" ? "15 minutes" : iv === "30m" ? "30 minutes" : "60 minutes"}`}
                     className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                       barInterval === iv
                         ? "bg-accent text-white"

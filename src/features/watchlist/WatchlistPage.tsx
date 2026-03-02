@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { Star, TrendingUp, TrendingDown, Inbox } from "lucide-react";
@@ -11,7 +12,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { MiniSparkline } from "@/components/charts/MiniSparkline";
 import { formatCurrency } from "@/lib/formatters";
 
-function WatchlistRow({ ticker, onRemove }: { ticker: string; onRemove: () => void }) {
+const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: string; onRemove: () => void }) {
   const { data: detail, isLoading } = useTicker(ticker);
   const { data: indicators } = useLatestIndicators(ticker);
   const { data: sparkline } = useSparkline(ticker, 7);
@@ -96,7 +97,7 @@ function WatchlistRow({ ticker, onRemove }: { ticker: string; onRemove: () => vo
       </div>
     </div>
   );
-}
+});
 
 export function WatchlistPage() {
   usePageTitle("Watchlist");
