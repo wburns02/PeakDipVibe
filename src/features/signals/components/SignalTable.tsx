@@ -77,6 +77,30 @@ function StatusBadge({ status }: { status: string | null }) {
   return <Badge variant={variants[status] ?? "default"}>{status}</Badge>;
 }
 
+type BounceClass = { label: string; variant: "green" | "red" | "amber" | "accent" | "default"; icon: string };
+
+function classifyBounce(recovery_pct: number | null, outcome_1d: number | null): BounceClass {
+  // No outcome data yet
+  if (outcome_1d == null && recovery_pct == null) return { label: "Pending", variant: "default", icon: "⏳" };
+
+  const rec = recovery_pct ?? 0;
+  const o1d = outcome_1d ?? 0;
+
+  if (rec >= 75 || o1d >= 3) return { label: "V-Bounce", variant: "green", icon: "🚀" };
+  if (rec >= 40 || o1d >= 1) return { label: "Bounced", variant: "accent", icon: "↗" };
+  if (rec >= 15 || o1d >= -1) return { label: "Weak", variant: "amber", icon: "→" };
+  return { label: "Faded", variant: "red", icon: "↘" };
+}
+
+function BounceBadge({ signal }: { signal: PatternSignal }) {
+  const cls = classifyBounce(signal.recovery_pct, signal.outcome_1d);
+  return (
+    <Badge variant={cls.variant}>
+      <span className="mr-0.5">{cls.icon}</span>{cls.label}
+    </Badge>
+  );
+}
+
 export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableProps) {
   const sortIcon = (field: string) =>
     sortBy === field ? (
@@ -117,6 +141,9 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                 </th>
                 <th scope="col" className="pb-2">Ticker</th>
                 <th scope="col" className="pb-2">Pattern</th>
+                <th scope="col" className="pb-2">
+                  <span className="flex items-center">Bounce<GlossaryTerm term="bounce" /></span>
+                </th>
                 <th scope="col" className="pb-2" aria-sort={sortBy === "gap" ? "descending" : "none"}>
                   <button type="button" onClick={() => onSort("gap")} className="flex items-center gap-1">
                     Gap<GlossaryTerm term="gap_up" /> {sortIcon("gap")}
@@ -161,6 +188,9 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                   </td>
                   <td className="py-2">
                     <PatternMiniChart signal={s} />
+                  </td>
+                  <td className="py-2">
+                    <BounceBadge signal={s} />
                   </td>
                   <td className="py-2">
                     {s.gap_up_pct != null ? (

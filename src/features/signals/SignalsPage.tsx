@@ -4,6 +4,7 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { usePatternSignals, useSignalStats } from "@/api/hooks/useSignals";
 import { useSectors } from "@/api/hooks/useMarket";
 import { Card } from "@/components/ui/Card";
+import { MiniLesson } from "@/components/education/MiniLesson";
 import { SignalStatsCards } from "./components/SignalStatsCards";
 import { SignalTable } from "./components/SignalTable";
 import { usePageTitle } from "@/hooks/usePageTitle";
@@ -103,6 +104,18 @@ export function SignalsPage() {
 
       {/* Stats cards */}
       <SignalStatsCards stats={stats} isLoading={statsLoading} />
+
+      {/* Educational mini-lesson */}
+      <MiniLesson
+        icon="🛡"
+        title="Understanding Risk: Why Some Signals Fail"
+        points={[
+          "Not every gap-up leads to more gains. About half the time, the stock gives back some or all of the initial jump — that's normal.",
+          "Signals with higher strength scores (60+) and strong catalysts like earnings beats tend to have better odds, but nothing is guaranteed.",
+          "Use the 'Bounce' column to see which events recovered and which faded. Over time, you'll start spotting patterns.",
+          "The best risk management rule: never bet more than you can afford to lose. Diversification (spreading bets across many stocks) is your friend.",
+        ]}
+      />
 
       {/* Filters */}
       <Card>

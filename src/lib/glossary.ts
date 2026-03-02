@@ -64,6 +64,11 @@ export const GLOSSARY: Record<string, { term: string; definition: string }> = {
     definition:
       "How much a stock bounces back after the initial sell-off. If a stock gapped up 5% but sold off to only +2%, and then climbed back to +4%, the recovery is strong — buyers stepped back in.",
   },
+  bounce: {
+    term: "Bounce Strength",
+    definition:
+      "How strongly a stock recovered after the initial sell-off. V-Bounce means it snapped back hard (like a rubber ball). Bounced means a solid recovery. Weak means it barely came back. Faded means it kept falling.",
+  },
   macd: {
     term: "MACD",
     definition:

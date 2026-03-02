@@ -3,6 +3,7 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 import { useImpactSummary, usePriceJourney, useThisWeek } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
 import { ErrorState } from "@/components/ui/ErrorState";
+import { MiniLesson } from "@/components/education/MiniLesson";
 import { PriceJourneyChart } from "./components/PriceJourneyChart";
 import { ImpactCards } from "./components/ImpactCards";
 import { ThisWeekTimeline } from "./components/ThisWeekTimeline";
@@ -192,6 +193,18 @@ export function EarningsPage() {
         </p>
         <SectorChart />
       </section>
+
+      {/* Educational mini-lesson */}
+      <MiniLesson
+        icon="📊"
+        title="Earnings 101: Why Stocks Jump on News"
+        points={[
+          "Every 3 months, public companies report how much money they made. If profits beat expectations, the stock often jumps higher the next morning.",
+          "The size of the jump depends on how much the company beat by AND how the market is feeling that day. A 5% beat in a bad market might barely move.",
+          "After the initial jump, there's almost always a sell-off. Early buyers lock in profits, which pushes the price down during the day. This is the 'dip' in Peak-Dip.",
+          "The real opportunity is watching what happens AFTER the dip. If the stock bounces back, it often means big investors believe the good news is real.",
+        ]}
+      />
     </div>
   );
 }

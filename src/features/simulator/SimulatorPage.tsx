@@ -19,6 +19,7 @@ import {
 import { useSectors } from "@/api/hooks/useMarket";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { Card } from "@/components/ui/Card";
+import { MiniLesson } from "@/components/education/MiniLesson";
 import type { LibraryEvent, IntradayBar } from "@/api/types/earnings";
 import { getCatalystConfig } from "@/lib/catalystTypes";
 import {
@@ -47,8 +48,13 @@ import {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-/** Auto-play advances one bar every 1.5s — fast enough to feel dynamic, slow enough to read */
-const AUTO_PLAY_INTERVAL_MS = 1500;
+/** Speed multipliers for auto-play — maps label to interval in ms */
+const SPEED_OPTIONS = [
+  { label: "0.5x", ms: 3000 },
+  { label: "1x", ms: 1500 },
+  { label: "2x", ms: 750 },
+  { label: "4x", ms: 375 },
+] as const;
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -174,6 +180,7 @@ export function SimulatorPage() {
   const [currentBarIndex, setCurrentBarIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [speedIndex, setSpeedIndex] = useState(1); // default 1x
   const autoPlayRef = useRef(false);
 
   const { data: intradaySim, isLoading: simLoading } = useIntradaySimulation(
@@ -197,6 +204,7 @@ export function SimulatorPage() {
 
   useEffect(() => {
     if (!autoPlay || totalBars === 0) return;
+    const intervalMs = SPEED_OPTIONS[speedIndex].ms;
     const timer = setInterval(() => {
       if (!autoPlayRef.current) return;
       setCurrentBarIndex((prev) => {
@@ -207,9 +215,9 @@ export function SimulatorPage() {
         }
         return prev + 1;
       });
-    }, AUTO_PLAY_INTERVAL_MS);
+    }, intervalMs);
     return () => clearInterval(timer);
-  }, [autoPlay, totalBars]);
+  }, [autoPlay, totalBars, speedIndex]);
 
   // Keyboard shortcuts (only active in replay mode)
   useEffect(() => {
@@ -617,6 +625,18 @@ export function SimulatorPage() {
           )}
         </Card>
 
+        {/* Educational mini-lesson */}
+        <MiniLesson
+          icon="📈"
+          title="Volatility 101: Why Prices Swing So Much"
+          points={[
+            "Volatility means how much a stock's price bounces around. High volatility = big swings up AND down. Low volatility = calm, steady movement.",
+            "After big news (like earnings), volatility spikes. The first hour of trading is usually the wildest — prices can swing 5-10% in minutes.",
+            "In this simulator, try different strategies: buying early (risky but high reward), waiting for the dip (safer), or just watching (sometimes the best move is no move).",
+            "The 'difficulty' rating on each event tells you how volatile it was. 'Hard' events had wild swings that are tough to trade profitably.",
+          ]}
+        />
+
         {/* Event Grid */}
         {libraryLoading ? (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -1021,15 +1041,60 @@ export function SimulatorPage() {
                 <span className="ml-2 text-[10px] tabular-nums text-text-muted">
                   {currentBarIndex + 1} / {totalBars}
                 </span>
+                {/* Speed control */}
+                <div className="ml-3 flex items-center gap-0.5 rounded-md bg-bg-primary p-0.5">
+                  {SPEED_OPTIONS.map((opt, i) => (
+                    <button
+                      key={opt.label}
+                      type="button"
+                      onClick={() => setSpeedIndex(i)}
+                      aria-label={`Set replay speed to ${opt.label}`}
+                      aria-pressed={i === speedIndex}
+                      className={`rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
+                        i === speedIndex
+                          ? "bg-accent text-white"
+                          : "text-text-muted hover:text-text-primary"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Progress bar */}
-            <div className="mt-2 h-1 overflow-hidden rounded-full bg-bg-hover">
+            {/* Clickable progress bar */}
+            <div
+              className="group relative mt-2 h-2 cursor-pointer overflow-hidden rounded-full bg-bg-hover transition-all hover:h-3"
+              role="slider"
+              aria-label="Simulation timeline — click or drag to jump to a point in time"
+              aria-valuemin={1}
+              aria-valuemax={totalBars}
+              aria-valuenow={currentBarIndex + 1}
+              tabIndex={0}
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                const idx = Math.round(pct * (totalBars - 1));
+                setCurrentBarIndex(idx);
+                setAutoPlay(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowRight") { e.preventDefault(); stepForward(); }
+                if (e.key === "ArrowLeft") { e.preventDefault(); stepBack(); }
+              }}
+            >
               <div
                 className="h-full rounded-full bg-accent transition-all duration-300"
                 style={{
                   width: `${totalBars > 0 ? ((currentBarIndex + 1) / totalBars) * 100 : 0}%`,
+                }}
+              />
+              {/* Thumb indicator */}
+              <div
+                className="absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-accent bg-bg-primary opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+                style={{
+                  left: `calc(${totalBars > 0 ? ((currentBarIndex + 1) / totalBars) * 100 : 0}% - 6px)`,
                 }}
               />
             </div>
@@ -1069,6 +1134,16 @@ export function SimulatorPage() {
                 <LineChart
                   data={chartData}
                   margin={{ top: 10, right: 10, left: 5, bottom: 5 }}
+                  onClick={(e) => {
+                    if (e?.activeLabel != null) {
+                      const idx = Number(e.activeLabel);
+                      if (!Number.isNaN(idx) && idx >= 0 && idx < totalBars) {
+                        setCurrentBarIndex(idx);
+                        setAutoPlay(false);
+                      }
+                    }
+                  }}
+                  style={{ cursor: "crosshair" }}
                 >
                   <CartesianGrid
                     strokeDasharray="3 3"
@@ -1452,6 +1527,24 @@ function WhatWeLearnedCard({
 
   if (analysis?.catalyst_type === "earnings_beat") {
     lessons.push("Earnings beats cause excitement, but the stock's reaction depends on whether the good news was already expected.");
+  } else if (analysis?.catalyst_type === "guidance_raise") {
+    lessons.push("A guidance raise means the company expects even better results ahead. The market often rewards forward-looking optimism.");
+  } else if (analysis?.catalyst_type === "acquisition") {
+    lessons.push("Acquisitions create uncertainty. The buyer's stock sometimes drops while the target's rises — it depends on who benefits more.");
+  } else if (analysis?.catalyst_type === "restructuring") {
+    lessons.push("Restructuring signals change. The stock can jump on hope of a turnaround, but the actual results take months to materialize.");
+  } else if (analysis?.catalyst_type === "breakout") {
+    lessons.push("Technical breakouts happen when a stock pushes past a resistance level. Momentum traders pile in, but the move needs volume to sustain.");
+  }
+
+  // Add a risk lesson
+  if (bars.length > 10) {
+    const maxPrice = Math.max(...bars.map((b) => b.high ?? b.close ?? 0));
+    const minPrice = Math.min(...bars.filter((b) => (b.low ?? b.close ?? 0) > 0).map((b) => b.low ?? b.close ?? 0));
+    const range = firstPrice > 0 ? ((maxPrice - minPrice) / firstPrice) * 100 : 0;
+    if (range > 8) {
+      lessons.push(`The price swung ${range.toFixed(1)}% between its high and low — a reminder that short-term trading can be a wild ride.`);
+    }
   }
 
   return (
