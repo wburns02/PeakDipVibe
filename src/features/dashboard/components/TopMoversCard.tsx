@@ -28,7 +28,7 @@ const SparkCell = memo(function SparkCell({ ticker, isGain }: { ticker: string; 
   );
 });
 
-function MoverRow({ mover }: { mover: Mover }) {
+const MoverRow = memo(function MoverRow({ mover }: { mover: Mover }) {
   const { toggle, isWatched } = useWatchlist();
   const isGain = mover.change_pct >= 0;
 
@@ -78,7 +78,7 @@ function MoverRow({ mover }: { mover: Mover }) {
       </div>
     </div>
   );
-}
+});
 
 export function TopMoversCard({ gainers, losers }: TopMoversCardProps) {
   return (
