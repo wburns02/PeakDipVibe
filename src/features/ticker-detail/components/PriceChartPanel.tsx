@@ -59,7 +59,7 @@ export function PriceChartPanel({ ticker }: PriceChartPanelProps) {
   return (
     <Card>
       {/* Controls */}
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         {/* Time range */}
         <div className="flex gap-1">
           {TIME_RANGES.map((r, i) => (
@@ -92,7 +92,7 @@ export function PriceChartPanel({ ticker }: PriceChartPanelProps) {
               className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${
                 activeOverlays.has(key)
                   ? "bg-bg-hover text-text-primary"
-                  : "text-text-muted hover:text-text-secondary"
+                  : "text-text-muted hover:bg-bg-hover hover:text-text-secondary"
               }`}
             >
               <span

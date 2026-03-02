@@ -84,7 +84,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
       ) : (
         <>
           {/* Summary stats */}
-          <div className="mb-4 grid grid-cols-3 gap-2">
+          <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
             <div className="rounded-lg bg-bg-primary p-3 text-center">
               <Target className="mx-auto mb-1 h-4 w-4 text-accent" />
               <p className="text-lg font-bold text-text-primary">{data.summary.win_rate}%</p>

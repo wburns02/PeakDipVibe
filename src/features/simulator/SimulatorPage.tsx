@@ -225,9 +225,11 @@ export function SimulatorPage() {
         case "ArrowRight":
           e.preventDefault();
           if (currentBarIndex < totalBars - 1) {
-            setCurrentBarIndex((i) => Math.min(totalBars - 1, i + 1));
-          } else {
-            setFinished(true);
+            setCurrentBarIndex((i) => {
+              const next = Math.min(totalBars - 1, i + 1);
+              if (next >= totalBars - 1) setFinished(true);
+              return next;
+            });
           }
           break;
         case "ArrowLeft":
@@ -1009,7 +1011,7 @@ export function SimulatorPage() {
                 <button
                   type="button"
                   onClick={stepForward}
-                  disabled={currentBarIndex >= totalBars - 1}
+                  disabled={finished}
                   className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
                   title="Forward"
                   aria-label="Step forward (→ key)"
