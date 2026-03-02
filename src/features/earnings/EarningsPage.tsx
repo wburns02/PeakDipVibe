@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, RefreshCw, ArrowRight } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { useImpactSummary, usePriceJourney, useThisWeek } from "@/api/hooks/useEarnings";
 import { Card } from "@/components/ui/Card";
 import { PriceJourneyChart } from "./components/PriceJourneyChart";
@@ -8,6 +9,7 @@ import { SectorChart } from "./components/SectorChart";
 import { ForwardLook } from "./components/ForwardLook";
 
 export function EarningsPage() {
+  usePageTitle("Earnings Events");
   const { data: summary, isLoading: summaryLoading } = useImpactSummary();
   const { data: journey } = usePriceJourney("all");
   const { data: thisWeek, isLoading: weekLoading } = useThisWeek();

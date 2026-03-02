@@ -17,6 +17,7 @@ import {
   useEventAnalysis,
 } from "@/api/hooks/useEarnings";
 import { useSectors } from "@/api/hooks/useMarket";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Card } from "@/components/ui/Card";
 import type { LibraryEvent, IntradayBar } from "@/api/types/earnings";
 import { getCatalystConfig } from "@/lib/catalystTypes";
@@ -103,6 +104,7 @@ function fmtCurrency(n: number): string {
 // ─── Main Component ─────────────────────────────────────────────────────────
 
 export function SimulatorPage() {
+  usePageTitle("Trading Simulator");
   const [searchParams, setSearchParams] = useSearchParams();
   const ticker = searchParams.get("ticker") || "";
   const signalDate = searchParams.get("date") || "";
@@ -477,6 +479,7 @@ export function SimulatorPage() {
             {["Small", "Medium", "Big", "Huge"].map((s) => (
               <button
                 key={s}
+                aria-pressed={filters.gap_size === s}
                 onClick={() =>
                   setFilters((f) => ({
                     ...f,
@@ -505,6 +508,7 @@ export function SimulatorPage() {
             {["Bounced", "Faded", "Kept Falling"].map((o) => (
               <button
                 key={o}
+                aria-pressed={filters.outcome === o}
                 onClick={() =>
                   setFilters((f) => ({
                     ...f,

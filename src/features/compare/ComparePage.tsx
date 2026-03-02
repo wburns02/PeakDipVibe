@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { X, Plus, BarChart3 } from "lucide-react";
 import { useCompare } from "@/api/hooks/useCompare";
 import { useTickerList } from "@/api/hooks/useTickers";
@@ -29,6 +30,7 @@ const PRESET_GROUPS = [
 ];
 
 export function ComparePage() {
+  usePageTitle("Compare Stocks");
   const [tickers, setTickers] = useState<string[]>(["AAPL", "MSFT"]);
   const [searchInput, setSearchInput] = useState("");
   const [period, setPeriod] = useState(252);
@@ -148,6 +150,8 @@ export function ComparePage() {
             <button
               key={p.label}
               onClick={() => setPeriod(p.days)}
+              aria-pressed={period === p.days}
+              aria-label={`Show ${p.label} performance`}
               className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
                 period === p.days
                   ? "bg-accent text-white"

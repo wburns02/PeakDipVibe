@@ -5,6 +5,7 @@ import { useSectors } from "@/api/hooks/useMarket";
 import { Card } from "@/components/ui/Card";
 import { SignalStatsCards } from "./components/SignalStatsCards";
 import { SignalTable } from "./components/SignalTable";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import type { SignalFilters } from "@/api/types/signals";
 
 const CATALYST_OPTIONS = [
@@ -23,6 +24,7 @@ const STATUS_OPTIONS = [
 ];
 
 export function SignalsPage() {
+  usePageTitle("News Catalyst Scanner");
   const [filters, setFilters] = useState<SignalFilters>({
     days: 30,
     min_strength: 0,

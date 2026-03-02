@@ -18,6 +18,7 @@ import { MiniSparkline } from "@/components/charts/MiniSparkline";
 import { useSparkline } from "@/api/hooks/useCompare";
 import { formatCurrency, formatPercent } from "@/lib/formatters";
 import { GlossaryTerm } from "@/components/education/GlossaryTerm";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import type { ScreenerFilters } from "@/api/types/screener";
 
 const PRESETS = [
@@ -41,6 +42,7 @@ const SparklineCell = memo(function SparklineCell({ ticker }: { ticker: string }
 });
 
 export function ScreenerPage() {
+  usePageTitle("Stock Screener");
   const { toggle, isWatched } = useWatchlist();
   const [searchParams] = useSearchParams();
   const sectorParam = searchParams.get("sector");

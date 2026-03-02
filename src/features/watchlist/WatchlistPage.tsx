@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Star, TrendingUp, TrendingDown, Inbox } from "lucide-react";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { useTicker } from "@/api/hooks/useTickers";
@@ -98,6 +99,7 @@ function WatchlistRow({ ticker, onRemove }: { ticker: string; onRemove: () => vo
 }
 
 export function WatchlistPage() {
+  usePageTitle("Watchlist");
   const { watchlist, remove } = useWatchlist();
 
   return (

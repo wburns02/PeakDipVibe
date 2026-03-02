@@ -4,6 +4,7 @@ import { Search, Clock, X } from "lucide-react";
 import { useMarketOverview, usePipelineStatus } from "@/api/hooks/useMarket";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { MarketOverviewCard } from "./components/MarketOverviewCard";
 import { SectorHeatmapCard } from "./components/SectorHeatmapCard";
@@ -28,6 +29,7 @@ function saveRecent(ticker: string) {
 }
 
 export function DashboardPage() {
+  usePageTitle("Market Dashboard");
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);

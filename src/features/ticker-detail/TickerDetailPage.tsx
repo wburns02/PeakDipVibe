@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { ArrowLeft, Star } from "lucide-react";
 import { useTicker } from "@/api/hooks/useTickers";
 import { useLatestIndicators } from "@/api/hooks/useIndicators";
@@ -13,6 +14,7 @@ import { SignalHistoryCard } from "@/features/signals/components/SignalHistoryCa
 
 export function TickerDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
+  usePageTitle(symbol ? `${symbol} — Stock Detail` : "Stock Detail");
   const { data: ticker, isLoading, error } = useTicker(symbol ?? "");
   const { data: indicators } = useLatestIndicators(symbol ?? "");
   const { toggle, isWatched } = useWatchlist();
