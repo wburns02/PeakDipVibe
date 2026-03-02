@@ -48,12 +48,12 @@ export const ComparisonChart = memo(function ComparisonChart({ data, tickers, co
         <ReferenceLine y={0} stroke="#64748b" strokeDasharray="3 3" />
         <Tooltip
           contentStyle={{
-            backgroundColor: "#1e2235",
-            border: "1px solid #2a2e45",
+            backgroundColor: "var(--color-bg-card)",
+            border: "1px solid var(--color-border)",
             borderRadius: "8px",
             fontSize: 12,
           }}
-          labelStyle={{ color: "#94a3b8" }}
+          labelStyle={{ color: "var(--color-text-muted)" }}
           formatter={((value: number | undefined, name: string | undefined) => [
             value != null ? `${value > 0 ? "+" : ""}${value.toFixed(2)}%` : "—",
             name ?? "",

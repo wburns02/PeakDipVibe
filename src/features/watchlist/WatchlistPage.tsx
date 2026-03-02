@@ -1,8 +1,9 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { Star, TrendingUp, TrendingDown, Inbox } from "lucide-react";
+import { Star, TrendingUp, TrendingDown, Inbox, ArrowUpDown } from "lucide-react";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import { useToast } from "@/components/ui/Toast";
 import { useTicker } from "@/api/hooks/useTickers";
 import { useLatestIndicators } from "@/api/hooks/useIndicators";
 import { useSparkline } from "@/api/hooks/useCompare";
@@ -99,9 +100,28 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: 
   );
 });
 
+type SortMode = "custom" | "alpha" | "alpha-desc";
+
 export function WatchlistPage() {
   usePageTitle("Watchlist");
   const { watchlist, remove } = useWatchlist();
+  const { show: showToast } = useToast();
+  const [sortMode, setSortMode] = useState<SortMode>("custom");
+
+  const sorted = [...watchlist].sort((a, b) => {
+    if (sortMode === "alpha") return a.localeCompare(b);
+    if (sortMode === "alpha-desc") return b.localeCompare(a);
+    return 0; // custom = insertion order
+  });
+
+  const cycleSortMode = () => {
+    setSortMode((prev) =>
+      prev === "custom" ? "alpha" : prev === "alpha" ? "alpha-desc" : "custom",
+    );
+  };
+
+  const sortLabel =
+    sortMode === "alpha" ? "A → Z" : sortMode === "alpha-desc" ? "Z → A" : "Added";
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -134,13 +154,27 @@ export function WatchlistPage() {
         <Card
           title={`${watchlist.length} Stock${watchlist.length === 1 ? "" : "s"}`}
           subtitle="Click star to remove"
+          action={
+            <button
+              type="button"
+              onClick={cycleSortMode}
+              className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              aria-label="Change sort order"
+            >
+              <ArrowUpDown className="h-3 w-3" />
+              {sortLabel}
+            </button>
+          }
         >
           <div className="-mx-3 space-y-0.5">
-            {watchlist.map((ticker) => (
+            {sorted.map((ticker) => (
               <WatchlistRow
                 key={ticker}
                 ticker={ticker}
-                onRemove={() => remove(ticker)}
+                onRemove={() => {
+                  remove(ticker);
+                  showToast(`${ticker} removed from watchlist`);
+                }}
               />
             ))}
           </div>
