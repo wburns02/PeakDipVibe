@@ -36,6 +36,7 @@ const MoverRow = memo(function MoverRow({ mover }: { mover: Mover }) {
     <div className="flex items-center justify-between rounded-lg px-3 py-2 transition-colors hover:bg-bg-hover">
       <div className="flex items-center gap-3">
         <button
+          type="button"
           onClick={(e) => {
             e.preventDefault();
             toggle(mover.ticker);

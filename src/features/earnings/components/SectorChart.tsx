@@ -33,6 +33,7 @@ export function SectorChart() {
       <div className="flex gap-1.5">
         {PERIOD_OPTIONS.map((o) => (
           <button
+            type="button"
             key={o.value}
             onClick={() => setDays(o.value)}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${

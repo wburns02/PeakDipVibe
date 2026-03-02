@@ -435,6 +435,7 @@ export function SimulatorPage() {
 
           <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <button
+              type="button"
               onClick={handleSurpriseMe}
               disabled={randomLoading}
               aria-label="Pick a random stock event to simulate"
@@ -472,6 +473,7 @@ export function SimulatorPage() {
                   />
                 </div>
                 <button
+                  type="button"
                   onClick={handleSearch}
                   className="rounded-lg bg-accent/10 px-4 py-2 text-sm font-medium text-accent hover:bg-accent/20"
                 >
@@ -484,6 +486,7 @@ export function SimulatorPage() {
           <div className="mt-3 flex flex-wrap gap-2">
             {["Small", "Medium", "Big", "Huge"].map((s) => (
               <button
+                type="button"
                 key={s}
                 aria-pressed={filters.gap_size === s}
                 onClick={() =>
@@ -513,6 +516,7 @@ export function SimulatorPage() {
 
             {["Bounced", "Faded", "Kept Falling"].map((o) => (
               <button
+                type="button"
                 key={o}
                 aria-pressed={filters.outcome === o}
                 onClick={() =>
@@ -614,6 +618,7 @@ export function SimulatorPage() {
             {library.total_pages > 1 && (
               <div className="flex items-center justify-center gap-2">
                 <button
+                  type="button"
                   onClick={() =>
                     setFilters((f) => ({
                       ...f,
@@ -629,6 +634,7 @@ export function SimulatorPage() {
                   Page {library.page} of {library.total_pages}
                 </span>
                 <button
+                  type="button"
                   onClick={() =>
                     setFilters((f) => ({
                       ...f,
@@ -660,6 +666,7 @@ export function SimulatorPage() {
     <div className="mx-auto max-w-5xl space-y-4 pb-12">
       {/* Back button */}
       <button
+        type="button"
         onClick={goBack}
         className="flex items-center gap-1.5 text-sm text-text-muted hover:text-accent"
       >
@@ -721,6 +728,7 @@ export function SimulatorPage() {
           {analysis?.found && (
             <Card className="border-indigo-500/20">
               <button
+                type="button"
                 onClick={() => setAnalysisExpanded(!analysisExpanded)}
                 className="flex w-full items-center justify-between text-left"
               >
@@ -824,6 +832,7 @@ export function SimulatorPage() {
               </span>
               {[1000, 5000, 10000].map((amt) => (
                 <button
+                  type="button"
                   key={amt}
                   onClick={() => changeStartingCash(amt)}
                   aria-pressed={startingCash === amt}
@@ -877,6 +886,7 @@ export function SimulatorPage() {
             {!finished && (
               <div className="mb-3 flex gap-2">
                 <button
+                  type="button"
                   onClick={handleBuy}
                   disabled={cash < currentPrice || currentPrice <= 0}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 py-2.5 text-sm font-bold text-white transition-colors hover:bg-emerald-500 disabled:opacity-30 disabled:hover:bg-emerald-600"
@@ -885,6 +895,7 @@ export function SimulatorPage() {
                   BUY at {fmtCurrency(currentPrice)}
                 </button>
                 <button
+                  type="button"
                   onClick={handleSell}
                   disabled={shares <= 0}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-red-600 py-2.5 text-sm font-bold text-white transition-colors hover:bg-red-500 disabled:opacity-30 disabled:hover:bg-red-600"
@@ -902,6 +913,7 @@ export function SimulatorPage() {
                 <span className="text-xs text-text-muted">Interval:</span>
                 {(["15m", "30m", "60m"] as const).map((iv) => (
                   <button
+                    type="button"
                     key={iv}
                     onClick={() => {
                       setBarInterval(iv);
@@ -927,6 +939,7 @@ export function SimulatorPage() {
               {/* Playback controls */}
               <div className="flex items-center gap-1.5">
                 <button
+                  type="button"
                   onClick={stepBack}
                   disabled={currentBarIndex <= 0}
                   className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
@@ -936,6 +949,7 @@ export function SimulatorPage() {
                   <ChevronLeft className="h-4 w-4" />
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     if (finished) {
                       resetSim();
@@ -965,6 +979,7 @@ export function SimulatorPage() {
                   )}
                 </button>
                 <button
+                  type="button"
                   onClick={stepForward}
                   disabled={currentBarIndex >= totalBars - 1}
                   className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
@@ -1212,6 +1227,7 @@ export function SimulatorPage() {
 
                 <div className="mt-4 flex justify-center gap-3">
                   <button
+                    type="button"
                     onClick={resetSim}
                     className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-bold text-white hover:bg-accent/80"
                   >
@@ -1219,6 +1235,7 @@ export function SimulatorPage() {
                     Try Again
                   </button>
                   <button
+                    type="button"
                     onClick={goBack}
                     className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover"
                   >
@@ -1245,6 +1262,7 @@ export function SimulatorPage() {
             Event not found. Try browsing the event library instead.
           </p>
           <button
+            type="button"
             onClick={goBack}
             className="mt-2 text-sm text-accent hover:underline"
           >
@@ -1302,6 +1320,7 @@ function EventBrowserCard({
 
   return (
     <button
+      type="button"
       onClick={onSelect}
       className="group flex flex-col rounded-xl border border-border bg-bg-card p-4 text-left transition-all hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5"
     >

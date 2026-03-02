@@ -102,6 +102,7 @@ export function ScreenerPage() {
       <div className="flex flex-wrap gap-2">
         {PRESETS.map((p) => (
           <button
+            type="button"
             key={p.label}
             onClick={() => applyPreset(p)}
             className="rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
@@ -114,6 +115,7 @@ export function ScreenerPage() {
       {/* Expandable filters */}
       <Card>
         <button
+          type="button"
           onClick={() => setShowFilters(!showFilters)}
           className="flex w-full items-center justify-between text-sm font-medium text-text-primary"
         >
@@ -249,19 +251,19 @@ export function ScreenerPage() {
                 <tr className="border-b border-border text-left text-xs text-text-muted">
                   <th scope="col" className="w-8 pb-2" />
                   <th scope="col" className="pb-2">
-                    <button onClick={() => toggleSort("ticker")} className="flex items-center gap-1">
+                    <button type="button" onClick={() => toggleSort("ticker")} className="flex items-center gap-1">
                       Ticker {sortIcon("ticker")}
                     </button>
                   </th>
                   <th scope="col" className="pb-2">7d</th>
                   <th scope="col" className="pb-2">Price</th>
                   <th scope="col" className="pb-2">
-                    <button onClick={() => toggleSort("change")} className="flex items-center gap-1">
+                    <button type="button" onClick={() => toggleSort("change")} className="flex items-center gap-1">
                       Change {sortIcon("change")}
                     </button>
                   </th>
                   <th scope="col" className="pb-2">
-                    <button onClick={() => toggleSort("rsi")} className="flex items-center gap-1">
+                    <button type="button" onClick={() => toggleSort("rsi")} className="flex items-center gap-1">
                       RSI<GlossaryTerm term="rsi" /> {sortIcon("rsi")}
                     </button>
                   </th>
@@ -276,7 +278,7 @@ export function ScreenerPage() {
                 {results.map((r) => (
                   <tr key={r.ticker} className="border-b border-border/50 transition-colors hover:bg-bg-hover">
                     <td className="py-2">
-                      <button onClick={() => toggle(r.ticker)} aria-label={isWatched(r.ticker) ? `Remove ${r.ticker} from watchlist` : `Add ${r.ticker} to watchlist`} className="text-text-muted hover:text-amber">
+                      <button type="button" onClick={() => toggle(r.ticker)} aria-label={isWatched(r.ticker) ? `Remove ${r.ticker} from watchlist` : `Add ${r.ticker} to watchlist`} className="text-text-muted hover:text-amber">
                         <Star className={`h-3.5 w-3.5 ${isWatched(r.ticker) ? "fill-amber text-amber" : ""}`} />
                       </button>
                     </td>

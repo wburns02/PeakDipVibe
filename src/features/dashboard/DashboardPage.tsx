@@ -144,6 +144,7 @@ export function DashboardPage() {
         {/* Clear button */}
         {searchInput.length > 0 && (
           <button
+            type="button"
             onClick={() => {
               setSearchInput("");
               inputRef.current?.focus();

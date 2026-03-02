@@ -69,6 +69,7 @@ export function TickerDetailPage() {
           Back to Dashboard
         </Link>
         <button
+          type="button"
           onClick={() => toggle(ticker.ticker)}
           className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary transition-colors hover:border-amber hover:text-amber"
         >

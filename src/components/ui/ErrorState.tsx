@@ -15,6 +15,7 @@ export function ErrorState({
       <p className="text-sm text-text-muted">{message}</p>
       {onRetry && (
         <button
+          type="button"
           onClick={onRetry}
           className="mt-3 flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-4 py-2 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
         >

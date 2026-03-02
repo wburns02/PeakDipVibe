@@ -65,6 +65,7 @@ export function SignalsPage() {
       {/* Filters */}
       <Card>
         <button
+          type="button"
           onClick={() => setShowFilters(!showFilters)}
           className="flex w-full items-center justify-between text-sm font-medium text-text-primary"
         >

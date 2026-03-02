@@ -40,6 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
           )}
           <div className="mt-6 flex gap-3">
             <button
+              type="button"
               onClick={this.handleReset}
               className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
             >

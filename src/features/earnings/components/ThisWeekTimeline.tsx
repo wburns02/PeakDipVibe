@@ -117,6 +117,7 @@ export function ThisWeekTimeline({ data, isLoading }: Props) {
       {/* Show all / Show less */}
       {hasMore && (
         <button
+          type="button"
           onClick={() => setShowAll(!showAll)}
           className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
         >

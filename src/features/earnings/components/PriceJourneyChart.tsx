@@ -91,6 +91,7 @@ export function PriceJourneyChart() {
         <div className="flex rounded-lg border border-border bg-bg-secondary p-0.5">
           {VIEWS.map((v) => (
             <button
+              type="button"
               key={v.id}
               onClick={() => setView(v.id)}
               className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
@@ -108,6 +109,7 @@ export function PriceJourneyChart() {
         <div className="flex flex-wrap gap-1">
           {SIZES.map((s) => (
             <button
+              type="button"
               key={s.value}
               onClick={() => setMoveSize(s.value)}
               className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${

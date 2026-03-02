@@ -37,6 +37,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
           <label className="mb-1 block text-[10px] text-text-muted">Signal</label>
           <div className="flex gap-1">
             <button
+              type="button"
               onClick={() => { setDirection("below"); setThreshold(30); }}
               className={`rounded-md px-2 py-1 text-xs ${
                 direction === "below" ? "bg-green/15 text-green" : "text-text-muted hover:bg-bg-hover"
@@ -45,6 +46,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
               RSI &lt; 30
             </button>
             <button
+              type="button"
               onClick={() => { setDirection("above"); setThreshold(70); }}
               className={`rounded-md px-2 py-1 text-xs ${
                 direction === "above" ? "bg-red/15 text-red" : "text-text-muted hover:bg-bg-hover"
@@ -59,6 +61,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
           <div className="flex gap-1">
             {HOLD_OPTIONS.map((d) => (
               <button
+                type="button"
                 key={d}
                 onClick={() => setHoldDays(d)}
                 className={`rounded-md px-2 py-1 text-xs ${

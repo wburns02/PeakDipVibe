@@ -90,7 +90,7 @@ export function ComparePage() {
               />
               <span className="text-sm font-medium text-text-primary">{ticker}</span>
               {tickers.length > 2 && (
-                <button onClick={() => removeTicker(ticker)} aria-label={`Remove ${ticker}`} className="text-text-muted hover:text-red">
+                <button type="button" onClick={() => removeTicker(ticker)} aria-label={`Remove ${ticker}`} className="text-text-muted hover:text-red">
                   <X className="h-3.5 w-3.5" />
                 </button>
               )}
@@ -119,6 +119,7 @@ export function ComparePage() {
                     .slice(0, 8)
                     .map((t) => (
                       <button
+                        type="button"
                         key={t.ticker}
                         onClick={() => addTicker(t.ticker)}
                         className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-bg-hover"
@@ -137,6 +138,7 @@ export function ComparePage() {
         <div className="mt-3 flex flex-wrap gap-1.5">
           {PRESET_GROUPS.map((g) => (
             <button
+              type="button"
               key={g.label}
               onClick={() => setTickers(g.tickers)}
               className="rounded-lg border border-border bg-bg-primary px-2.5 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
@@ -150,6 +152,7 @@ export function ComparePage() {
         <div className="mt-3 flex gap-1">
           {PERIOD_OPTIONS.map((p) => (
             <button
+              type="button"
               key={p.label}
               onClick={() => setPeriod(p.days)}
               aria-pressed={period === p.days}

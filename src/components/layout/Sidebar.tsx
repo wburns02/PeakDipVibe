@@ -42,6 +42,7 @@ export function Sidebar() {
     <>
       {/* Mobile hamburger button */}
       <button
+        type="button"
         onClick={() => setOpen(true)}
         className="fixed left-3 top-3 z-40 flex h-10 w-10 items-center justify-center rounded-lg bg-bg-secondary border border-border md:hidden"
         aria-label="Open menu"
@@ -74,6 +75,7 @@ export function Sidebar() {
             </div>
           </div>
           <button
+            type="button"
             onClick={() => setOpen(false)}
             className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-bg-hover md:hidden"
             aria-label="Close menu"
