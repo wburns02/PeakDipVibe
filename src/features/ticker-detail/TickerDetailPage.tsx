@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { useParams, Link } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { ArrowLeft, Star } from "lucide-react";
@@ -9,8 +10,13 @@ import { CompanyInfoCard } from "./components/CompanyInfoCard";
 import { PriceChartPanel } from "./components/PriceChartPanel";
 import { IndicatorPanel } from "./components/IndicatorPanel";
 import { TechnicalSummary } from "./components/TechnicalSummary";
-import { BacktestPanel } from "./components/BacktestPanel";
-import { SignalHistoryCard } from "@/features/signals/components/SignalHistoryCard";
+
+const BacktestPanel = lazy(() =>
+  import("./components/BacktestPanel").then((m) => ({ default: m.BacktestPanel }))
+);
+const SignalHistoryCard = lazy(() =>
+  import("@/features/signals/components/SignalHistoryCard").then((m) => ({ default: m.SignalHistoryCard }))
+);
 
 export function TickerDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
@@ -82,8 +88,12 @@ export function TickerDetailPage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-6">
           <PriceChartPanel ticker={ticker.ticker} />
-          <BacktestPanel ticker={ticker.ticker} />
-          <SignalHistoryCard ticker={ticker.ticker} />
+          <Suspense fallback={<Skeleton className="h-64" />}>
+            <BacktestPanel ticker={ticker.ticker} />
+          </Suspense>
+          <Suspense fallback={<Skeleton className="h-48" />}>
+            <SignalHistoryCard ticker={ticker.ticker} />
+          </Suspense>
         </div>
         <div className="space-y-6">
           <TechnicalSummary ticker={ticker} indicators={indicators} />

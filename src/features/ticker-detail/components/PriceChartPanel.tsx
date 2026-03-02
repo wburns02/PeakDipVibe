@@ -1,9 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, lazy, Suspense } from "react";
 import { useChartData } from "@/api/hooks/usePrices";
-import { CandlestickChart } from "@/components/charts/CandlestickChart";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { CHART_COLORS } from "@/lib/colors";
+
+const CandlestickChart = lazy(() =>
+  import("@/components/charts/CandlestickChart").then((m) => ({ default: m.CandlestickChart }))
+);
 
 interface PriceChartPanelProps {
   ticker: string;
@@ -106,7 +109,9 @@ export function PriceChartPanel({ ticker }: PriceChartPanelProps) {
       {isLoading ? (
         <Skeleton className="h-[500px]" />
       ) : data && data.length > 0 ? (
-        <CandlestickChart data={data} overlays={overlays} />
+        <Suspense fallback={<Skeleton className="h-[500px]" />}>
+          <CandlestickChart data={data} overlays={overlays} />
+        </Suspense>
       ) : (
         <div className="flex h-[500px] items-center justify-center text-text-muted">
           No price data available
