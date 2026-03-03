@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { X, Plus, BarChart3, Zap, Link2, Check } from "lucide-react";
+import { X, Plus, BarChart3, Zap, Link2, Check, Download } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useCompare } from "@/api/hooks/useCompare";
 import { useTickerList } from "@/api/hooks/useTickers";
@@ -83,6 +83,35 @@ export function ComparePage() {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const downloadCSV = () => {
+    if (!compareData || chartData.length === 0) return;
+    const header = ["Date", ...tickers].join(",");
+    const rows = chartData.map((row) => {
+      const r = row as Record<string, string | number>;
+      const vals = tickers.map((t) => {
+        const v = r[t];
+        return v != null ? Number(v).toFixed(4) : "";
+      });
+      return [row.date, ...vals].join(",");
+    });
+    // Add correlation matrix as a footer
+    const corrLines: string[] = ["", "Correlation Matrix"];
+    if (correlations) {
+      corrLines.push(["", ...tickers].join(","));
+      for (const t1 of tickers) {
+        corrLines.push([t1, ...tickers.map((t2) => (correlations[t1]?.[t2] ?? 0).toFixed(4))].join(","));
+      }
+    }
+    const csv = [header, ...rows, ...corrLines].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `compare_${tickers.join("_")}_${period}d.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Build chart data
   const chartData = useMemo(() => {
     if (!compareData) return [];
@@ -143,15 +172,28 @@ export function ComparePage() {
           </p>
         </div>
         {tab === "stocks" && tickers.length >= 2 && (
-          <button
-            type="button"
-            onClick={copyLink}
-            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
-            title="Copy shareable link"
-          >
-            {copied ? <Check className="h-3.5 w-3.5 text-green" /> : <Link2 className="h-3.5 w-3.5" />}
-            {copied ? "Copied!" : "Copy Link"}
-          </button>
+          <div className="flex items-center gap-2">
+            {compareData && chartData.length > 0 && (
+              <button
+                type="button"
+                onClick={downloadCSV}
+                className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+                title="Download comparison as CSV"
+              >
+                <Download className="h-3.5 w-3.5" />
+                CSV
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={copyLink}
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              title="Copy shareable link"
+            >
+              {copied ? <Check className="h-3.5 w-3.5 text-green" /> : <Link2 className="h-3.5 w-3.5" />}
+              {copied ? "Copied!" : "Copy Link"}
+            </button>
+          </div>
         )}
       </div>
 
