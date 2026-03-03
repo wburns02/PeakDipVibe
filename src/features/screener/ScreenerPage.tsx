@@ -373,6 +373,21 @@ export function ScreenerPage() {
             <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </span>
         </button>
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
+          {(() => {
+            let count = 0;
+            if (filters.rsi_min != null) count++;
+            if (filters.rsi_max != null) count++;
+            if (filters.price_min != null) count++;
+            if (filters.price_max != null) count++;
+            if (filters.sector) count++;
+            if (filters.above_sma200 != null) count++;
+            if (filters.above_sma50 != null) count++;
+            if (filters.golden_cross) count++;
+            if (filters.death_cross) count++;
+            return count > 0 ? `${count} active filter${count > 1 ? "s" : ""}` : "No active filters";
+          })()}
+        </div>
 
         {showFilters && (
           <div id="screener-filters" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
