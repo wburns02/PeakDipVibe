@@ -514,8 +514,8 @@ export function ComparePage() {
           <div className="flex flex-col items-center justify-center py-16 text-text-muted">
             <BarChart3 className="mb-3 h-10 w-10 opacity-40" />
             <p className="text-sm font-medium">No overlapping data found</p>
-            <p className="mt-1 max-w-xs text-center text-xs">
-              These tickers don't have matching price history. Try different tickers or a shorter time period.
+            <p className="mt-1 max-w-sm text-center text-xs">
+              These tickers may not have price history for the same date range. Try picking a shorter period (e.g. 30 or 90 days) or choose tickers that have been trading longer.
             </p>
           </div>
         </Card>
