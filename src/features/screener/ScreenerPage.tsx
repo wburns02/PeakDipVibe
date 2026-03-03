@@ -474,7 +474,11 @@ export function ScreenerPage() {
                     </button>
                   </th>
                   <th scope="col" className="pb-2">7d</th>
-                  <th scope="col" className="pb-2">Price</th>
+                  <th scope="col" className="pb-2" aria-sort={filters.sort_by === "price" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
+                    <button type="button" onClick={() => toggleSort("price")} className="flex items-center gap-1">
+                      Price {sortIcon("price")}
+                    </button>
+                  </th>
                   <th scope="col" className="pb-2" aria-sort={filters.sort_by === "change" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
                     <button type="button" onClick={() => toggleSort("change")} className="flex items-center gap-1">
                       Change {sortIcon("change")}
@@ -489,7 +493,11 @@ export function ScreenerPage() {
                     <span className="flex items-center">SMA 50<GlossaryTerm term="sma" /></span>
                   </th>
                   <th scope="col" className="pb-2">SMA 200</th>
-                  <th scope="col" className="pb-2">Sector</th>
+                  <th scope="col" className="pb-2" aria-sort={filters.sort_by === "sector" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
+                    <button type="button" onClick={() => toggleSort("sector")} className="flex items-center gap-1">
+                      Sector {sortIcon("sector")}
+                    </button>
+                  </th>
                 </tr>
               </thead>
               <tbody>
