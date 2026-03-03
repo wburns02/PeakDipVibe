@@ -10,6 +10,7 @@ import {
   SearchX,
   X,
   Save,
+  Download,
 } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useScreener } from "@/api/hooks/useScreener";
@@ -145,6 +146,29 @@ export function ScreenerPage() {
     filters.golden_cross ||
     filters.death_cross
   );
+
+  const exportCSV = useCallback(() => {
+    if (!results || results.length === 0) return;
+    const headers = ["Ticker", "Name", "Sector", "Price", "Change %", "RSI 14", "Above SMA 50", "Above SMA 200"];
+    const rows = results.map((r) => [
+      r.ticker,
+      `"${(r.name ?? "").replace(/"/g, '""')}"`,
+      r.sector ?? "",
+      r.close?.toFixed(2) ?? "",
+      r.change_pct?.toFixed(2) ?? "",
+      r.rsi_14?.toFixed(1) ?? "",
+      r.above_sma50 != null ? (r.above_sma50 ? "Yes" : "No") : "",
+      r.above_sma200 != null ? (r.above_sma200 ? "Yes" : "No") : "",
+    ]);
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `screener-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [results]);
 
   const sortIcon = (field: string) =>
     filters.sort_by === field ? (
@@ -410,6 +434,18 @@ export function ScreenerPage() {
       <Card
         title={`Results${results ? ` (${results.length})` : ""}`}
         subtitle="Click any row to view full analysis"
+        action={
+          results && results.length > 0 ? (
+            <button
+              type="button"
+              onClick={exportCSV}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+            >
+              <Download className="h-3.5 w-3.5" />
+              Export CSV
+            </button>
+          ) : undefined
+        }
       >
         {isLoading ? (
           <div className="space-y-2">
