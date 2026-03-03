@@ -20,6 +20,7 @@ import {
 import { useSectors } from "@/api/hooks/useMarket";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { Card } from "@/components/ui/Card";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { MiniLesson } from "@/components/education/MiniLesson";
 import type { LibraryEvent, IntradayBar } from "@/api/types/earnings";
 import { getCatalystConfig } from "@/lib/catalystTypes";
@@ -227,7 +228,7 @@ export function SimulatorPage() {
   }>({ page: 1 });
   const [searchInput, setSearchInput] = useState("");
 
-  const { data: library, isLoading: libraryLoading } = useEventLibrary({
+  const { data: library, isLoading: libraryLoading, isError: libraryError, refetch: refetchLibrary } = useEventLibrary({
     ...filters,
     per_page: 12,
   });
@@ -256,7 +257,7 @@ export function SimulatorPage() {
   const [showCone, setShowCone] = useState(false);
   const autoPlayRef = useRef(false);
 
-  const { data: intradaySim, isLoading: simLoading } = useIntradaySimulation(
+  const { data: intradaySim, isLoading: simLoading, isError: simError, refetch: refetchSim } = useIntradaySimulation(
     activeTicker,
     activeDate,
     barInterval,
@@ -750,7 +751,9 @@ export function SimulatorPage() {
         />
 
         {/* Event Grid */}
-        {libraryLoading ? (
+        {libraryError ? (
+          <ErrorState message="Could not load events. The API may be offline." onRetry={refetchLibrary} />
+        ) : libraryLoading ? (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <Card key={i}>
@@ -887,6 +890,10 @@ export function SimulatorPage() {
             </div>
           </div>
         </Card>
+      )}
+
+      {simError && !simLoading && (
+        <ErrorState message="Could not load intraday data for this event." onRetry={refetchSim} />
       )}
 
       {intradaySim && !("error" in intradaySim) && (
