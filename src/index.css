@@ -16,6 +16,23 @@
   --color-amber: #f59e0b;
 }
 
+/* Light theme overrides */
+[data-theme="light"] {
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-hover: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-accent: #4f46e5;
+  --color-accent-hover: #6366f1;
+  --color-green: #16a34a;
+  --color-red: #dc2626;
+  --color-amber: #d97706;
+}
+
 body {
   margin: 0;
   background-color: var(--color-bg-primary);
@@ -35,6 +52,20 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 3px;
+}
+
+/* Chart theme-aware colors */
+:root {
+  --chart-grid: rgba(255, 255, 255, 0.06);
+  --chart-tick: rgba(255, 255, 255, 0.5);
+  --chart-tooltip-bg: #1a1e2e;
+  --chart-tooltip-border: rgba(255, 255, 255, 0.1);
+}
+[data-theme="light"] {
+  --chart-grid: rgba(0, 0, 0, 0.08);
+  --chart-tick: rgba(0, 0, 0, 0.5);
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: rgba(0, 0, 0, 0.12);
 }
 
 /* Focus-visible ring for keyboard navigation */

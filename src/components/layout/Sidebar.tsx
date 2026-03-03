@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { preloadRoute } from "@/App";
+import { useTheme } from "@/hooks/useTheme";
 import {
   LayoutDashboard,
   TrendingUp,
@@ -13,6 +14,8 @@ import {
   PlayCircle,
   Menu,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 const navItems = [
@@ -28,6 +31,7 @@ const navItems = [
 export function Sidebar() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   // Close mobile sidebar on Escape key
   useEffect(() => {
@@ -110,13 +114,22 @@ export function Sidebar() {
           })}
         </nav>
 
-        <div className="border-t border-border px-4 py-3">
-          <div className="flex items-center justify-between text-xs text-text-muted">
-            <div className="flex items-center gap-2">
-              <Activity className="h-3 w-3" />
-              <span>S&P 500 Pipeline</span>
-            </div>
+        <div className="border-t border-border px-3 py-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </button>
             <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-[10px] font-mono text-text-muted" title="Keyboard shortcuts">?</kbd>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-text-muted">
+            <Activity className="h-3 w-3" />
+            <span>S&P 500 Pipeline</span>
           </div>
         </div>
       </aside>
