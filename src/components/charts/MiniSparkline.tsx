@@ -19,6 +19,7 @@ export const MiniSparkline = memo(function MiniSparkline({
   if (data.length === 0) return null;
 
   return (
+    <div role="img" aria-label="Price sparkline">
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data}>
         <Line
@@ -31,5 +32,6 @@ export const MiniSparkline = memo(function MiniSparkline({
         />
       </LineChart>
     </ResponsiveContainer>
+    </div>
   );
 });

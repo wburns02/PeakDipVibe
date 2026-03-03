@@ -41,6 +41,7 @@ export function PatternMiniChart({ signal }: PatternMiniChartProps) {
   };
 
   return (
+    <div role="img" aria-label="Pattern price movement mini chart" className="inline-block">
     <ComposedChart width={80} height={28} data={data} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
       <XAxis dataKey="name" hide />
       <YAxis domain={[min, max]} hide />
@@ -51,5 +52,6 @@ export function PatternMiniChart({ signal }: PatternMiniChartProps) {
         ))}
       </Bar>
     </ComposedChart>
+    </div>
   );
 }

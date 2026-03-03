@@ -215,7 +215,7 @@ export function EventCompare() {
       {/* Chart */}
       {events.length >= 2 && chartData.length > 0 && (
         <Card>
-          <div className="h-64 sm:h-80">
+          <div className="h-64 sm:h-80" role="img" aria-label="Earnings event comparison chart showing post-event price performance">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={chartData}

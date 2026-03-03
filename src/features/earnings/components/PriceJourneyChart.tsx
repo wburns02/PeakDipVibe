@@ -141,7 +141,7 @@ export function PriceJourneyChart() {
             {moveSize !== "all" && ` (${moveSize} moves only)`}
           </p>
 
-          <div className="h-80">
+          <div className="h-80" role="img" aria-label="Price journey chart showing stock movement around earnings events">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={chartData}

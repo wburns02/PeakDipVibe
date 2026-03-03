@@ -35,7 +35,7 @@ export function SeasonalTrendsCard({ ticker }: { ticker: string }) {
       </div>
 
       {/* Bar chart */}
-      <div className="h-36">
+      <div className="h-36" role="img" aria-label="Monthly seasonal performance bar chart">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={seasonal.months}

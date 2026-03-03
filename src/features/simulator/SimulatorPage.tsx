@@ -1303,7 +1303,7 @@ export function SimulatorPage() {
                 Probability Cone
               </button>
             </div>
-            <div className="h-64 sm:h-80">
+            <div className="h-64 sm:h-80" role="img" aria-label="Intraday price chart for trading simulation">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
                   data={chartData}
