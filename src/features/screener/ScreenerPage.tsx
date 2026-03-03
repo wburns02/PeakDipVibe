@@ -155,6 +155,19 @@ export function ScreenerPage() {
   const isRefetching = isFetching && !isLoading;
   const { data: sectors } = useSectors();
 
+  // "F" key toggles filter panel
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement).tagName)) return;
+      if (e.key === "f" || e.key === "F") {
+        e.preventDefault();
+        setShowFilters((v) => !v);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
+
   const setFilter = (key: keyof ScreenerFilters, value: unknown) => {
     setFilters((prev) => ({ ...prev, [key]: value || undefined }));
   };
@@ -348,7 +361,10 @@ export function ScreenerPage() {
               );
             })()}
           </span>
-          <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+          <span className="flex items-center gap-2">
+            <kbd className="hidden rounded border border-border bg-bg-hover px-1.5 py-0.5 text-[10px] font-medium text-text-muted sm:inline">F</kbd>
+            <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+          </span>
         </button>
 
         {showFilters && (
