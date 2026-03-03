@@ -224,9 +224,9 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove, alert, onSet
       </div>
 
       <div className="flex items-center gap-4">
-        {/* Sparkline */}
+        {/* Sparkline — hidden on mobile */}
         {sparkline && (
-          <div className="w-20">
+          <div className="hidden w-20 sm:block">
             <MiniSparkline
               data={sparkline.closes.map((v) => ({ value: v }))}
               color={sparkColor}
@@ -241,7 +241,7 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove, alert, onSet
             {detail.latest_close ? formatCurrency(detail.latest_close) : "—"}
           </p>
           <div className="flex items-center justify-end gap-1">
-            <p className="text-xs text-text-muted">{detail.sector}</p>
+            <p className="hidden text-xs text-text-muted sm:block">{detail.sector}</p>
             {sectorRank && (
               <span
                 className={`inline-flex items-center gap-0.5 rounded px-1 py-px text-[10px] font-medium ${
@@ -262,8 +262,8 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove, alert, onSet
           </div>
         </div>
 
-        {/* RSI */}
-        <div className="w-16 text-right">
+        {/* RSI — hidden on small screens */}
+        <div className="hidden w-16 text-right md:block">
           {rsi != null ? (
             <Badge variant={rsi < 30 ? "green" : rsi > 70 ? "red" : "default"}>
               RSI {rsi.toFixed(0)}
@@ -273,8 +273,8 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove, alert, onSet
           )}
         </div>
 
-        {/* Signal */}
-        <div className="w-20 text-right">
+        {/* Signal — hidden on small screens */}
+        <div className="hidden w-20 text-right md:block">
           {rsi != null ? (
             rsi < 30 ? (
               <Badge variant="green">
