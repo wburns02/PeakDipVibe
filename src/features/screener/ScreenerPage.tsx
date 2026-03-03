@@ -184,8 +184,12 @@ export function ScreenerPage() {
     }));
   };
 
+  const isDuplicateName = saveName.trim() !== "" && savedPresets.some(
+    (p) => p.name.toLowerCase() === saveName.trim().toLowerCase(),
+  );
+
   const saveCurrentFilters = useCallback(() => {
-    if (!saveName.trim()) return;
+    if (!saveName.trim() || isDuplicateName) return;
     const { sort_by, sort_dir, limit, ...filterParts } = filters;
     const preset: SavedPreset = {
       name: saveName.trim(),
@@ -314,11 +318,14 @@ export function ScreenerPage() {
             <button
               type="button"
               onClick={saveCurrentFilters}
-              disabled={!saveName.trim()}
+              disabled={!saveName.trim() || isDuplicateName}
               className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-accent/80 disabled:opacity-40"
             >
               Save
             </button>
+            {isDuplicateName && (
+              <span className="text-[10px] text-red">Name taken</span>
+            )}
             <button
               type="button"
               onClick={() => { setShowSaveInput(false); setSaveName(""); }}
