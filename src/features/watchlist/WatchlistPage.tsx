@@ -103,6 +103,7 @@ function PriceAlertEditor({
             value={above}
             onChange={(e) => setAbove(e.target.value)}
             placeholder={currentPrice ? (currentPrice * 1.05).toFixed(2) : "0.00"}
+            aria-invalid={!!validationError || undefined}
             className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-1 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
           />
         </div>
@@ -114,12 +115,13 @@ function PriceAlertEditor({
             value={below}
             onChange={(e) => setBelow(e.target.value)}
             placeholder={currentPrice ? (currentPrice * 0.95).toFixed(2) : "0.00"}
+            aria-invalid={!!validationError || undefined}
             className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-1 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
           />
         </div>
       </div>
       {validationError && (
-        <p className="mt-2 text-[10px] text-red">{validationError}</p>
+        <p role="alert" className="mt-2 text-[10px] text-red">{validationError}</p>
       )}
       <div className="mt-2.5 flex gap-2">
         <button
