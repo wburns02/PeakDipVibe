@@ -24,19 +24,52 @@ function CatalystBadge({ type }: { type: string | null }) {
   return <Badge variant={config.variant}>{config.label}</Badge>;
 }
 
-function StrengthBar({ score, max = 100 }: { score: number | null; max?: number }) {
-  if (score == null) return <span className="text-text-muted">—</span>;
+function StrengthBar({ signal }: { signal: PatternSignal }) {
+  if (signal.signal_strength == null) return <span className="text-text-muted">—</span>;
 
-  const pct = Math.min(100, (score / max) * 100);
-  const color =
-    pct >= 70 ? "bg-green" : pct >= 40 ? "bg-amber" : "bg-red";
+  const score = signal.signal_strength;
+  const pct = Math.min(100, score);
+  const color = pct >= 70 ? "bg-green" : pct >= 40 ? "bg-amber" : "bg-red";
+
+  const components = [
+    { label: "Gap", value: signal.gap_score, color: "bg-accent" },
+    { label: "Selloff", value: signal.selloff_score, color: "bg-purple" },
+    { label: "Volume", value: signal.volume_score, color: "bg-amber" },
+    { label: "Catalyst", value: signal.catalyst_score, color: "bg-green" },
+  ];
+  const hasBreakdown = components.some((c) => c.value != null && c.value > 0);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="group relative flex items-center gap-2">
       <div className="h-1.5 w-16 rounded-full bg-bg-hover">
         <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
       </div>
       <span className="text-xs text-text-secondary">{score}</span>
+
+      {/* Tooltip breakdown on hover */}
+      {hasBreakdown && (
+        <div className="pointer-events-none absolute top-full left-0 z-30 mt-2 hidden w-44 rounded-lg border border-border bg-bg-card p-2.5 shadow-xl group-hover:block">
+          <p className="mb-1.5 text-[10px] font-semibold text-text-primary">
+            Score Breakdown
+          </p>
+          {components.map((c) => (
+            <div key={c.label} className="mb-1 last:mb-0">
+              <div className="flex items-center justify-between text-[10px]">
+                <span className="text-text-muted">{c.label}</span>
+                <span className="font-medium text-text-secondary">
+                  {c.value?.toFixed(0) ?? 0}
+                </span>
+              </div>
+              <div className="mt-0.5 h-1 w-full rounded-full bg-bg-hover">
+                <div
+                  className={`h-full rounded-full ${c.color} transition-all`}
+                  style={{ width: `${Math.min(100, c.value ?? 0)}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -206,7 +239,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                     <CatalystBadge type={s.catalyst_type} />
                   </td>
                   <td className="py-2">
-                    <StrengthBar score={s.signal_strength} />
+                    <StrengthBar signal={s} />
                   </td>
                   <td className="py-2">
                     {s.outcome_1d != null ? (
