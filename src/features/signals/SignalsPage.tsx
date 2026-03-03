@@ -172,8 +172,10 @@ export function SignalsPage() {
                 aria-valuenow={filters.min_strength ?? 0}
                 aria-valuemin={0}
                 aria-valuemax={100}
+                aria-describedby="strength-hint"
                 className="w-full accent-accent"
               />
+              <span id="strength-hint" className="sr-only">0 = weak signal, 100 = strongest signal</span>
             </div>
 
             {/* Status */}
