@@ -32,13 +32,18 @@ export function BottomNav() {
             aria-current={active ? "page" : undefined}
             onMouseEnter={() => preloadRoute[to]?.()}
             onFocus={() => preloadRoute[to]?.()}
-            className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] transition-colors ${
+            className={`relative flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] transition-colors duration-200 ${
               active
                 ? "text-accent"
                 : "text-text-muted"
             }`}
           >
-            <Icon className="h-5 w-5" />
+            <span
+              className={`absolute top-0 h-0.5 rounded-full bg-accent transition-all duration-200 ${
+                active ? "w-6 opacity-100" : "w-0 opacity-0"
+              }`}
+            />
+            <Icon className={`h-5 w-5 transition-transform duration-200 ${active ? "scale-110" : "scale-100"}`} />
             {label}
           </Link>
         );
