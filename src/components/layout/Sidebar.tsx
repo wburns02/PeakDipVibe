@@ -105,7 +105,7 @@ export function Sidebar() {
           </button>
         </div>
 
-        <nav className="mt-2 flex-1 px-2">
+        <nav aria-label="Main navigation" className="mt-2 flex-1 px-2">
           {navItems.map(({ to, icon: Icon, label }) => {
             const active =
               to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
