@@ -6,6 +6,7 @@ import {
   MarketOverviewSchema,
   SectorPerformanceSchema,
   StatusResponseSchema,
+  UpcomingEarningsResponseSchema,
 } from "../types/market";
 import { z } from "zod";
 
@@ -37,6 +38,19 @@ export function useMarketBreadth() {
     queryFn: async () => {
       const { data } = await api.get("/market/breadth");
       return MarketBreadthSchema.parse(data);
+    },
+    staleTime: STALE_WARM,
+  });
+}
+
+export function useUpcomingEarnings(limit = 8) {
+  return useQuery({
+    queryKey: ["upcoming-earnings", limit],
+    queryFn: async () => {
+      const { data } = await api.get("/market/upcoming-earnings", {
+        params: { limit },
+      });
+      return UpcomingEarningsResponseSchema.parse(data);
     },
     staleTime: STALE_WARM,
   });

@@ -49,8 +49,23 @@ export const StatusResponseSchema = z.object({
   last_update: z.string().nullable(),
 });
 
+export const UpcomingEarningSchema = z.object({
+  ticker: z.string(),
+  name: z.string().nullable(),
+  sector: z.string().nullable(),
+  earnings_date: z.string(),
+  market_cap: z.number().nullable(),
+});
+
+export const UpcomingEarningsResponseSchema = z.object({
+  earnings: z.array(UpcomingEarningSchema),
+  last_refreshed: z.string().nullable(),
+});
+
 export type Mover = z.infer<typeof MoverSchema>;
 export type SectorPerformance = z.infer<typeof SectorPerformanceSchema>;
 export type MarketOverview = z.infer<typeof MarketOverviewSchema>;
 export type MarketBreadth = z.infer<typeof MarketBreadthSchema>;
 export type StatusResponse = z.infer<typeof StatusResponseSchema>;
+export type UpcomingEarning = z.infer<typeof UpcomingEarningSchema>;
+export type UpcomingEarningsResponse = z.infer<typeof UpcomingEarningsResponseSchema>;
