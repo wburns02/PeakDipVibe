@@ -16,6 +16,7 @@ export function Tooltip({ content, children }: TooltipProps) {
       onMouseLeave={() => setShow(false)}
       onFocus={() => setShow(true)}
       onBlur={() => setShow(false)}
+      onKeyDown={(e) => { if (e.key === "Escape") setShow(false); }}
       aria-describedby={show ? tooltipId : undefined}
     >
       {children}
