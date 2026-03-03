@@ -385,6 +385,7 @@ export function ScreenerPage() {
                   placeholder="Min"
                   value={filters.rsi_min ?? ""}
                   onChange={(e) => setFilter("rsi_min", e.target.value ? +e.target.value : undefined)}
+                  onBlur={(e) => { const v = +e.target.value; if (e.target.value && (v < 0 || v > 100)) setFilter("rsi_min", Math.max(0, Math.min(100, v))); }}
                   min={0}
                   max={100}
                   aria-label="Minimum RSI value"
@@ -395,6 +396,7 @@ export function ScreenerPage() {
                   placeholder="Max"
                   value={filters.rsi_max ?? ""}
                   onChange={(e) => setFilter("rsi_max", e.target.value ? +e.target.value : undefined)}
+                  onBlur={(e) => { const v = +e.target.value; if (e.target.value && (v < 0 || v > 100)) setFilter("rsi_max", Math.max(0, Math.min(100, v))); }}
                   min={0}
                   max={100}
                   aria-label="Maximum RSI value"
@@ -412,6 +414,7 @@ export function ScreenerPage() {
                   placeholder="Min"
                   value={filters.price_min ?? ""}
                   onChange={(e) => setFilter("price_min", e.target.value ? +e.target.value : undefined)}
+                  onBlur={(e) => { const v = +e.target.value; if (e.target.value && v < 0) setFilter("price_min", 0); }}
                   min={0}
                   step={1}
                   aria-label="Minimum price"
@@ -422,6 +425,7 @@ export function ScreenerPage() {
                   placeholder="Max"
                   value={filters.price_max ?? ""}
                   onChange={(e) => setFilter("price_max", e.target.value ? +e.target.value : undefined)}
+                  onBlur={(e) => { const v = +e.target.value; if (e.target.value && v < 0) setFilter("price_max", 0); }}
                   min={0}
                   step={1}
                   aria-label="Maximum price"
