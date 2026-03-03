@@ -1,9 +1,13 @@
-import { memo, useState } from "react";
+import { memo, useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { useQueries } from "@tanstack/react-query";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { Star, TrendingUp, TrendingDown, Inbox, ArrowUpDown } from "lucide-react";
+import { Star, TrendingUp, TrendingDown, Inbox, ArrowUpDown, Download, BarChart3 } from "lucide-react";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { useToast } from "@/components/ui/Toast";
+import { api } from "@/api/client";
+import { TickerDetailSchema } from "@/api/types/ticker";
+import { IndicatorSnapshotSchema } from "@/api/types/indicator";
 import { useTicker } from "@/api/hooks/useTickers";
 import { useLatestIndicators } from "@/api/hooks/useIndicators";
 import { useSparkline } from "@/api/hooks/useCompare";
@@ -11,7 +15,22 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { MiniSparkline } from "@/components/charts/MiniSparkline";
-import { formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatPercent } from "@/lib/formatters";
+
+const SECTOR_COLORS: Record<string, string> = {
+  "Technology": "#6366f1",
+  "Information Technology": "#6366f1",
+  "Health Care": "#22c55e",
+  "Financials": "#eab308",
+  "Consumer Discretionary": "#f97316",
+  "Communication Services": "#ec4899",
+  "Industrials": "#64748b",
+  "Consumer Staples": "#14b8a6",
+  "Energy": "#ef4444",
+  "Utilities": "#8b5cf6",
+  "Real Estate": "#06b6d4",
+  "Materials": "#a3e635",
+};
 
 const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: string; onRemove: () => void }) {
   const { data: detail, isLoading } = useTicker(ticker);
@@ -100,6 +119,186 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: 
   );
 });
 
+function WatchlistSummary({ tickers }: { tickers: string[] }) {
+  const detailQueries = useQueries({
+    queries: tickers.map((t) => ({
+      queryKey: ["ticker", t],
+      queryFn: async () => {
+        const { data } = await api.get(`/tickers/${t}`);
+        return TickerDetailSchema.parse(data);
+      },
+    })),
+  });
+
+  const indicatorQueries = useQueries({
+    queries: tickers.map((t) => ({
+      queryKey: ["indicators", t],
+      queryFn: async () => {
+        const { data } = await api.get(`/indicators/${t}`);
+        return IndicatorSnapshotSchema.parse(data);
+      },
+    })),
+  });
+
+  const sparkQueries = useQueries({
+    queries: tickers.map((t) => ({
+      queryKey: ["sparkline", t, 7],
+      queryFn: async () => {
+        const { data } = await api.get(`/prices/${t}/sparkline`, { params: { days: 7 } });
+        return data as { closes: number[] };
+      },
+    })),
+  });
+
+  const details = detailQueries.map((q) => q.data).filter(Boolean);
+  const indicators = indicatorQueries.map((q) => q.data).filter(Boolean);
+  const sparks = sparkQueries.map((q) => q.data).filter(Boolean);
+
+  // Sector distribution
+  const sectorCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const d of details) {
+      if (d?.sector) counts[d.sector] = (counts[d.sector] || 0) + 1;
+    }
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  }, [details]);
+
+  // Average RSI
+  const avgRsi = useMemo(() => {
+    const rsis = indicators
+      .map((i) => i?.indicators?.RSI_14)
+      .filter((v): v is number => v != null);
+    return rsis.length > 0 ? rsis.reduce((a, b) => a + b, 0) / rsis.length : null;
+  }, [indicators]);
+
+  // Average 7d change %
+  const avgChange = useMemo(() => {
+    const changes: number[] = [];
+    for (const s of sparks) {
+      if (s && s.closes.length > 1) {
+        const first = s.closes[0];
+        const last = s.closes[s.closes.length - 1];
+        if (first !== 0) changes.push(((last - first) / first) * 100);
+      }
+    }
+    return changes.length > 0 ? changes.reduce((a, b) => a + b, 0) / changes.length : null;
+  }, [sparks]);
+
+  // CSV export
+  const exportCSV = useCallback(() => {
+    if (details.length === 0) return;
+    const headers = ["Ticker", "Name", "Sector", "Price", "RSI 14", "7d Change %"];
+    const rows = tickers.map((t, i) => {
+      const d = detailQueries[i]?.data;
+      const ind = indicatorQueries[i]?.data;
+      const sp = sparkQueries[i]?.data;
+      const rsi = ind?.indicators?.RSI_14;
+      let chg = "";
+      if (sp && sp.closes.length > 1 && sp.closes[0] !== 0) {
+        chg = (((sp.closes[sp.closes.length - 1] - sp.closes[0]) / sp.closes[0]) * 100).toFixed(2);
+      }
+      return [
+        t,
+        `"${(d?.name ?? "").replace(/"/g, '""')}"`,
+        d?.sector ?? "",
+        d?.latest_close?.toFixed(2) ?? "",
+        rsi?.toFixed(1) ?? "",
+        chg,
+      ];
+    });
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `watchlist-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [tickers, details, detailQueries, indicatorQueries, sparkQueries]);
+
+  const isLoading = detailQueries.some((q) => q.isLoading);
+  const totalSectors = sectorCounts.reduce((sum, [, c]) => sum + c, 0);
+
+  if (isLoading) return <Skeleton className="h-28" />;
+
+  return (
+    <Card>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="h-4 w-4 text-accent" />
+          <h3 className="text-sm font-semibold text-text-primary">Portfolio Summary</h3>
+        </div>
+        <button
+          type="button"
+          onClick={exportCSV}
+          className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+        >
+          <Download className="h-3 w-3" />
+          Export CSV
+        </button>
+      </div>
+
+      {/* Stats row */}
+      <div className="mt-3 grid grid-cols-3 gap-3">
+        <div>
+          <p className="text-[11px] text-text-muted">Stocks</p>
+          <p className="text-lg font-semibold text-text-primary">{tickers.length}</p>
+        </div>
+        <div>
+          <p className="text-[11px] text-text-muted">Avg RSI</p>
+          <p className="text-lg font-semibold text-text-primary">
+            {avgRsi != null ? (
+              <span className={avgRsi < 30 ? "text-green" : avgRsi > 70 ? "text-red" : ""}>
+                {avgRsi.toFixed(1)}
+              </span>
+            ) : "—"}
+          </p>
+        </div>
+        <div>
+          <p className="text-[11px] text-text-muted">7d Chg</p>
+          <p className="text-lg font-semibold text-text-primary">
+            {avgChange != null ? (
+              <span className={avgChange >= 0 ? "text-green" : "text-red"}>
+                {formatPercent(avgChange)}
+              </span>
+            ) : "—"}
+          </p>
+        </div>
+      </div>
+
+      {/* Sector breakdown bar */}
+      {sectorCounts.length > 0 && (
+        <div className="mt-4">
+          <p className="mb-1.5 text-xs text-text-muted">Sector Distribution</p>
+          <div className="flex h-3 overflow-hidden rounded-full">
+            {sectorCounts.map(([sector, count]) => (
+              <div
+                key={sector}
+                style={{
+                  width: `${(count / totalSectors) * 100}%`,
+                  backgroundColor: SECTOR_COLORS[sector] || "#64748b",
+                }}
+                title={`${sector}: ${count}`}
+              />
+            ))}
+          </div>
+          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+            {sectorCounts.map(([sector, count]) => (
+              <span key={sector} className="flex items-center gap-1 text-[11px] text-text-secondary">
+                <span
+                  className="inline-block h-2 w-2 rounded-full"
+                  style={{ backgroundColor: SECTOR_COLORS[sector] || "#64748b" }}
+                />
+                {sector} {count}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
 type SortMode = "custom" | "alpha" | "alpha-desc";
 
 export function WatchlistPage() {
@@ -131,6 +330,9 @@ export function WatchlistPage() {
           Your starred stocks — data persists in your browser
         </p>
       </div>
+
+      {/* Portfolio summary */}
+      {watchlist.length > 0 && <WatchlistSummary tickers={watchlist} />}
 
       {watchlist.length === 0 ? (
         <Card>
