@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { X, Plus, BarChart3, Zap } from "lucide-react";
+import { X, Plus, BarChart3, Zap, Link2, Check } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useCompare } from "@/api/hooks/useCompare";
 import { useTickerList } from "@/api/hooks/useTickers";
@@ -34,11 +35,32 @@ const PRESET_GROUPS = [
 
 export function ComparePage() {
   usePageTitle("Compare");
-  const [tab, setTab] = useState<"stocks" | "events">("stocks");
-  const [tickers, setTickers] = useState<string[]>(["AAPL", "MSFT"]);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchInput, setSearchInput] = useState("");
-  const [period, setPeriod] = useState(252);
+  const [copied, setCopied] = useState(false);
   const debouncedSearch = useDebounce(searchInput, 200);
+
+  // Read state from URL params (with defaults)
+  const tab = (searchParams.get("tab") === "events" ? "events" : "stocks") as "stocks" | "events";
+  const tickersParam = searchParams.get("tickers");
+  const tickers = tickersParam ? tickersParam.split(",").filter(Boolean).slice(0, 8) : ["AAPL", "MSFT"];
+  const periodParam = searchParams.get("period");
+  const period = periodParam ? Number(periodParam) : 252;
+
+  const updateParams = useCallback((updates: Record<string, string | null>) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      for (const [key, val] of Object.entries(updates)) {
+        if (val == null) next.delete(key);
+        else next.set(key, val);
+      }
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
+
+  const setTab = (t: "stocks" | "events") => updateParams({ tab: t === "stocks" ? null : t });
+  const setTickers = (t: string[]) => updateParams({ tickers: t.join(",") });
+  const setPeriod = (d: number) => updateParams({ period: d === 252 ? null : String(d) });
 
   const { data: compareData, isLoading, isFetching, isError, refetch } = useCompare(tickers, period);
   const isRefetching = isFetching && !isLoading;
@@ -53,6 +75,12 @@ export function ComparePage() {
 
   const removeTicker = (ticker: string) => {
     setTickers(tickers.filter((t) => t !== ticker));
+  };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   // Build chart data
@@ -107,11 +135,24 @@ export function ComparePage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-text-primary">Compare</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Side-by-side analysis of stocks or catalyst events
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-text-primary">Compare</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Side-by-side analysis of stocks or catalyst events
+          </p>
+        </div>
+        {tab === "stocks" && tickers.length >= 2 && (
+          <button
+            type="button"
+            onClick={copyLink}
+            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+            title="Copy shareable link"
+          >
+            {copied ? <Check className="h-3.5 w-3.5 text-green" /> : <Link2 className="h-3.5 w-3.5" />}
+            {copied ? "Copied!" : "Copy Link"}
+          </button>
+        )}
       </div>
 
       {/* Tab selector */}
