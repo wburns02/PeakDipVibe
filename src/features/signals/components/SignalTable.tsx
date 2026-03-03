@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpDown, PlayCircle, Zap, Copy, Check } from "lucide-react";
+import { ArrowUpDown, PlayCircle, Zap, Copy, Check, GitCompareArrows } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -256,6 +256,14 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                   <td className="py-2">
                     <div className="flex items-center gap-1">
                       <CopySignalButton signal={s} />
+                      <Link
+                        to={`/compare?tickers=${s.ticker}`}
+                        className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
+                        title={`Compare ${s.ticker}`}
+                        aria-label={`Compare ${s.ticker} with other stocks`}
+                      >
+                        <GitCompareArrows className="h-3.5 w-3.5" />
+                      </Link>
                       <Link
                         to={`/simulator?ticker=${s.ticker}&date=${s.signal_date}`}
                         className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-accent hover:bg-accent/10 transition-colors"

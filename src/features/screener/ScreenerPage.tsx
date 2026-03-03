@@ -11,6 +11,7 @@ import {
   X,
   Save,
   Download,
+  GitCompareArrows,
 } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useScreener } from "@/api/hooks/useScreener";
@@ -531,6 +532,7 @@ export function ScreenerPage() {
                       Sector {sortIcon("sector")}
                     </button>
                   </th>
+                  <th scope="col" className="w-8 pb-2" />
                 </tr>
               </thead>
               <tbody>
@@ -605,6 +607,16 @@ export function ScreenerPage() {
                     </td>
                     <td className="py-2 text-xs text-text-muted">
                       {r.sector ?? "—"}
+                    </td>
+                    <td className="py-2">
+                      <Link
+                        to={`/compare?tickers=${r.ticker}`}
+                        className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
+                        title={`Compare ${r.ticker}`}
+                        aria-label={`Compare ${r.ticker} with other stocks`}
+                      >
+                        <GitCompareArrows className="h-3.5 w-3.5" />
+                      </Link>
                     </td>
                   </tr>
                 ))}
