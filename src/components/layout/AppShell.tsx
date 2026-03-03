@@ -4,6 +4,7 @@ import { BottomNav } from "./BottomNav";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { OnboardingTour } from "../onboarding/OnboardingTour";
 import { KeyboardShortcuts } from "../ui/KeyboardShortcuts";
+import { BackToTop } from "../ui/BackToTop";
 
 export function AppShell() {
   return (
@@ -23,6 +24,7 @@ export function AppShell() {
       <BottomNav />
       <OnboardingTour />
       <KeyboardShortcuts />
+      <BackToTop />
     </div>
   );
 }
