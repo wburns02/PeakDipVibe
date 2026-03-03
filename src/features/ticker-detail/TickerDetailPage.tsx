@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { ArrowLeft, Star } from "lucide-react";
+import { ChevronRight, Star } from "lucide-react";
 import { useTicker } from "@/api/hooks/useTickers";
 import { useLatestIndicators } from "@/api/hooks/useIndicators";
 import { useWatchlist } from "@/hooks/useWatchlist";
@@ -25,12 +25,15 @@ const SignalHistoryCard = lazy(() =>
 export function TickerDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
   usePageTitle(symbol ? `${symbol} — Stock Detail` : "Stock Detail");
-  const navigate = useNavigate();
   const { data: ticker, isLoading, error } = useTicker(symbol ?? "");
   const { data: indicators } = useLatestIndicators(symbol ?? "");
   const { toggle, isWatched } = useWatchlist();
   const { show: showToast } = useToast();
-  const goBack = () => (window.history.length > 1 ? navigate(-1) : navigate("/"));
+
+  // Breadcrumb: sector link when available, otherwise Dashboard
+  const sectorLink = ticker?.sector
+    ? { label: ticker.sector, to: `/screener?sector=${encodeURIComponent(ticker.sector)}` }
+    : null;
 
   if (isLoading) {
     return (
@@ -45,14 +48,11 @@ export function TickerDetailPage() {
   if (error || !ticker) {
     return (
       <div className="mx-auto max-w-6xl">
-        <button
-          type="button"
-          onClick={goBack}
-          className="mb-4 inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </button>
+        <nav className="mb-4 flex items-center gap-1 text-sm text-text-muted" aria-label="Breadcrumb">
+          <Link to="/" className="hover:text-accent">Dashboard</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-text-secondary">{symbol}</span>
+        </nav>
         <div className="rounded-xl border border-border bg-bg-card p-12 text-center">
           <p className="text-lg font-semibold text-text-primary">
             Ticker not found
@@ -67,16 +67,19 @@ export function TickerDetailPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      {/* Back button + watchlist */}
+      {/* Breadcrumb + watchlist */}
       <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={goBack}
-          className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-accent"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </button>
+        <nav className="flex items-center gap-1 text-sm text-text-muted" aria-label="Breadcrumb">
+          <Link to="/" className="hover:text-accent">Dashboard</Link>
+          {sectorLink && (
+            <>
+              <ChevronRight className="h-3 w-3" />
+              <Link to={sectorLink.to} className="hidden hover:text-accent sm:inline">{sectorLink.label}</Link>
+            </>
+          )}
+          <ChevronRight className="h-3 w-3" />
+          <span className="font-medium text-text-primary">{ticker.ticker}</span>
+        </nav>
         <button
           type="button"
           onClick={() => {
