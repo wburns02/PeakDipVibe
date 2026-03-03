@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { Clock } from "lucide-react";
+import { Clock, Search } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { MiniSparkline } from "@/components/charts/MiniSparkline";
@@ -70,7 +70,27 @@ const RecentTickerRow = memo(function RecentTickerRow({
 export function RecentlyViewedCard() {
   const recentTickers = loadRecent();
 
-  if (recentTickers.length === 0) return null;
+  if (recentTickers.length === 0) {
+    return (
+      <Card>
+        <div className="mb-3 flex items-center gap-2">
+          <Clock className="h-4 w-4 text-accent" />
+          <h3 className="text-sm font-semibold text-text-primary">
+            Recently Viewed
+          </h3>
+        </div>
+        <div className="flex flex-col items-center gap-2 py-6 text-center">
+          <Search className="h-6 w-6 text-text-muted" />
+          <p className="text-sm text-text-muted">
+            No recent searches yet
+          </p>
+          <p className="text-xs text-text-muted">
+            Use the search bar or <Link to="/screener" className="text-accent hover:underline">browse the screener</Link> to find stocks
+          </p>
+        </div>
+      </Card>
+    );
+  }
 
   const tickers = recentTickers.slice(0, 6);
 
