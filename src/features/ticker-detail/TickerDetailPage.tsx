@@ -8,6 +8,7 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { useToast } from "@/components/ui/Toast";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { CompanyInfoCard } from "./components/CompanyInfoCard";
+import { QuickStats } from "./components/QuickStats";
 import { PriceChartPanel } from "./components/PriceChartPanel";
 import { IndicatorPanel } from "./components/IndicatorPanel";
 import { TechnicalSummary } from "./components/TechnicalSummary";
@@ -94,6 +95,9 @@ export function TickerDetailPage() {
 
       {/* Company info */}
       <CompanyInfoCard ticker={ticker} />
+
+      {/* Quick stats bar */}
+      <QuickStats ticker={ticker.ticker} />
 
       {/* Chart + sidebar layout */}
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
