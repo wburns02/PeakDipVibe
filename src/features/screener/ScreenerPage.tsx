@@ -8,6 +8,7 @@ import {
   Star,
   ChevronDown,
   SearchX,
+  X,
 } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useScreener } from "@/api/hooks/useScreener";
@@ -127,6 +128,22 @@ export function ScreenerPage() {
           <span className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
             Custom Filters
+            {(() => {
+              let count = 0;
+              if (filters.rsi_min != null) count++;
+              if (filters.rsi_max != null) count++;
+              if (filters.sector) count++;
+              if (filters.above_sma200 != null) count++;
+              if (filters.above_sma50 != null) count++;
+              if (filters.golden_cross) count++;
+              if (filters.death_cross) count++;
+              if (count === 0) return null;
+              return (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[10px] font-bold text-white">
+                  {count}
+                </span>
+              );
+            })()}
           </span>
           <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
         </button>
@@ -230,6 +247,44 @@ export function ScreenerPage() {
           </div>
         )}
       </Card>
+
+      {/* Active filter chips */}
+      {(() => {
+        const chips: { label: string; clear: () => void }[] = [];
+        if (filters.rsi_min != null) chips.push({ label: `RSI ≥ ${filters.rsi_min}`, clear: () => setFilter("rsi_min", undefined) });
+        if (filters.rsi_max != null) chips.push({ label: `RSI ≤ ${filters.rsi_max}`, clear: () => setFilter("rsi_max", undefined) });
+        if (filters.sector) chips.push({ label: filters.sector, clear: () => setFilter("sector", undefined) });
+        if (filters.above_sma200 === true) chips.push({ label: "Above SMA 200", clear: () => setFilter("above_sma200", undefined) });
+        if (filters.above_sma50 === true) chips.push({ label: "Above SMA 50", clear: () => setFilter("above_sma50", undefined) });
+        if (filters.above_sma200 === false) chips.push({ label: "Below SMA 200", clear: () => setFilter("above_sma200", undefined) });
+        if (filters.above_sma50 === false) chips.push({ label: "Below SMA 50", clear: () => setFilter("above_sma50", undefined) });
+        if (filters.golden_cross) chips.push({ label: "Golden Cross", clear: () => setFilter("golden_cross", undefined) });
+        if (filters.death_cross) chips.push({ label: "Death Cross", clear: () => setFilter("death_cross", undefined) });
+        if (chips.length === 0) return null;
+        return (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-text-muted">Active filters:</span>
+            {chips.map((c) => (
+              <button
+                key={c.label}
+                type="button"
+                onClick={c.clear}
+                className="inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+              >
+                {c.label}
+                <X className="h-3 w-3" />
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => setFilters({ sort_by: "rsi", sort_dir: "asc", limit: 50 })}
+              className="text-xs text-text-muted underline hover:text-text-secondary"
+            >
+              Clear all
+            </button>
+          </div>
+        );
+      })()}
 
       {/* Results table */}
       <Card
