@@ -496,7 +496,7 @@ type SortMode = "custom" | "alpha" | "alpha-desc";
 
 export function WatchlistPage() {
   usePageTitle("Watchlist");
-  const { watchlist, remove } = useWatchlist();
+  const { watchlist, add, remove } = useWatchlist();
   const { setAlert, removeAlert, getAlert, checkTriggered } = usePriceAlerts();
   const { show: showToast } = useToast();
   const [sortMode, setSortMode] = useState<SortMode>("custom");
@@ -530,20 +530,51 @@ export function WatchlistPage() {
 
       {watchlist.length === 0 ? (
         <Card>
-          <div className="flex flex-col items-center justify-center py-16 text-text-muted">
+          <div className="flex flex-col items-center justify-center py-12 text-text-muted">
             <Inbox className="mb-3 h-10 w-10 opacity-40" />
-            <p className="text-sm">Your watchlist is empty</p>
-            <p className="mt-1 text-xs">
-              Star stocks from the{" "}
-              <Link to="/" className="text-accent hover:underline">
-                Dashboard
-              </Link>{" "}
-              or{" "}
-              <Link to="/screener" className="text-accent hover:underline">
-                Screener
-              </Link>{" "}
-              to add them here
+            <p className="text-sm font-medium text-text-primary">Your watchlist is empty</p>
+            <p className="mt-1 max-w-xs text-center text-xs">
+              Track your favorite stocks with price alerts, RSI signals, and sector rankings
             </p>
+
+            {/* Quick-add popular stocks */}
+            <div className="mt-5">
+              <p className="mb-2 text-center text-[10px] uppercase tracking-wide text-text-muted">Quick add</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {["AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "TSLA"].map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => {
+                      add(t);
+                      showToast(`${t} added to watchlist`);
+                    }}
+                    className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:border-accent hover:bg-accent/10"
+                  >
+                    <Star className="h-3 w-3" />
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Browse links */}
+            <div className="mt-5 flex gap-3">
+              <Link
+                to="/signals"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              >
+                <TrendingUp className="h-3.5 w-3.5" />
+                Browse Signals
+              </Link>
+              <Link
+                to="/screener?rsi_max=30&sort_by=rsi&sort_dir=asc"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              >
+                <TrendingDown className="h-3.5 w-3.5" />
+                Oversold Stocks
+              </Link>
+            </div>
           </div>
         </Card>
       ) : (
