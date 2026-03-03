@@ -9,6 +9,7 @@ import { ImpactCards } from "./components/ImpactCards";
 import { ThisWeekTimeline } from "./components/ThisWeekTimeline";
 import { SectorChart } from "./components/SectorChart";
 import { ForwardLook } from "./components/ForwardLook";
+import { SignalCalendar } from "./components/SignalCalendar";
 
 export function EarningsPage() {
   usePageTitle("Earnings Events");
@@ -169,6 +170,17 @@ export function EarningsPage() {
         ) : (
           <ThisWeekTimeline data={thisWeek} isLoading={weekLoading} />
         )}
+      </section>
+
+      {/* ── Signal Calendar ── */}
+      <section>
+        <h2 className="mb-1 text-xl font-bold text-text-primary">
+          Signal Calendar
+        </h2>
+        <p className="mb-4 text-sm text-text-muted">
+          When did gap-up events happen this month? Dots show signal activity.
+        </p>
+        <SignalCalendar />
       </section>
 
       {/* ── Section 5: "What's Coming Up?" — Forward Look ── */}
