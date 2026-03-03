@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   BarChart3,
   Search,
@@ -66,6 +66,7 @@ const TOUR_STEPS: TourStep[] = [
 export function OnboardingTour() {
   const [visible, setVisible] = useState(false);
   const [step, setStep] = useState(0);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -113,6 +114,13 @@ export function OnboardingTour() {
     return () => window.removeEventListener("keydown", handler);
   }, [visible, next, prev, dismiss]);
 
+  // Focus dialog when it becomes visible
+  useEffect(() => {
+    if (visible) {
+      requestAnimationFrame(() => dialogRef.current?.focus());
+    }
+  }, [visible]);
+
   if (!visible) return null;
 
   const current = TOUR_STEPS[step];
@@ -120,7 +128,9 @@ export function OnboardingTour() {
 
   return (
     <div
-      className="fixed inset-0 z-[99] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      ref={dialogRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-[99] flex items-center justify-center bg-black/60 backdrop-blur-sm outline-none"
       onClick={(e) => {
         // Close if clicking the backdrop
         if (e.target === e.currentTarget) dismiss();
@@ -167,7 +177,7 @@ export function OnboardingTour() {
         <div className="flex items-center justify-between border-t border-border px-5 py-4">
           {/* Progress dots */}
           <div className="flex gap-1.5">
-            {TOUR_STEPS.map((_, i) => (
+            {TOUR_STEPS.map((s, i) => (
               <button
                 key={i}
                 type="button"
@@ -179,7 +189,7 @@ export function OnboardingTour() {
                       ? "w-1.5 bg-accent/40"
                       : "w-1.5 bg-bg-hover"
                 }`}
-                aria-label={`Go to step ${i + 1}`}
+                aria-label={`Go to step ${i + 1}: ${s.title}`}
               />
             ))}
           </div>
