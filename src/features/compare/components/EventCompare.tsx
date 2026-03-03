@@ -243,9 +243,9 @@ export function EventCompare() {
                     borderRadius: 8,
                     fontSize: 12,
                   }}
-                  formatter={(v: number) => [
+                  formatter={((v: number) => [
                     `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`,
-                  ]}
+                  ]) as never}
                 />
                 <Legend
                   wrapperStyle={{ fontSize: 11 }}
@@ -341,7 +341,7 @@ export function EventCompare() {
                     <td className="py-2 pr-3 text-xs font-medium text-text-secondary">
                       {metric.label}
                     </td>
-                    {events.map((e, i) => {
+                    {events.map((e) => {
                       const val = e[metric.key];
                       const isReturn = metric.key.startsWith("outcome_");
                       const color =

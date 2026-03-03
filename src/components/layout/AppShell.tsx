@@ -3,6 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { BottomNav } from "./BottomNav";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { OnboardingTour } from "../onboarding/OnboardingTour";
+import { KeyboardShortcuts } from "../ui/KeyboardShortcuts";
 
 export function AppShell() {
   return (
@@ -21,6 +22,7 @@ export function AppShell() {
       </main>
       <BottomNav />
       <OnboardingTour />
+      <KeyboardShortcuts />
     </div>
   );
 }

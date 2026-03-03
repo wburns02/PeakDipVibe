@@ -111,9 +111,12 @@ export function Sidebar() {
         </nav>
 
         <div className="border-t border-border px-4 py-3">
-          <div className="flex items-center gap-2 text-xs text-text-muted">
-            <Activity className="h-3 w-3" />
-            <span>S&P 500 Pipeline</span>
+          <div className="flex items-center justify-between text-xs text-text-muted">
+            <div className="flex items-center gap-2">
+              <Activity className="h-3 w-3" />
+              <span>S&P 500 Pipeline</span>
+            </div>
+            <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-[10px] font-mono text-text-muted" title="Keyboard shortcuts">?</kbd>
           </div>
         </div>
       </aside>

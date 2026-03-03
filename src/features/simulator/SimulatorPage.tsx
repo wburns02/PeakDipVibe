@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
-  LineChart,
   Line,
   Area,
   XAxis,
@@ -1310,7 +1309,7 @@ export function SimulatorPage() {
                       if (!bar) return "";
                       return `${formatDate(bar.datetime)} ${formatTime(bar.datetime)}`;
                     }}
-                    formatter={(v: number | undefined, name: string) => {
+                    formatter={((v: number, name: string) => {
                       if (v == null) return ["—", name];
                       if (name === "price") return [fmtCurrency(v), "Price"];
                       if (name === "p90") return [fmtCurrency(v), "90th %ile"];
@@ -1318,7 +1317,7 @@ export function SimulatorPage() {
                       if (name === "p25") return [fmtCurrency(v), "25th %ile"];
                       if (name === "p10") return [fmtCurrency(v), "10th %ile"];
                       return [fmtCurrency(v), name];
-                    }}
+                    }) as never}
                   />
                   {/* Day separator lines */}
                   {dayBoundaries
