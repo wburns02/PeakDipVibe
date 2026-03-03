@@ -64,9 +64,19 @@ function PriceAlertEditor({
     return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
+  const aboveVal = above ? parseFloat(above) : undefined;
+  const belowVal = below ? parseFloat(below) : undefined;
+  const validationError =
+    aboveVal != null && aboveVal <= 0
+      ? "Above price must be positive"
+      : belowVal != null && belowVal <= 0
+        ? "Below price must be positive"
+        : aboveVal != null && belowVal != null && aboveVal <= belowVal
+          ? "Above must be higher than below"
+          : null;
+
   const handleSave = () => {
-    const aboveVal = above ? parseFloat(above) : undefined;
-    const belowVal = below ? parseFloat(below) : undefined;
+    if (validationError) return;
     if (aboveVal == null && belowVal == null) {
       onRemove(ticker);
     } else {
@@ -110,11 +120,15 @@ function PriceAlertEditor({
           />
         </div>
       </div>
+      {validationError && (
+        <p className="mt-2 text-[10px] text-red">{validationError}</p>
+      )}
       <div className="mt-2.5 flex gap-2">
         <button
           type="button"
           onClick={handleSave}
-          className="flex-1 rounded-md bg-accent px-2 py-1 text-xs font-medium text-white hover:bg-accent/90"
+          disabled={!!validationError}
+          className="flex-1 rounded-md bg-accent px-2 py-1 text-xs font-medium text-white hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Save
         </button>
