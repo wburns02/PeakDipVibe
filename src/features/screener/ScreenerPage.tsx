@@ -12,6 +12,7 @@ import {
   Save,
   Download,
   GitCompareArrows,
+  Info,
 } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useScreener } from "@/api/hooks/useScreener";
@@ -26,7 +27,7 @@ import { formatCurrency, formatPercent } from "@/lib/formatters";
 import { GlossaryTerm } from "@/components/education/GlossaryTerm";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { ScrollableTable } from "@/components/ui/ScrollableTable";
-import type { ScreenerFilters } from "@/api/types/screener";
+import type { ScreenerFilters, ScreenerResult } from "@/api/types/screener";
 
 const PRESETS = [
   { label: "Oversold (RSI < 30)", filters: { rsi_max: 30, sort_by: "rsi", sort_dir: "asc" } },
@@ -71,6 +72,50 @@ const SparklineCell = memo(function SparklineCell({ ticker }: { ticker: string }
     </div>
   );
 });
+
+function getMatchReasons(r: ScreenerResult, f: ScreenerFilters): string[] {
+  const reasons: string[] = [];
+  if (f.rsi_min != null && r.rsi_14 != null)
+    reasons.push(`RSI ${r.rsi_14.toFixed(1)} ≥ ${f.rsi_min}`);
+  if (f.rsi_max != null && r.rsi_14 != null)
+    reasons.push(`RSI ${r.rsi_14.toFixed(1)} ≤ ${f.rsi_max}`);
+  if (f.price_min != null && r.close != null)
+    reasons.push(`Price $${r.close.toFixed(2)} ≥ $${f.price_min}`);
+  if (f.price_max != null && r.close != null)
+    reasons.push(`Price $${r.close.toFixed(2)} ≤ $${f.price_max}`);
+  if (f.sector && r.sector)
+    reasons.push(`Sector: ${r.sector}`);
+  if (f.above_sma200 === true && r.above_sma200)
+    reasons.push("Above SMA 200");
+  if (f.above_sma200 === false && r.above_sma200 === false)
+    reasons.push("Below SMA 200");
+  if (f.above_sma50 === true && r.above_sma50)
+    reasons.push("Above SMA 50");
+  if (f.above_sma50 === false && r.above_sma50 === false)
+    reasons.push("Below SMA 50");
+  if (f.golden_cross)
+    reasons.push("Golden Cross");
+  if (f.death_cross)
+    reasons.push("Death Cross");
+  return reasons;
+}
+
+function FilterMatchTooltip({ reasons }: { reasons: string[] }) {
+  if (reasons.length === 0) return null;
+  return (
+    <div className="group relative">
+      <Info className="h-3.5 w-3.5 text-accent/60" />
+      <div className="pointer-events-none absolute bottom-full right-0 z-30 mb-1.5 hidden w-48 rounded-lg border border-border bg-bg-card p-2 shadow-xl group-hover:block">
+        <p className="mb-1 text-[10px] font-semibold text-text-primary">Filter Match</p>
+        {reasons.map((r) => (
+          <p key={r} className="text-[10px] text-text-secondary">
+            {r}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function ScreenerPage() {
   usePageTitle("Stock Screener");
@@ -617,14 +662,19 @@ export function ScreenerPage() {
                       {r.sector ?? "—"}
                     </td>
                     <td className="py-2">
-                      <Link
-                        to={`/compare?tickers=${r.ticker}`}
-                        className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
-                        title={`Compare ${r.ticker}`}
-                        aria-label={`Compare ${r.ticker} with other stocks`}
-                      >
-                        <GitCompareArrows className="h-3.5 w-3.5" />
-                      </Link>
+                      <div className="flex items-center gap-1">
+                        {hasActiveFilters && (
+                          <FilterMatchTooltip reasons={getMatchReasons(r, filters)} />
+                        )}
+                        <Link
+                          to={`/compare?tickers=${r.ticker}`}
+                          className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
+                          title={`Compare ${r.ticker}`}
+                          aria-label={`Compare ${r.ticker} with other stocks`}
+                        >
+                          <GitCompareArrows className="h-3.5 w-3.5" />
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))}
