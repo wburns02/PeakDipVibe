@@ -424,7 +424,7 @@ export function ComparePage() {
                   autoComplete="off"
                   placeholder="Add ticker..."
                   value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
+                  onChange={(e) => setSearchInput(e.target.value.replace(/[^a-zA-Z0-9 .\-]/g, "").toUpperCase())}
                   onKeyDown={(e) => {
                     if (e.key === "Escape") setSearchInput("");
                     if (e.key === "Enter" && searchResults && searchResults.length > 0) {

@@ -154,7 +154,7 @@ export function DashboardPage() {
           placeholder="Search tickers... (e.g. AAPL, Microsoft)  Press /"
           value={searchInput}
           onChange={(e) => {
-            setSearchInput(e.target.value);
+            setSearchInput(e.target.value.replace(/[^a-zA-Z0-9 .\-]/g, ""));
             setShowDropdown(true);
           }}
           onFocus={() => setShowDropdown(true)}

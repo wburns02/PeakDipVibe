@@ -223,7 +223,7 @@ export function CommandPalette() {
             ref={inputRef}
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value.replace(/[^a-zA-Z0-9 .\-]/g, ""))}
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search..."
             className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
