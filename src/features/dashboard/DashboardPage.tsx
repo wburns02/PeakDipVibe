@@ -7,6 +7,7 @@ import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { formatRelativeTime } from "@/lib/formatters";
 import { MarketOverviewCard } from "./components/MarketOverviewCard";
 import { SectorHeatmapCard } from "./components/SectorHeatmapCard";
 import { TopMoversCard } from "./components/TopMoversCard";
@@ -116,11 +117,27 @@ export function DashboardPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-text-primary">Market Dashboard</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          S&P 500 analytics powered by 7 years of daily OHLCV data
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h1 className="text-2xl font-bold text-text-primary">Market Dashboard</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            S&P 500 analytics powered by 7 years of daily OHLCV data
+          </p>
+        </div>
+        {status?.last_update && (() => {
+          const then = new Date(status.last_update.includes("T") ? status.last_update : status.last_update + "T00:00:00").getTime();
+          const hoursAgo = (Date.now() - then) / 3_600_000;
+          const color = hoursAgo < 12 ? "text-green" : hoursAgo < 24 ? "text-amber" : "text-red";
+          const dotColor = hoursAgo < 12 ? "bg-green" : hoursAgo < 24 ? "bg-amber" : "bg-red";
+          return (
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-3 py-1.5">
+              <span className={`inline-block h-2 w-2 rounded-full ${dotColor}`} />
+              <span className={`text-xs font-medium ${color}`}>
+                {formatRelativeTime(status.last_update)}
+              </span>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Search */}
