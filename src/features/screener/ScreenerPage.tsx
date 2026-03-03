@@ -140,6 +140,8 @@ export function ScreenerPage() {
   const hasActiveFilters = !!(
     filters.rsi_min != null ||
     filters.rsi_max != null ||
+    filters.price_min != null ||
+    filters.price_max != null ||
     filters.sector ||
     filters.above_sma200 != null ||
     filters.above_sma50 != null ||
@@ -276,6 +278,8 @@ export function ScreenerPage() {
               let count = 0;
               if (filters.rsi_min != null) count++;
               if (filters.rsi_max != null) count++;
+              if (filters.price_min != null) count++;
+              if (filters.price_max != null) count++;
               if (filters.sector) count++;
               if (filters.above_sma200 != null) count++;
               if (filters.above_sma50 != null) count++;
@@ -316,6 +320,33 @@ export function ScreenerPage() {
                   min={0}
                   max={100}
                   aria-label="Maximum RSI value"
+                  className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
+                />
+              </div>
+            </div>
+
+            {/* Price Range */}
+            <div>
+              <label className="mb-1 block text-xs text-text-muted">Price Range ($)</label>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  placeholder="Min"
+                  value={filters.price_min ?? ""}
+                  onChange={(e) => setFilter("price_min", e.target.value ? +e.target.value : undefined)}
+                  min={0}
+                  step={1}
+                  aria-label="Minimum price"
+                  className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
+                />
+                <input
+                  type="number"
+                  placeholder="Max"
+                  value={filters.price_max ?? ""}
+                  onChange={(e) => setFilter("price_max", e.target.value ? +e.target.value : undefined)}
+                  min={0}
+                  step={1}
+                  aria-label="Maximum price"
                   className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
                 />
               </div>
@@ -397,6 +428,8 @@ export function ScreenerPage() {
         const chips: { label: string; clear: () => void }[] = [];
         if (filters.rsi_min != null) chips.push({ label: `RSI ≥ ${filters.rsi_min}`, clear: () => setFilter("rsi_min", undefined) });
         if (filters.rsi_max != null) chips.push({ label: `RSI ≤ ${filters.rsi_max}`, clear: () => setFilter("rsi_max", undefined) });
+        if (filters.price_min != null) chips.push({ label: `Price ≥ $${filters.price_min}`, clear: () => setFilter("price_min", undefined) });
+        if (filters.price_max != null) chips.push({ label: `Price ≤ $${filters.price_max}`, clear: () => setFilter("price_max", undefined) });
         if (filters.sector) chips.push({ label: filters.sector, clear: () => setFilter("sector", undefined) });
         if (filters.above_sma200 === true) chips.push({ label: "Above SMA 200", clear: () => setFilter("above_sma200", undefined) });
         if (filters.above_sma50 === true) chips.push({ label: "Above SMA 50", clear: () => setFilter("above_sma50", undefined) });

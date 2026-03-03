@@ -22,6 +22,8 @@ export type ScreenerResult = z.infer<typeof ScreenerResultSchema>;
 export interface ScreenerFilters {
   rsi_min?: number;
   rsi_max?: number;
+  price_min?: number;
+  price_max?: number;
   above_sma50?: boolean;
   above_sma200?: boolean;
   golden_cross?: boolean;
