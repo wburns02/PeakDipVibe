@@ -124,9 +124,11 @@ export function ScreenerPage() {
   const [searchParams] = useSearchParams();
   const sectorParam = searchParams.get("sector");
   const [filters, setFilters] = useState<ScreenerFilters>(() => {
+    // URL params take precedence, then sessionStorage, then defaults
+    const savedSort = (() => { try { return JSON.parse(sessionStorage.getItem("screener-sort") || "{}"); } catch { return {}; } })();
     const initial: ScreenerFilters = {
-      sort_by: searchParams.get("sort_by") || "rsi",
-      sort_dir: (searchParams.get("sort_dir") as "asc" | "desc") || "asc",
+      sort_by: searchParams.get("sort_by") || savedSort.sort_by || "rsi",
+      sort_dir: (searchParams.get("sort_dir") as "asc" | "desc") || savedSort.sort_dir || "asc",
       limit: 50,
     };
     if (sectorParam) initial.sector = sectorParam;
@@ -175,6 +177,11 @@ export function ScreenerPage() {
   const applyPreset = (preset: (typeof PRESETS)[number]) => {
     setFilters({ ...preset.filters, limit: 50 });
   };
+
+  // Persist sort state to sessionStorage
+  useEffect(() => {
+    try { sessionStorage.setItem("screener-sort", JSON.stringify({ sort_by: filters.sort_by, sort_dir: filters.sort_dir })); } catch { /* ignore */ }
+  }, [filters.sort_by, filters.sort_dir]);
 
   const toggleSort = (field: string) => {
     setFilters((prev) => ({
