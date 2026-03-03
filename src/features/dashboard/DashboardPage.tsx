@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { formatRelativeTime } from "@/lib/formatters";
 import { MarketOverviewCard } from "./components/MarketOverviewCard";
 import { SectorHeatmapCard } from "./components/SectorHeatmapCard";
+import { SectorBreakdownCard } from "./components/SectorBreakdownCard";
 import { TopMoversCard } from "./components/TopMoversCard";
 import { PipelineStatusCard } from "./components/PipelineStatusCard";
 import { RecentSignalsCard } from "./components/RecentSignalsCard";
@@ -279,13 +280,21 @@ export function DashboardPage() {
       {/* Recent signals */}
       <RecentSignalsCard />
 
-      {/* Sector heatmap */}
+      {/* Sector heatmap + breakdown */}
       {overviewLoading ? (
-        <Skeleton className="h-72" />
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Skeleton className="h-72" />
+          <Skeleton className="h-72" />
+        </div>
       ) : overviewError ? (
         <ErrorState message="Could not load sector data." onRetry={refetchOverview} />
       ) : (
-        overview && <SectorHeatmapCard sectors={overview.sectors} />
+        overview && (
+          <div className="grid gap-4 lg:grid-cols-2">
+            <SectorHeatmapCard sectors={overview.sectors} />
+            <SectorBreakdownCard sectors={overview.sectors} />
+          </div>
+        )
       )}
 
       {/* Top movers */}
