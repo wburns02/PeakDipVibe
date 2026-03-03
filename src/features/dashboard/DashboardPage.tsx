@@ -14,6 +14,7 @@ import { SectorBreakdownCard } from "./components/SectorBreakdownCard";
 import { TopMoversCard } from "./components/TopMoversCard";
 import { PipelineStatusCard } from "./components/PipelineStatusCard";
 import { RecentSignalsCard } from "./components/RecentSignalsCard";
+import { RecentlyViewedCard } from "./components/RecentlyViewedCard";
 
 const RECENT_KEY = "peakdipvibe-recent-searches";
 
@@ -260,6 +261,9 @@ export function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Recently viewed */}
+      <RecentlyViewedCard />
 
       {/* Stats cards */}
       {statusLoading ? (
