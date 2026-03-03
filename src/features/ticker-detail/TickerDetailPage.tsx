@@ -12,6 +12,7 @@ import { QuickStats } from "./components/QuickStats";
 import { PriceChartPanel } from "./components/PriceChartPanel";
 import { IndicatorPanel } from "./components/IndicatorPanel";
 import { TechnicalSummary } from "./components/TechnicalSummary";
+import { SectorPeersPanel } from "./components/SectorPeersPanel";
 
 const BacktestPanel = lazy(() =>
   import("./components/BacktestPanel").then((m) => ({ default: m.BacktestPanel }))
@@ -113,6 +114,7 @@ export function TickerDetailPage() {
         <div className="space-y-6">
           <TechnicalSummary ticker={ticker} indicators={indicators} />
           <IndicatorPanel ticker={ticker.ticker} />
+          <SectorPeersPanel ticker={ticker} />
         </div>
       </div>
     </div>
