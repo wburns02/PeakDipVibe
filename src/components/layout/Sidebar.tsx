@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { preloadRoute } from "@/App";
 import { useTheme } from "@/hooks/useTheme";
+import { useWatchlist } from "@/hooks/useWatchlist";
+import { useSparkline } from "@/api/hooks/useCompare";
+import { MiniSparkline } from "@/components/charts/MiniSparkline";
 import {
   LayoutDashboard,
   TrendingUp,
@@ -18,6 +21,17 @@ import {
   Moon,
 } from "lucide-react";
 
+const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
+  const { data } = useSparkline(ticker, 7);
+  if (!data || data.closes.length < 2) return <div className="h-[20px] w-12" />;
+  const color = data.closes[data.closes.length - 1] >= data.closes[0] ? "#22c55e" : "#ef4444";
+  return (
+    <div className="w-12">
+      <MiniSparkline data={data.closes.map((v) => ({ value: v }))} color={color} height={20} />
+    </div>
+  );
+});
+
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/signals", icon: Zap, label: "Signals" },
@@ -32,6 +46,8 @@ export function Sidebar() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const { theme, toggle: toggleTheme } = useTheme();
+  const { watchlist } = useWatchlist();
+  const sidebarWatchlist = watchlist.slice(0, 5);
 
   // Close mobile sidebar on Escape key
   useEffect(() => {
@@ -113,6 +129,30 @@ export function Sidebar() {
             );
           })}
         </nav>
+
+        {sidebarWatchlist.length > 0 && (
+          <div className="border-t border-border px-3 py-2">
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-text-muted">Watchlist</span>
+              {watchlist.length > 5 && (
+                <Link to="/watchlist" onClick={() => setOpen(false)} className="text-[10px] text-accent hover:underline">
+                  +{watchlist.length - 5} more
+                </Link>
+              )}
+            </div>
+            {sidebarWatchlist.map((ticker) => (
+              <Link
+                key={ticker}
+                to={`/ticker/${ticker}`}
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-between rounded px-1.5 py-1 text-xs transition-colors hover:bg-bg-hover"
+              >
+                <span className="font-medium text-accent">{ticker}</span>
+                <SidebarSparkline ticker={ticker} />
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="border-t border-border px-3 py-3 space-y-2">
           <div className="flex items-center justify-between">
