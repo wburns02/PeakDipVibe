@@ -326,7 +326,7 @@ export function ScreenerPage() {
               type="button"
               onClick={saveCurrentFilters}
               disabled={!saveName.trim() || isDuplicateName}
-              className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-accent/80 disabled:opacity-40"
+              className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Save
             </button>

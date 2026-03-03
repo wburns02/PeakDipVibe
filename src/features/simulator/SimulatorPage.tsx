@@ -587,7 +587,7 @@ export function SimulatorPage() {
               onClick={handleSurpriseMe}
               disabled={randomLoading}
               aria-label="Pick a random stock event to simulate"
-              className="flex items-center gap-2 rounded-xl bg-accent px-8 py-4 text-lg font-bold text-white shadow-lg shadow-accent/20 transition-all hover:scale-105 hover:bg-accent/90 disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-accent px-8 py-4 text-lg font-bold text-white shadow-lg shadow-accent/20 transition-all hover:scale-105 hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Shuffle className="h-5 w-5" />
               {randomLoading ? "Picking..." : "Surprise Me!"}
@@ -789,7 +789,7 @@ export function SimulatorPage() {
                     }))
                   }
                   disabled={library.page <= 1}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-30"
+                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -805,7 +805,7 @@ export function SimulatorPage() {
                     }))
                   }
                   disabled={library.page >= library.total_pages}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-30"
+                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -1151,7 +1151,7 @@ export function SimulatorPage() {
                   type="button"
                   onClick={stepBack}
                   disabled={currentBarIndex <= 0}
-                  className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
+                  className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
                   title="Back"
                   aria-label="Step back (← key)"
                 >
@@ -1191,7 +1191,7 @@ export function SimulatorPage() {
                   type="button"
                   onClick={stepForward}
                   disabled={finished}
-                  className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30"
+                  className="rounded-md bg-bg-hover p-1.5 text-text-secondary hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
                   title="Forward"
                   aria-label="Step forward (→ key)"
                 >
