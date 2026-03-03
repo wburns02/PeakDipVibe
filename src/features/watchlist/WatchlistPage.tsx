@@ -1,16 +1,19 @@
 import { memo, useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { Star, TrendingUp, TrendingDown, Inbox, ArrowUpDown, Download, BarChart3 } from "lucide-react";
+import { Star, TrendingUp, TrendingDown, Inbox, ArrowUpDown, Download, BarChart3, Trophy } from "lucide-react";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { useToast } from "@/components/ui/Toast";
 import { api } from "@/api/client";
 import { TickerDetailSchema } from "@/api/types/ticker";
 import { IndicatorSnapshotSchema } from "@/api/types/indicator";
+import { ScreenerResultSchema } from "@/api/types/screener";
+import { z } from "zod";
 import { useTicker } from "@/api/hooks/useTickers";
 import { useLatestIndicators } from "@/api/hooks/useIndicators";
 import { useSparkline } from "@/api/hooks/useCompare";
+import { STALE_FRESH } from "@/api/queryConfig";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -36,6 +39,25 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: 
   const { data: detail, isLoading } = useTicker(ticker);
   const { data: indicators } = useLatestIndicators(ticker);
   const { data: sparkline } = useSparkline(ticker, 7);
+
+  // Fetch sector peers for ranking (React Query deduplicates same-sector calls)
+  const { data: sectorPeers } = useQuery({
+    queryKey: ["screener", { sector: detail?.sector, sort_by: "change", sort_dir: "desc", limit: 200 }],
+    queryFn: async () => {
+      const { data } = await api.get("/screener", {
+        params: { sector: detail!.sector, sort_by: "change", sort_dir: "desc", limit: 200 },
+      });
+      return z.array(ScreenerResultSchema).parse(data);
+    },
+    enabled: !!detail?.sector,
+    staleTime: STALE_FRESH,
+  });
+
+  const sectorRank = useMemo(() => {
+    if (!sectorPeers) return null;
+    const idx = sectorPeers.findIndex((p) => p.ticker === ticker);
+    return idx >= 0 ? { rank: idx + 1, total: sectorPeers.length } : null;
+  }, [sectorPeers, ticker]);
 
   if (isLoading) return <Skeleton className="h-14" />;
   if (!detail) return null;
@@ -77,12 +99,31 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: 
           </div>
         )}
 
-        {/* Price */}
+        {/* Price + Sector Rank */}
         <div className="text-right">
           <p className="text-sm text-text-primary">
             {detail.latest_close ? formatCurrency(detail.latest_close) : "—"}
           </p>
-          <p className="text-xs text-text-muted">{detail.sector}</p>
+          <div className="flex items-center justify-end gap-1">
+            <p className="text-xs text-text-muted">{detail.sector}</p>
+            {sectorRank && (
+              <span
+                className={`inline-flex items-center gap-0.5 rounded px-1 py-px text-[10px] font-medium ${
+                  sectorRank.rank <= 3
+                    ? "bg-amber/15 text-amber"
+                    : sectorRank.rank <= Math.ceil(sectorRank.total * 0.25)
+                      ? "bg-green/15 text-green"
+                      : sectorRank.rank > Math.ceil(sectorRank.total * 0.75)
+                        ? "bg-red/15 text-red"
+                        : "bg-bg-hover text-text-muted"
+                }`}
+                title={`#${sectorRank.rank} of ${sectorRank.total} in ${detail.sector} by daily change`}
+              >
+                {sectorRank.rank <= 3 && <Trophy className="h-2.5 w-2.5" />}
+                #{sectorRank.rank}/{sectorRank.total}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* RSI */}
