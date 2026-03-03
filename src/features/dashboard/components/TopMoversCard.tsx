@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { TrendingUp, TrendingDown, Star } from "lucide-react";
+import { TrendingUp, TrendingDown, Star, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { MiniSparkline } from "@/components/charts/MiniSparkline";
@@ -94,6 +94,12 @@ export function TopMoversCard({ gainers, losers }: TopMoversCardProps) {
             <MoverRow key={m.ticker} mover={m} />
           ))}
         </div>
+        <Link
+          to="/screener?sort_by=change&sort_dir=desc"
+          className="mt-3 flex items-center justify-center gap-1 text-xs text-accent hover:underline"
+        >
+          View all in screener <ArrowRight className="h-3 w-3" />
+        </Link>
       </Card>
       <Card title="Top Losers" subtitle="Biggest daily drops">
         <div className="-mx-3 space-y-0.5">
@@ -101,6 +107,12 @@ export function TopMoversCard({ gainers, losers }: TopMoversCardProps) {
             <MoverRow key={m.ticker} mover={m} />
           ))}
         </div>
+        <Link
+          to="/screener?sort_by=change&sort_dir=asc"
+          className="mt-3 flex items-center justify-center gap-1 text-xs text-accent hover:underline"
+        >
+          View all in screener <ArrowRight className="h-3 w-3" />
+        </Link>
       </Card>
     </div>
   );

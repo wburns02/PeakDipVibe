@@ -1,4 +1,5 @@
-import { Activity, TrendingUp, TrendingDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Activity, TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
 import { useMarketBreadth } from "@/api/hooks/useMarket";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -46,6 +47,22 @@ export function MarketBreadthCard() {
         <p className="mt-1 text-center text-[10px] text-text-muted">
           A/D Ratio: {breadth.advance_decline_ratio.toFixed(2)} ({breadth.total_stocks} stocks)
         </p>
+      </div>
+
+      {/* Quick links */}
+      <div className="mb-3 flex flex-wrap gap-2">
+        <Link
+          to="/screener?rsi_max=30&sort_by=rsi&sort_dir=asc"
+          className="rounded-md border border-border px-2 py-0.5 text-[10px] text-green transition-colors hover:border-green hover:bg-green/10"
+        >
+          Oversold stocks ({breadth.pct_oversold}%)
+        </Link>
+        <Link
+          to="/screener?rsi_min=70&sort_by=rsi&sort_dir=desc"
+          className="rounded-md border border-border px-2 py-0.5 text-[10px] text-red transition-colors hover:border-red hover:bg-red/10"
+        >
+          Overbought stocks ({breadth.pct_overbought}%)
+        </Link>
       </div>
 
       {/* Stats grid */}
@@ -117,6 +134,13 @@ export function MarketBreadthCard() {
           </div>
         </div>
       </div>
+
+      <Link
+        to="/screener"
+        className="mt-3 flex items-center justify-center gap-1 text-xs text-accent hover:underline"
+      >
+        Explore in screener <ArrowRight className="h-3 w-3" />
+      </Link>
     </Card>
   );
 }

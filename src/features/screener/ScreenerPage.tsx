@@ -77,13 +77,21 @@ export function ScreenerPage() {
   const { toggle, isWatched } = useWatchlist();
   const [searchParams] = useSearchParams();
   const sectorParam = searchParams.get("sector");
-  const [filters, setFilters] = useState<ScreenerFilters>({
-    sort_by: "rsi",
-    sort_dir: "asc",
-    limit: 50,
-    ...(sectorParam ? { sector: sectorParam } : {}),
+  const [filters, setFilters] = useState<ScreenerFilters>(() => {
+    const initial: ScreenerFilters = {
+      sort_by: searchParams.get("sort_by") || "rsi",
+      sort_dir: (searchParams.get("sort_dir") as "asc" | "desc") || "asc",
+      limit: 50,
+    };
+    if (sectorParam) initial.sector = sectorParam;
+    const rsiMin = searchParams.get("rsi_min");
+    const rsiMax = searchParams.get("rsi_max");
+    if (rsiMin) initial.rsi_min = +rsiMin;
+    if (rsiMax) initial.rsi_max = +rsiMax;
+    return initial;
   });
-  const [showFilters, setShowFilters] = useState(!!sectorParam);
+  const hasUrlFilters = !!(sectorParam || searchParams.get("rsi_min") || searchParams.get("rsi_max"));
+  const [showFilters, setShowFilters] = useState(hasUrlFilters);
 
   // Apply sector from URL when navigating from heatmap
   useEffect(() => {
