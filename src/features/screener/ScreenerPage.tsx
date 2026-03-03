@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Filter,
@@ -9,6 +9,7 @@ import {
   ChevronDown,
   SearchX,
   X,
+  Save,
 } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useScreener } from "@/api/hooks/useScreener";
@@ -33,6 +34,30 @@ const PRESETS = [
   { label: "Golden Cross", filters: { golden_cross: true, sort_by: "change", sort_dir: "desc" } },
   { label: "Death Cross", filters: { death_cross: true, sort_by: "change", sort_dir: "asc" } },
 ];
+
+const SAVED_KEY = "peakdipvibe-screener-presets";
+
+interface SavedPreset {
+  name: string;
+  filters: Partial<ScreenerFilters>;
+  createdAt: number;
+}
+
+function loadSavedPresets(): SavedPreset[] {
+  try {
+    return JSON.parse(localStorage.getItem(SAVED_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveSavedPresets(presets: SavedPreset[]) {
+  try {
+    localStorage.setItem(SAVED_KEY, JSON.stringify(presets));
+  } catch {
+    // quota exceeded
+  }
+}
 
 const SparklineCell = memo(function SparklineCell({ ticker }: { ticker: string }) {
   const { data } = useSparkline(ticker, 7);
@@ -66,6 +91,10 @@ export function ScreenerPage() {
     }
   }, [sectorParam]);
 
+  const [savedPresets, setSavedPresets] = useState<SavedPreset[]>(loadSavedPresets);
+  const [saveName, setSaveName] = useState("");
+  const [showSaveInput, setShowSaveInput] = useState(false);
+
   const { data: results, isLoading, isFetching, isError, refetch } = useScreener(filters);
   const isRefetching = isFetching && !isLoading;
   const { data: sectors } = useSectors();
@@ -85,6 +114,37 @@ export function ScreenerPage() {
       sort_dir: prev.sort_by === field && prev.sort_dir === "asc" ? "desc" : "asc",
     }));
   };
+
+  const saveCurrentFilters = useCallback(() => {
+    if (!saveName.trim()) return;
+    const { sort_by, sort_dir, limit, ...filterParts } = filters;
+    const preset: SavedPreset = {
+      name: saveName.trim(),
+      filters: { ...filterParts, sort_by, sort_dir },
+      createdAt: Date.now(),
+    };
+    const updated = [...savedPresets, preset];
+    setSavedPresets(updated);
+    saveSavedPresets(updated);
+    setSaveName("");
+    setShowSaveInput(false);
+  }, [saveName, filters, savedPresets]);
+
+  const deleteSavedPreset = useCallback((idx: number) => {
+    const updated = savedPresets.filter((_, i) => i !== idx);
+    setSavedPresets(updated);
+    saveSavedPresets(updated);
+  }, [savedPresets]);
+
+  const hasActiveFilters = !!(
+    filters.rsi_min != null ||
+    filters.rsi_max != null ||
+    filters.sector ||
+    filters.above_sma200 != null ||
+    filters.above_sma50 != null ||
+    filters.golden_cross ||
+    filters.death_cross
+  );
 
   const sortIcon = (field: string) =>
     filters.sort_by === field ? (
@@ -114,6 +174,66 @@ export function ScreenerPage() {
             {p.label}
           </button>
         ))}
+        {savedPresets.map((p, i) => (
+          <div key={p.createdAt} className="group relative">
+            <button
+              type="button"
+              onClick={() => setFilters({ ...p.filters, limit: 50 })}
+              className="rounded-lg border border-accent/30 bg-accent/5 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+            >
+              {p.name}
+            </button>
+            <button
+              type="button"
+              onClick={() => deleteSavedPreset(i)}
+              className="absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full bg-red/90 text-white group-hover:flex"
+              aria-label={`Delete ${p.name} preset`}
+            >
+              <X className="h-2.5 w-2.5" />
+            </button>
+          </div>
+        ))}
+        {hasActiveFilters && !showSaveInput && (
+          <button
+            type="button"
+            onClick={() => setShowSaveInput(true)}
+            className="inline-flex items-center gap-1 rounded-lg border border-dashed border-border px-3 py-1.5 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+          >
+            <Save className="h-3 w-3" />
+            Save filters
+          </button>
+        )}
+        {showSaveInput && (
+          <div className="inline-flex items-center gap-1.5">
+            <input
+              type="text"
+              value={saveName}
+              onChange={(e) => setSaveName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") saveCurrentFilters();
+                if (e.key === "Escape") { setShowSaveInput(false); setSaveName(""); }
+              }}
+              placeholder="Preset name..."
+              autoFocus
+              className="w-32 rounded-lg border border-accent bg-bg-primary px-2 py-1 text-xs text-text-primary placeholder:text-text-muted focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={saveCurrentFilters}
+              disabled={!saveName.trim()}
+              className="rounded-lg bg-accent px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-accent/80 disabled:opacity-40"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowSaveInput(false); setSaveName(""); }}
+              className="rounded-lg px-1.5 py-1 text-xs text-text-muted hover:text-text-primary"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Expandable filters */}
