@@ -13,6 +13,7 @@ import { PriceChartPanel } from "./components/PriceChartPanel";
 import { IndicatorPanel } from "./components/IndicatorPanel";
 import { TechnicalSummary } from "./components/TechnicalSummary";
 import { SectorPeersPanel } from "./components/SectorPeersPanel";
+import { SeasonalTrendsCard } from "./components/SeasonalTrendsCard";
 
 const BacktestPanel = lazy(() =>
   import("./components/BacktestPanel").then((m) => ({ default: m.BacktestPanel }))
@@ -113,6 +114,7 @@ export function TickerDetailPage() {
         </div>
         <div className="space-y-6">
           <TechnicalSummary ticker={ticker} indicators={indicators} />
+          <SeasonalTrendsCard ticker={ticker.ticker} />
           <IndicatorPanel ticker={ticker.ticker} />
           <SectorPeersPanel ticker={ticker} />
         </div>

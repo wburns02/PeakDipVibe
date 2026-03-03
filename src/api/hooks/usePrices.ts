@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
-import { ChartRowSchema, PriceRowSchema } from "../types/price";
+import { ChartRowSchema, PriceRowSchema, SeasonalResponseSchema } from "../types/price";
 import { z } from "zod";
 
 export function usePriceHistory(
@@ -12,6 +12,17 @@ export function usePriceHistory(
     queryFn: async () => {
       const { data } = await api.get(`/prices/${ticker}`, { params: opts });
       return z.array(PriceRowSchema).parse(data);
+    },
+    enabled: !!ticker,
+  });
+}
+
+export function useSeasonalTrends(ticker: string) {
+  return useQuery({
+    queryKey: ["seasonal", ticker],
+    queryFn: async () => {
+      const { data } = await api.get(`/prices/${ticker}/seasonal`);
+      return SeasonalResponseSchema.parse(data);
     },
     enabled: !!ticker,
   });

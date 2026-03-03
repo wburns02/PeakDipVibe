@@ -22,5 +22,26 @@ export const ChartRowSchema = PriceRowSchema.extend({
   bb_middle: z.number().nullable(),
 });
 
+export const MonthlyReturnSchema = z.object({
+  month: z.number(),
+  label: z.string(),
+  avg_return: z.number(),
+  median_return: z.number(),
+  win_rate: z.number(),
+  best: z.number(),
+  worst: z.number(),
+  years: z.number(),
+});
+
+export const SeasonalResponseSchema = z.object({
+  ticker: z.string(),
+  years_analyzed: z.number(),
+  months: z.array(MonthlyReturnSchema),
+  best_month: z.number(),
+  worst_month: z.number(),
+});
+
 export type PriceRow = z.infer<typeof PriceRowSchema>;
 export type ChartRow = z.infer<typeof ChartRowSchema>;
+export type MonthlyReturn = z.infer<typeof MonthlyReturnSchema>;
+export type SeasonalResponse = z.infer<typeof SeasonalResponseSchema>;
