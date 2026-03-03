@@ -15,6 +15,7 @@ import { TopMoversCard } from "./components/TopMoversCard";
 import { PipelineStatusCard } from "./components/PipelineStatusCard";
 import { RecentSignalsCard } from "./components/RecentSignalsCard";
 import { RecentlyViewedCard } from "./components/RecentlyViewedCard";
+import { MarketBreadthCard } from "./components/MarketBreadthCard";
 
 const RECENT_KEY = "peakdipvibe-recent-searches";
 
@@ -280,6 +281,9 @@ export function DashboardPage() {
 
       {/* Pipeline status */}
       {status && <PipelineStatusCard status={status} />}
+
+      {/* Market breadth */}
+      <MarketBreadthCard />
 
       {/* Recent signals */}
       <RecentSignalsCard />

@@ -26,6 +26,19 @@ export const MarketOverviewSchema = z.object({
   top_losers: z.array(MoverSchema),
 });
 
+export const MarketBreadthSchema = z.object({
+  total_stocks: z.number(),
+  advancers: z.number(),
+  decliners: z.number(),
+  unchanged: z.number(),
+  advance_decline_ratio: z.number(),
+  pct_above_sma50: z.number(),
+  pct_above_sma200: z.number(),
+  avg_rsi: z.number().nullable(),
+  pct_oversold: z.number(),
+  pct_overbought: z.number(),
+});
+
 export const StatusResponseSchema = z.object({
   total_tickers: z.number(),
   total_prices: z.number(),
@@ -39,4 +52,5 @@ export const StatusResponseSchema = z.object({
 export type Mover = z.infer<typeof MoverSchema>;
 export type SectorPerformance = z.infer<typeof SectorPerformanceSchema>;
 export type MarketOverview = z.infer<typeof MarketOverviewSchema>;
+export type MarketBreadth = z.infer<typeof MarketBreadthSchema>;
 export type StatusResponse = z.infer<typeof StatusResponseSchema>;
