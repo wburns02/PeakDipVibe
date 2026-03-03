@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import {
   Line,
   Area,
@@ -45,6 +45,8 @@ import {
   Zap,
   ChevronDown,
   ChevronUp,
+  SlidersHorizontal,
+  CalendarDays,
 } from "lucide-react";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -816,6 +818,46 @@ export function SimulatorPage() {
             </div>
           </Card>
         )}
+
+        {/* Next steps */}
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Link
+            to="/signals"
+            className="group flex items-center gap-3 rounded-xl border border-border bg-bg-card p-4 transition-colors hover:border-accent/30"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+              <Zap className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-text-primary group-hover:text-accent">Browse Signals</p>
+              <p className="text-xs text-text-muted">Find more events to simulate</p>
+            </div>
+          </Link>
+          <Link
+            to="/screener"
+            className="group flex items-center gap-3 rounded-xl border border-border bg-bg-card p-4 transition-colors hover:border-accent/30"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+              <SlidersHorizontal className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-text-primary group-hover:text-accent">Screen Stocks</p>
+              <p className="text-xs text-text-muted">Filter by RSI, price & sector</p>
+            </div>
+          </Link>
+          <Link
+            to="/earnings"
+            className="group flex items-center gap-3 rounded-xl border border-border bg-bg-card p-4 transition-colors hover:border-accent/30"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+              <CalendarDays className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-text-primary group-hover:text-accent">Earnings Calendar</p>
+              <p className="text-xs text-text-muted">Upcoming reports & analysis</p>
+            </div>
+          </Link>
+        </div>
       </div>
     );
   }
