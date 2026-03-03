@@ -29,6 +29,7 @@ export function CommandPalette() {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
   const navigate = useNavigate();
 
   const go = useCallback(
@@ -163,10 +164,14 @@ export function CommandPalette() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  // Focus input when opened
+  // Save opener and focus input when opened; restore focus on close
   useEffect(() => {
     if (open) {
+      openerRef.current = document.activeElement as HTMLElement | null;
       requestAnimationFrame(() => inputRef.current?.focus());
+    } else {
+      openerRef.current?.focus();
+      openerRef.current = null;
     }
   }, [open]);
 
