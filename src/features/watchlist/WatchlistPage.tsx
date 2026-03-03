@@ -93,9 +93,7 @@ function PriceAlertEditor({
           <X className="h-3.5 w-3.5" />
         </button>
       </div>
-      {currentPrice != null && (
-        <p className="mb-2 text-[10px] text-text-muted">Current: {formatCurrency(currentPrice)}</p>
-      )}
+      <p className="mb-2 text-[10px] text-text-muted">Current: {currentPrice != null ? formatCurrency(currentPrice) : "—"}</p>
       <div className="space-y-2">
         <div>
           <label className="text-[10px] text-text-muted">Alert above ($)</label>
