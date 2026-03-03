@@ -1,11 +1,14 @@
 import { useState, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { X, Plus, BarChart3, Zap, Link2, Check, Download } from "lucide-react";
+import { X, Plus, BarChart3, Zap, Link2, Check, Download, Lightbulb, TrendingUp, Shield } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useCompare } from "@/api/hooks/useCompare";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useQueries } from "@tanstack/react-query";
+import { api } from "@/api/client";
+import { TickerDetailSchema } from "@/api/types/ticker";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ScrollableTable } from "@/components/ui/ScrollableTable";
@@ -32,6 +35,169 @@ const PRESET_GROUPS = [
   { label: "Defense", tickers: ["LMT", "RTX", "NOC", "GD", "BA"] },
   { label: "Pharma", tickers: ["JNJ", "PFE", "MRK", "ABBV", "LLY"] },
 ];
+
+/** Well-known stocks per sector for quick suggestions (no extra API calls). */
+const SECTOR_PEERS: Record<string, string[]> = {
+  "Technology": ["AAPL", "MSFT", "NVDA", "GOOGL", "META", "CRM", "ADBE", "ORCL"],
+  "Information Technology": ["AAPL", "MSFT", "NVDA", "GOOGL", "META", "CRM", "ADBE", "ORCL"],
+  "Financials": ["JPM", "BAC", "GS", "MS", "C", "WFC", "BLK", "AXP"],
+  "Financial Services": ["JPM", "BAC", "GS", "MS", "C", "WFC", "BLK", "AXP"],
+  "Health Care": ["JNJ", "UNH", "PFE", "MRK", "ABBV", "LLY", "TMO", "ABT"],
+  "Healthcare": ["JNJ", "UNH", "PFE", "MRK", "ABBV", "LLY", "TMO", "ABT"],
+  "Consumer Discretionary": ["AMZN", "TSLA", "HD", "NKE", "MCD", "SBUX", "LOW", "TJX"],
+  "Consumer Cyclical": ["AMZN", "TSLA", "HD", "NKE", "MCD", "SBUX", "LOW", "TJX"],
+  "Communication Services": ["GOOGL", "META", "NFLX", "DIS", "CMCSA", "T", "VZ", "TMUS"],
+  "Industrials": ["CAT", "DE", "UNP", "HON", "GE", "RTX", "LMT", "BA"],
+  "Energy": ["XOM", "CVX", "COP", "SLB", "EOG", "MPC", "PSX", "OXY"],
+  "Consumer Staples": ["PG", "KO", "PEP", "WMT", "COST", "PM", "CL", "MDLZ"],
+  "Consumer Defensive": ["PG", "KO", "PEP", "WMT", "COST", "PM", "CL", "MDLZ"],
+  "Utilities": ["NEE", "DUK", "SO", "D", "AEP", "EXC", "SRE", "XEL"],
+  "Real Estate": ["AMT", "PLD", "CCI", "EQIX", "SPG", "O", "PSA", "WELL"],
+  "Materials": ["LIN", "APD", "SHW", "ECL", "NEM", "FCX", "NUE", "VMC"],
+  "Basic Materials": ["LIN", "APD", "SHW", "ECL", "NEM", "FCX", "NUE", "VMC"],
+};
+
+/** Diversification: hedging picks from defensive/uncorrelated sectors */
+const HEDGE_PICKS = ["XOM", "JNJ", "PG", "NEE", "AMT", "KO", "GLD", "WMT"];
+
+function CorrelationSuggestions({
+  tickers,
+  correlations,
+  onAdd,
+}: {
+  tickers: string[];
+  correlations: Record<string, Record<string, number>> | null;
+  onAdd: (ticker: string) => void;
+}) {
+  // Fetch sectors for current tickers
+  const detailQueries = useQueries({
+    queries: tickers.map((t) => ({
+      queryKey: ["ticker", t],
+      queryFn: async () => {
+        const { data } = await api.get(`/tickers/${t}`);
+        return TickerDetailSchema.parse(data);
+      },
+    })),
+  });
+
+  const sectors = useMemo(() => {
+    const s = new Set<string>();
+    for (const q of detailQueries) {
+      if (q.data?.sector) s.add(q.data.sector);
+    }
+    return [...s];
+  }, [detailQueries]);
+
+  // Average off-diagonal correlation
+  const avgCorr = useMemo(() => {
+    if (!correlations || tickers.length < 2) return null;
+    let sum = 0, count = 0;
+    for (let i = 0; i < tickers.length; i++) {
+      for (let j = i + 1; j < tickers.length; j++) {
+        sum += Math.abs(correlations[tickers[i]]?.[tickers[j]] ?? 0);
+        count++;
+      }
+    }
+    return count > 0 ? sum / count : null;
+  }, [correlations, tickers]);
+
+  // Sector peer suggestions (not already in comparison)
+  const peerSuggestions = useMemo(() => {
+    const suggestions: string[] = [];
+    for (const sector of sectors) {
+      const peers = SECTOR_PEERS[sector] ?? [];
+      for (const p of peers) {
+        if (!tickers.includes(p) && !suggestions.includes(p)) {
+          suggestions.push(p);
+        }
+        if (suggestions.length >= 6) break;
+      }
+      if (suggestions.length >= 6) break;
+    }
+    return suggestions;
+  }, [sectors, tickers]);
+
+  // Diversification suggestions
+  const hedgeSuggestions = useMemo(() => {
+    return HEDGE_PICKS.filter((t) => !tickers.includes(t) && !peerSuggestions.includes(t)).slice(0, 4);
+  }, [tickers, peerSuggestions]);
+
+  if (tickers.length < 2 || (peerSuggestions.length === 0 && hedgeSuggestions.length === 0)) return null;
+
+  const highCorr = avgCorr != null && avgCorr > 0.7;
+
+  return (
+    <Card>
+      <div className="flex items-center gap-2 mb-3">
+        <Lightbulb className="h-4 w-4 text-amber" />
+        <h3 className="text-sm font-semibold text-text-primary">Suggestions</h3>
+      </div>
+
+      {/* Correlation insight */}
+      {avgCorr != null && (
+        <div className={`mb-3 rounded-lg px-3 py-2 text-xs ${highCorr ? "bg-amber/10 text-amber" : "bg-green/10 text-green"}`}>
+          {highCorr ? (
+            <>
+              <strong>High correlation detected</strong> (avg |r| = {avgCorr.toFixed(2)}). Your stocks move together — consider adding an uncorrelated asset for diversification.
+            </>
+          ) : (
+            <>
+              <strong>Good diversification</strong> (avg |r| = {avgCorr.toFixed(2)}). Your selected stocks have moderate independence from each other.
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Sector peers */}
+      {peerSuggestions.length > 0 && (
+        <div className="mb-3">
+          <div className="flex items-center gap-1.5 mb-2">
+            <TrendingUp className="h-3 w-3 text-accent" />
+            <span className="text-xs font-medium text-text-secondary">
+              Sector Peers ({sectors.join(", ")})
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {peerSuggestions.map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => onAdd(t)}
+                className="flex items-center gap-1 rounded-lg border border-border bg-bg-primary px-2.5 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              >
+                <Plus className="h-3 w-3" />
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Diversification picks */}
+      {highCorr && hedgeSuggestions.length > 0 && (
+        <div>
+          <div className="flex items-center gap-1.5 mb-2">
+            <Shield className="h-3 w-3 text-green" />
+            <span className="text-xs font-medium text-text-secondary">Diversify With</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {hedgeSuggestions.map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => onAdd(t)}
+                className="flex items-center gap-1 rounded-lg border border-dashed border-green/40 bg-green/5 px-2.5 py-1 text-xs font-medium text-green transition-colors hover:border-green hover:bg-green/10"
+              >
+                <Plus className="h-3 w-3" />
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
 
 export function ComparePage() {
   usePageTitle("Compare");
@@ -434,6 +600,15 @@ export function ComparePage() {
             Values near +1.0 mean stocks move together. Near -1.0 means they move opposite. Near 0 means little relationship.
           </p>
         </Card>
+      )}
+
+      {/* Correlation suggestions */}
+      {tickers.length >= 2 && (
+        <CorrelationSuggestions
+          tickers={tickers}
+          correlations={correlations}
+          onAdd={addTicker}
+        />
       )}
       </>}
     </div>
