@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, memo } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import {
   Filter,
   ArrowUpDown,
@@ -119,6 +119,7 @@ function FilterMatchTooltip({ reasons }: { reasons: string[] }) {
 
 export function ScreenerPage() {
   usePageTitle("Stock Screener");
+  const navigate = useNavigate();
   const { toggle, isWatched } = useWatchlist();
   const [searchParams] = useSearchParams();
   const sectorParam = searchParams.get("sector");
@@ -523,14 +524,29 @@ export function ScreenerPage() {
         subtitle="Click any row to view full analysis"
         action={
           results && results.length > 0 ? (
-            <button
-              type="button"
-              onClick={exportCSV}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
-            >
-              <Download className="h-3.5 w-3.5" />
-              Export CSV
-            </button>
+            <div className="flex items-center gap-2">
+              {results.length >= 2 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const tickers = results.slice(0, 3).map((r) => r.ticker).join(",");
+                    navigate(`/compare?tickers=${tickers}`);
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+                >
+                  <GitCompareArrows className="h-3.5 w-3.5" />
+                  Compare top {Math.min(3, results.length)}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={exportCSV}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Export CSV
+              </button>
+            </div>
           ) : undefined
         }
       >
