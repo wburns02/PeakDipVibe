@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { X, Plus, BarChart3 } from "lucide-react";
+import { X, Plus, BarChart3, Zap } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useCompare } from "@/api/hooks/useCompare";
 import { useTickerList } from "@/api/hooks/useTickers";
@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/Badge";
 import { ScrollableTable } from "@/components/ui/ScrollableTable";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ComparisonChart } from "@/components/charts/ComparisonChart";
+import { EventCompare } from "./components/EventCompare";
 
 const CHART_COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899", "#8b5cf6", "#14b8a6"];
 
@@ -32,7 +33,8 @@ const PRESET_GROUPS = [
 ];
 
 export function ComparePage() {
-  usePageTitle("Compare Stocks");
+  usePageTitle("Compare");
+  const [tab, setTab] = useState<"stocks" | "events">("stocks");
   const [tickers, setTickers] = useState<string[]>(["AAPL", "MSFT"]);
   const [searchInput, setSearchInput] = useState("");
   const [period, setPeriod] = useState(252);
@@ -106,12 +108,43 @@ export function ComparePage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-text-primary">Compare Stocks</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Compare</h1>
         <p className="mt-1 text-sm text-text-muted">
-          Normalized % change comparison — all tickers start at 0%
+          Side-by-side analysis of stocks or catalyst events
         </p>
       </div>
 
+      {/* Tab selector */}
+      <div className="flex gap-1 rounded-xl bg-bg-hover/50 p-1">
+        <button
+          type="button"
+          onClick={() => setTab("stocks")}
+          className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+            tab === "stocks"
+              ? "bg-bg-card text-text-primary shadow-sm"
+              : "text-text-muted hover:text-text-secondary"
+          }`}
+        >
+          <BarChart3 className="h-4 w-4" />
+          Stocks
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("events")}
+          className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+            tab === "events"
+              ? "bg-bg-card text-text-primary shadow-sm"
+              : "text-text-muted hover:text-text-secondary"
+          }`}
+        >
+          <Zap className="h-4 w-4" />
+          Events
+        </button>
+      </div>
+
+      {tab === "events" && <EventCompare />}
+
+      {tab === "stocks" && <>
       {/* Ticker management */}
       <Card>
         <div className="flex flex-wrap items-center gap-2">
@@ -319,6 +352,7 @@ export function ComparePage() {
           </p>
         </Card>
       )}
+      </>}
     </div>
   );
 }
