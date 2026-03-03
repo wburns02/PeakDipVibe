@@ -1,9 +1,10 @@
-import { memo, useState, useCallback, useMemo } from "react";
+import { memo, useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { Star, TrendingUp, TrendingDown, Inbox, ArrowUpDown, Download, BarChart3, Trophy } from "lucide-react";
+import { Star, TrendingUp, TrendingDown, Inbox, ArrowUpDown, Download, BarChart3, Trophy, Bell, BellRing, X } from "lucide-react";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import { usePriceAlerts } from "@/hooks/usePriceAlerts";
 import { useToast } from "@/components/ui/Toast";
 import { api } from "@/api/client";
 import { TickerDetailSchema } from "@/api/types/ticker";
@@ -19,6 +20,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { MiniSparkline } from "@/components/charts/MiniSparkline";
 import { formatCurrency, formatPercent } from "@/lib/formatters";
+import type { PriceAlert } from "@/hooks/usePriceAlerts";
 
 const SECTOR_COLORS: Record<string, string> = {
   "Technology": "#6366f1",
@@ -35,7 +37,112 @@ const SECTOR_COLORS: Record<string, string> = {
   "Materials": "#a3e635",
 };
 
-const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: string; onRemove: () => void }) {
+function PriceAlertEditor({
+  ticker,
+  currentPrice,
+  alert,
+  onSave,
+  onRemove,
+  onClose,
+}: {
+  ticker: string;
+  currentPrice: number | null;
+  alert?: PriceAlert;
+  onSave: (ticker: string, alert: PriceAlert) => void;
+  onRemove: (ticker: string) => void;
+  onClose: () => void;
+}) {
+  const [above, setAbove] = useState(alert?.above?.toString() ?? "");
+  const [below, setBelow] = useState(alert?.below?.toString() ?? "");
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [onClose]);
+
+  const handleSave = () => {
+    const aboveVal = above ? parseFloat(above) : undefined;
+    const belowVal = below ? parseFloat(below) : undefined;
+    if (aboveVal == null && belowVal == null) {
+      onRemove(ticker);
+    } else {
+      onSave(ticker, { above: aboveVal, below: belowVal });
+    }
+    onClose();
+  };
+
+  return (
+    <div ref={ref} className="absolute right-0 top-full z-40 mt-1 w-56 rounded-lg border border-border bg-bg-card p-3 shadow-xl">
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-xs font-semibold text-text-primary">Price Alerts — {ticker}</p>
+        <button type="button" onClick={onClose} className="text-text-muted hover:text-text-primary">
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      {currentPrice != null && (
+        <p className="mb-2 text-[10px] text-text-muted">Current: {formatCurrency(currentPrice)}</p>
+      )}
+      <div className="space-y-2">
+        <div>
+          <label className="text-[10px] text-text-muted">Alert above ($)</label>
+          <input
+            type="number"
+            step="0.01"
+            value={above}
+            onChange={(e) => setAbove(e.target.value)}
+            placeholder={currentPrice ? (currentPrice * 1.05).toFixed(2) : "0.00"}
+            className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-1 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
+          />
+        </div>
+        <div>
+          <label className="text-[10px] text-text-muted">Alert below ($)</label>
+          <input
+            type="number"
+            step="0.01"
+            value={below}
+            onChange={(e) => setBelow(e.target.value)}
+            placeholder={currentPrice ? (currentPrice * 0.95).toFixed(2) : "0.00"}
+            className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-1 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
+          />
+        </div>
+      </div>
+      <div className="mt-2.5 flex gap-2">
+        <button
+          type="button"
+          onClick={handleSave}
+          className="flex-1 rounded-md bg-accent px-2 py-1 text-xs font-medium text-white hover:bg-accent/90"
+        >
+          Save
+        </button>
+        {alert && (
+          <button
+            type="button"
+            onClick={() => { onRemove(ticker); onClose(); }}
+            className="rounded-md border border-border px-2 py-1 text-xs text-red hover:bg-red/10"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface WatchlistRowProps {
+  ticker: string;
+  onRemove: () => void;
+  alert?: PriceAlert;
+  onSetAlert: (ticker: string, alert: PriceAlert) => void;
+  onRemoveAlert: (ticker: string) => void;
+  checkTriggered: (ticker: string, price: number | null) => "above" | "below" | null;
+}
+
+const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove, alert, onSetAlert, onRemoveAlert, checkTriggered }: WatchlistRowProps) {
+  const [showEditor, setShowEditor] = useState(false);
   const { data: detail, isLoading } = useTicker(ticker);
   const { data: indicators } = useLatestIndicators(ticker);
   const { data: sparkline } = useSparkline(ticker, 7);
@@ -62,6 +169,7 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: 
   if (isLoading) return <Skeleton className="h-14" />;
   if (!detail) return null;
 
+  const triggered = checkTriggered(ticker, detail.latest_close ?? null);
   const rsi = indicators?.indicators?.RSI_14;
 
   const sparkColor =
@@ -71,15 +179,29 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: 
         : "#ef4444"
       : "#6366f1";
 
+  const hasAlert = !!alert;
+  const triggeredClass = triggered === "above"
+    ? "ring-1 ring-green/50 bg-green/5"
+    : triggered === "below"
+      ? "ring-1 ring-red/50 bg-red/5"
+      : "";
+
   return (
-    <div className="flex items-center justify-between rounded-lg px-3 py-3 transition-colors hover:bg-bg-hover">
+    <div className={`relative flex items-center justify-between rounded-lg px-3 py-3 transition-colors hover:bg-bg-hover ${triggeredClass}`}>
       <div className="flex items-center gap-3">
         <button type="button" onClick={onRemove} aria-label={`Remove ${ticker} from watchlist`} className="text-amber hover:text-amber/70">
           <Star className="h-4 w-4 fill-amber" />
         </button>
         <Link to={`/ticker/${ticker}`} className="flex items-center gap-3">
           <div>
-            <p className="text-sm font-medium text-accent">{ticker}</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-sm font-medium text-accent">{ticker}</p>
+              {triggered && (
+                <Badge variant={triggered === "above" ? "green" : "red"}>
+                  {triggered === "above" ? "Above" : "Below"} {formatCurrency(triggered === "above" ? alert!.above! : alert!.below!)}
+                </Badge>
+              )}
+            </div>
             <p className="max-w-[160px] truncate text-xs text-text-muted">
               {detail.name}
             </p>
@@ -154,6 +276,36 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove }: { ticker: 
               <Badge variant="default">Neutral</Badge>
             )
           ) : null}
+        </div>
+
+        {/* Alert bell */}
+        <div className="relative w-8 text-center">
+          <button
+            type="button"
+            onClick={() => setShowEditor(!showEditor)}
+            className={`rounded-md p-1 transition-colors ${
+              hasAlert
+                ? "text-accent hover:bg-accent/10"
+                : "text-text-muted hover:bg-bg-hover hover:text-text-secondary"
+            }`}
+            title={hasAlert
+              ? `Alert: ${alert.above ? `above ${formatCurrency(alert.above)}` : ""}${alert.above && alert.below ? " / " : ""}${alert.below ? `below ${formatCurrency(alert.below)}` : ""}`
+              : "Set price alert"
+            }
+            aria-label={`${hasAlert ? "Edit" : "Set"} price alert for ${ticker}`}
+          >
+            {hasAlert ? <BellRing className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
+          </button>
+          {showEditor && (
+            <PriceAlertEditor
+              ticker={ticker}
+              currentPrice={detail.latest_close ?? null}
+              alert={alert}
+              onSave={onSetAlert}
+              onRemove={onRemoveAlert}
+              onClose={() => setShowEditor(false)}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -345,6 +497,7 @@ type SortMode = "custom" | "alpha" | "alpha-desc";
 export function WatchlistPage() {
   usePageTitle("Watchlist");
   const { watchlist, remove } = useWatchlist();
+  const { setAlert, removeAlert, getAlert, checkTriggered } = usePriceAlerts();
   const { show: showToast } = useToast();
   const [sortMode, setSortMode] = useState<SortMode>("custom");
 
@@ -418,6 +571,16 @@ export function WatchlistPage() {
                   remove(ticker);
                   showToast(`${ticker} removed from watchlist`);
                 }}
+                alert={getAlert(ticker)}
+                onSetAlert={(t, a) => {
+                  setAlert(t, a);
+                  showToast(`Price alert set for ${t}`);
+                }}
+                onRemoveAlert={(t) => {
+                  removeAlert(t);
+                  showToast(`Price alert removed for ${t}`);
+                }}
+                checkTriggered={checkTriggered}
               />
             ))}
           </div>
