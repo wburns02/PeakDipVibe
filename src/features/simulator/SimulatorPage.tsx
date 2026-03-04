@@ -11,6 +11,7 @@ import {
   ReferenceLine,
   ReferenceArea,
   ComposedChart,
+  LineChart,
 } from "recharts";
 import {
   useIntradaySimulation,
@@ -742,6 +743,41 @@ export function SimulatorPage() {
   const sellMarkers = trades
     .filter((t) => t.type === "sell" && t.barIndex <= currentBarIndex)
     .map((t) => t.barIndex);
+
+  // Equity curve — compute portfolio value at each visible bar
+  const equityCurve = (() => {
+    if (visibleBars.length === 0) return [];
+    let simCash = startingCash;
+    let simShares = 0;
+    let tradeIdx = 0;
+    const tradesUpTo = trades.filter((t) => t.barIndex <= currentBarIndex);
+    // Sort trades by barIndex
+    const sorted = [...tradesUpTo].sort((a, b) => a.barIndex - b.barIndex);
+
+    return visibleBars.map((bar, i) => {
+      // Apply any trades at this bar
+      while (tradeIdx < sorted.length && sorted[tradeIdx].barIndex === i) {
+        const t = sorted[tradeIdx];
+        if (t.type === "buy") {
+          simCash -= t.shares * t.price;
+          simShares += t.shares;
+        } else {
+          simCash += t.shares * t.price;
+          simShares -= t.shares;
+        }
+        tradeIdx++;
+      }
+      const price = bar.close ?? 0;
+      const value = simCash + simShares * price;
+      const pctReturn = startingCash > 0 ? ((value - startingCash) / startingCash) * 100 : 0;
+      return {
+        idx: i,
+        value,
+        pctReturn,
+        label: formatTime(bar.datetime),
+      };
+    });
+  })();
 
   // Summary stats
   const totalBuys = trades.filter((t) => t.type === "buy").length;
@@ -1869,6 +1905,82 @@ export function SimulatorPage() {
             )}
           </Card>
 
+          {/* Equity Curve + Performance Stats */}
+          {trades.length > 0 && equityCurve.length > 1 && (
+            <Card>
+              <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+                <TrendingUp className="h-4 w-4 text-accent" />
+                Equity Curve
+                <span className={`ml-auto text-xs font-bold tabular-nums ${pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                  {pnl >= 0 ? "+" : ""}{pnlPct.toFixed(2)}%
+                </span>
+              </h3>
+              <div className="h-28 sm:h-36">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={equityCurve} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                    <XAxis dataKey="idx" hide />
+                    <YAxis
+                      tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
+                      tickFormatter={(v: number) => `$${v.toFixed(0)}`}
+                      domain={["dataMin - 10", "dataMax + 10"]}
+                      width={50}
+                    />
+                    <ReTooltip
+                      contentStyle={{
+                        background: "#1a1e2e",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: 8,
+                        fontSize: 11,
+                      }}
+                      formatter={((v: number) => [fmtCurrency(v), "Portfolio"]) as never}
+                      labelFormatter={(idx) => {
+                        const point = equityCurve[Number(idx)];
+                        return point ? point.label : "";
+                      }}
+                    />
+                    <ReferenceLine
+                      y={startingCash}
+                      stroke="rgba(255,255,255,0.15)"
+                      strokeDasharray="4 4"
+                      label={{
+                        value: "Start",
+                        position: "right",
+                        fill: "rgba(255,255,255,0.3)",
+                        fontSize: 9,
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke={pnl >= 0 ? "#10b981" : "#ef4444"}
+                      strokeWidth={2}
+                      dot={false}
+                      animationDuration={0}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              {/* Quick stats row */}
+              <div className="mt-2 flex flex-wrap gap-3 text-[10px] text-text-muted">
+                {(() => {
+                  const maxVal = Math.max(...equityCurve.map((e) => e.value));
+                  const minVal = Math.min(...equityCurve.map((e) => e.value));
+                  const maxDrawdown = startingCash > 0 ? ((minVal - startingCash) / startingCash) * 100 : 0;
+                  const peakGain = startingCash > 0 ? ((maxVal - startingCash) / startingCash) * 100 : 0;
+                  return (
+                    <>
+                      <span>Peak: <strong className="text-emerald-400">+{peakGain.toFixed(1)}%</strong></span>
+                      <span>Max Drawdown: <strong className={maxDrawdown < 0 ? "text-red-400" : "text-text-primary"}>{maxDrawdown.toFixed(1)}%</strong></span>
+                      <span>High: <strong className="text-text-primary">{fmtCurrency(maxVal)}</strong></span>
+                      <span>Low: <strong className="text-text-primary">{fmtCurrency(minVal)}</strong></span>
+                    </>
+                  );
+                })()}
+              </div>
+            </Card>
+          )}
+
           {/* AI Reasoning Panel */}
           {aiData && aiData.decisions && aiData.decisions.length > 0 && (
             <Card>
@@ -1981,35 +2093,54 @@ export function SimulatorPage() {
               <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-text-primary">
                 <BarChart3 className="h-4 w-4" />
                 Trade History
+                <span className="ml-auto text-[10px] font-normal text-text-muted">
+                  {totalBuys} buy{totalBuys !== 1 ? "s" : ""}, {totalSells} sell{totalSells !== 1 ? "s" : ""}
+                </span>
               </h3>
               <div className="max-h-40 space-y-1 overflow-y-auto">
-                {trades.map((t, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between rounded-md bg-bg-hover/30 px-3 py-1.5 text-xs"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`font-bold ${t.type === "buy" ? "text-emerald-400" : "text-red-400"}`}
-                      >
-                        {t.type === "buy" ? "BOUGHT" : "SOLD"} {t.shares} shares @{" "}
-                        {fmtCurrency(t.price)}
-                      </span>
-                      {t.reason && t.reason !== "manual" && (
-                        <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase ${
-                          t.reason === "stop-loss" ? "bg-red-500/20 text-red-400" :
-                          t.reason === "trailing-stop" ? "bg-amber-500/20 text-amber-400" :
-                          "bg-emerald-500/20 text-emerald-400"
-                        }`}>
-                          {t.reason.replace("-", " ")}
+                {trades.map((t, i) => {
+                  // Calculate P&L for sell trades
+                  let tradePnl: number | null = null;
+                  if (t.type === "sell") {
+                    const priorBuys = trades.slice(0, i).filter((b) => b.type === "buy");
+                    if (priorBuys.length > 0) {
+                      const lastBuy = priorBuys[priorBuys.length - 1];
+                      tradePnl = (t.price - lastBuy.price) * t.shares;
+                    }
+                  }
+                  return (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between rounded-md bg-bg-hover/30 px-3 py-1.5 text-xs"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`font-bold ${t.type === "buy" ? "text-emerald-400" : "text-red-400"}`}
+                        >
+                          {t.type === "buy" ? "BOUGHT" : "SOLD"} {t.shares} @{" "}
+                          {fmtCurrency(t.price)}
                         </span>
-                      )}
+                        {t.reason && t.reason !== "manual" && (
+                          <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase ${
+                            t.reason === "stop-loss" ? "bg-red-500/20 text-red-400" :
+                            t.reason === "trailing-stop" ? "bg-amber-500/20 text-amber-400" :
+                            "bg-emerald-500/20 text-emerald-400"
+                          }`}>
+                            {t.reason.replace("-", " ")}
+                          </span>
+                        )}
+                        {tradePnl !== null && (
+                          <span className={`text-[10px] font-bold tabular-nums ${tradePnl >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                            {tradePnl >= 0 ? "+" : ""}{fmtCurrency(tradePnl)}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-text-muted">
+                        {formatDate(t.datetime)} {formatTime(t.datetime)}
+                      </span>
                     </div>
-                    <span className="text-text-muted">
-                      {formatDate(t.datetime)} {formatTime(t.datetime)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </Card>
           )}
