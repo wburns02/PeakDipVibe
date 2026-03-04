@@ -48,6 +48,9 @@ import {
   ChevronUp,
   SlidersHorizontal,
   CalendarDays,
+  Shield,
+  Target,
+  Settings2,
 } from "lucide-react";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -58,7 +61,12 @@ const SPEED_OPTIONS = [
   { label: "1x", ms: 1500 },
   { label: "2x", ms: 750 },
   { label: "4x", ms: 375 },
+  { label: "8x", ms: 187 },
+  { label: "16x", ms: 94 },
 ] as const;
+
+/** localStorage key for simulator params */
+const SIM_PARAMS_KEY = "sim-params";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -68,6 +76,34 @@ interface Trade {
   shares: number;
   barIndex: number;
   datetime: string;
+  reason?: "manual" | "stop-loss" | "take-profit-1" | "take-profit-2" | "trailing-stop";
+}
+
+interface SimParams {
+  stopLoss: number;       // % below entry to trigger stop-loss (0 = disabled)
+  takeProfit1: number;    // % above entry for first take-profit (0 = disabled)
+  takeProfit2: number;    // % above entry for second take-profit (0 = disabled)
+  trailingStop: number;   // % from high-water-mark to trigger trailing stop (0 = disabled)
+  positionSizePct: number; // % of cash to deploy on each buy (1-100)
+}
+
+const DEFAULT_PARAMS: SimParams = {
+  stopLoss: 5,
+  takeProfit1: 3,
+  takeProfit2: 7,
+  trailingStop: 0,
+  positionSizePct: 100,
+};
+
+function loadSimParams(): SimParams {
+  try {
+    const raw = localStorage.getItem(SIM_PARAMS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return { ...DEFAULT_PARAMS, ...parsed };
+    }
+  } catch { /* ignore */ }
+  return { ...DEFAULT_PARAMS };
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -257,6 +293,16 @@ export function SimulatorPage() {
   const [showCone, setShowCone] = useState(false);
   const autoPlayRef = useRef(false);
 
+  // Investment parameters
+  const [simParams, setSimParams] = useState<SimParams>(loadSimParams);
+  const [paramsExpanded, setParamsExpanded] = useState(false);
+  const [highSinceEntry, setHighSinceEntry] = useState(0);
+  const [tp1Hit, setTp1Hit] = useState(false);
+  const tp1HitRef = useRef(false);
+  const sharesRef = useRef(0);
+  const avgCostRef = useRef(0);
+  const highSinceEntryRef = useRef(0);
+
   const { data: intradaySim, isLoading: simLoading, isError: simError, refetch: refetchSim } = useIntradaySimulation(
     activeTicker,
     activeDate,
@@ -270,6 +316,19 @@ export function SimulatorPage() {
 
   const bars = intradaySim?.bars ?? [];
   const totalBars = bars.length;
+
+  // Persist params to localStorage
+  useEffect(() => {
+    localStorage.setItem(SIM_PARAMS_KEY, JSON.stringify(simParams));
+  }, [simParams]);
+
+  // Keep refs in sync
+  useEffect(() => {
+    sharesRef.current = shares;
+    avgCostRef.current = avgCost;
+    tp1HitRef.current = tp1Hit;
+    highSinceEntryRef.current = highSinceEntry;
+  }, [shares, avgCost, tp1Hit, highSinceEntry]);
 
   // Auto-play timer
   useEffect(() => {
@@ -292,6 +351,80 @@ export function SimulatorPage() {
     }, intervalMs);
     return () => clearInterval(timer);
   }, [autoPlay, totalBars, speedIndex]);
+
+  // Auto-trigger: stop-loss, take-profit, trailing-stop
+  useEffect(() => {
+    if (mode !== "replay" || totalBars === 0) return;
+    const bar = bars[currentBarIndex];
+    if (!bar || !bar.close) return;
+    const price = bar.close;
+    const s = sharesRef.current;
+    const avg = avgCostRef.current;
+    if (s <= 0 || avg <= 0) {
+      // Reset high-water-mark when not holding
+      if (highSinceEntryRef.current !== 0) {
+        setHighSinceEntry(0);
+      }
+      return;
+    }
+
+    // Update high-water-mark
+    if (price > highSinceEntryRef.current) {
+      setHighSinceEntry(price);
+      highSinceEntryRef.current = price;
+    }
+
+    const pctFromEntry = ((price - avg) / avg) * 100;
+
+    // Stop-loss check
+    if (simParams.stopLoss > 0 && pctFromEntry <= -simParams.stopLoss) {
+      const proceeds = s * price;
+      setCash((c) => c + proceeds);
+      setTrades((t) => [...t, { type: "sell", price, shares: s, barIndex: currentBarIndex, datetime: bar.datetime, reason: "stop-loss" }]);
+      setShares(0);
+      setAvgCost(0);
+      setHighSinceEntry(0);
+      setTp1Hit(false);
+      return;
+    }
+
+    // Take-profit 2 check (sell remaining)
+    if (simParams.takeProfit2 > 0 && pctFromEntry >= simParams.takeProfit2 && tp1HitRef.current) {
+      const proceeds = s * price;
+      setCash((c) => c + proceeds);
+      setTrades((t) => [...t, { type: "sell", price, shares: s, barIndex: currentBarIndex, datetime: bar.datetime, reason: "take-profit-2" }]);
+      setShares(0);
+      setAvgCost(0);
+      setHighSinceEntry(0);
+      setTp1Hit(false);
+      return;
+    }
+
+    // Take-profit 1 check (sell half)
+    if (simParams.takeProfit1 > 0 && pctFromEntry >= simParams.takeProfit1 && !tp1HitRef.current) {
+      const halfShares = Math.max(1, Math.floor(s / 2));
+      const proceeds = halfShares * price;
+      setCash((c) => c + proceeds);
+      setTrades((t) => [...t, { type: "sell", price, shares: halfShares, barIndex: currentBarIndex, datetime: bar.datetime, reason: "take-profit-1" }]);
+      setShares(s - halfShares);
+      setTp1Hit(true);
+      return;
+    }
+
+    // Trailing stop check
+    if (simParams.trailingStop > 0 && highSinceEntryRef.current > 0) {
+      const dropFromHigh = ((highSinceEntryRef.current - price) / highSinceEntryRef.current) * 100;
+      if (dropFromHigh >= simParams.trailingStop) {
+        const proceeds = s * price;
+        setCash((c) => c + proceeds);
+        setTrades((t) => [...t, { type: "sell", price, shares: s, barIndex: currentBarIndex, datetime: bar.datetime, reason: "trailing-stop" }]);
+        setShares(0);
+        setAvgCost(0);
+        setHighSinceEntry(0);
+        setTp1Hit(false);
+      }
+    }
+  }, [currentBarIndex, mode, totalBars, bars, simParams]);
 
   // Keyboard shortcuts (only active in replay mode)
   useEffect(() => {
@@ -389,6 +522,8 @@ export function SimulatorPage() {
     setShares(0);
     setAvgCost(0);
     setTrades([]);
+    setHighSinceEntry(0);
+    setTp1Hit(false);
   };
 
   const changeStartingCash = (amount: number) => {
@@ -400,6 +535,8 @@ export function SimulatorPage() {
     setCurrentBarIndex(0);
     setAutoPlay(false);
     setFinished(false);
+    setHighSinceEntry(0);
+    setTp1Hit(false);
   };
 
   // Current bar
@@ -411,10 +548,11 @@ export function SimulatorPage() {
   const pnl = portfolioValue - startingCash;
   const pnlPct = startingCash > 0 ? (pnl / startingCash) * 100 : 0;
 
-  // Buy handler
+  // Buy handler (uses position sizing %)
   const handleBuy = () => {
     if (cash <= 0 || currentPrice <= 0) return;
-    const sharesToBuy = Math.floor(cash / currentPrice);
+    const deployableCash = cash * (simParams.positionSizePct / 100);
+    const sharesToBuy = Math.floor(deployableCash / currentPrice);
     if (sharesToBuy <= 0) return;
     const cost = sharesToBuy * currentPrice;
     const newTotalShares = shares + sharesToBuy;
@@ -425,6 +563,8 @@ export function SimulatorPage() {
     setCash((c) => c - cost);
     setShares(newTotalShares);
     setAvgCost(newAvgCost);
+    setHighSinceEntry(currentPrice);
+    setTp1Hit(false);
     setTrades((t) => [
       ...t,
       {
@@ -433,6 +573,7 @@ export function SimulatorPage() {
         shares: sharesToBuy,
         barIndex: currentBarIndex,
         datetime: currentBar?.datetime ?? "",
+        reason: "manual",
       },
     ]);
   };
@@ -450,10 +591,13 @@ export function SimulatorPage() {
         shares,
         barIndex: currentBarIndex,
         datetime: currentBar?.datetime ?? "",
+        reason: "manual",
       },
     ]);
     setShares(0);
     setAvgCost(0);
+    setHighSinceEntry(0);
+    setTp1Hit(false);
   };
 
   // Step handlers
@@ -1057,6 +1201,120 @@ export function SimulatorPage() {
               ))}
             </div>
 
+            {/* Investment Parameters (collapsible) */}
+            <div className="mb-3">
+              <button
+                type="button"
+                onClick={() => setParamsExpanded(!paramsExpanded)}
+                className="flex w-full items-center justify-between rounded-lg bg-bg-hover/50 px-3 py-2 text-left transition-colors hover:bg-bg-hover"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings2 className="h-4 w-4 text-accent" />
+                  <span className="text-xs font-semibold text-text-primary">
+                    Trade Parameters
+                  </span>
+                  <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-accent">
+                    {simParams.stopLoss > 0 && `SL -${simParams.stopLoss}%`}
+                    {simParams.takeProfit1 > 0 && ` · TP1 +${simParams.takeProfit1}%`}
+                    {simParams.takeProfit2 > 0 && ` · TP2 +${simParams.takeProfit2}%`}
+                    {simParams.trailingStop > 0 && ` · Trail ${simParams.trailingStop}%`}
+                    {simParams.positionSizePct < 100 && ` · Size ${simParams.positionSizePct}%`}
+                    {simParams.stopLoss === 0 && simParams.takeProfit1 === 0 && simParams.takeProfit2 === 0 && simParams.trailingStop === 0 && simParams.positionSizePct === 100 && "No limits"}
+                  </span>
+                </div>
+                {paramsExpanded ? (
+                  <ChevronUp className="h-4 w-4 text-text-muted" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-text-muted" />
+                )}
+              </button>
+
+              {paramsExpanded && (
+                <div className="mt-2 grid grid-cols-2 gap-3 rounded-lg border border-border/50 bg-bg-hover/30 p-3 sm:grid-cols-5">
+                  <div>
+                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-red-400">
+                      <Shield className="h-3 w-3" />
+                      Stop-Loss %
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={50}
+                      step={0.5}
+                      value={simParams.stopLoss}
+                      onChange={(e) => setSimParams((p) => ({ ...p, stopLoss: Math.max(0, Math.min(50, Number(e.target.value) || 0)) }))}
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                    />
+                    <p className="mt-0.5 text-[9px] text-text-muted">0 = off</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-emerald-400">
+                      <Target className="h-3 w-3" />
+                      TP1 % (50%)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={0.5}
+                      value={simParams.takeProfit1}
+                      onChange={(e) => setSimParams((p) => ({ ...p, takeProfit1: Math.max(0, Math.min(100, Number(e.target.value) || 0)) }))}
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                    />
+                    <p className="mt-0.5 text-[9px] text-text-muted">Sells half</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-emerald-400">
+                      <Target className="h-3 w-3" />
+                      TP2 % (rest)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={200}
+                      step={0.5}
+                      value={simParams.takeProfit2}
+                      onChange={(e) => setSimParams((p) => ({ ...p, takeProfit2: Math.max(0, Math.min(200, Number(e.target.value) || 0)) }))}
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                    />
+                    <p className="mt-0.5 text-[9px] text-text-muted">Sells rest</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-amber-400">
+                      <TrendingDown className="h-3 w-3" />
+                      Trail Stop %
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={50}
+                      step={0.5}
+                      value={simParams.trailingStop}
+                      onChange={(e) => setSimParams((p) => ({ ...p, trailingStop: Math.max(0, Math.min(50, Number(e.target.value) || 0)) }))}
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                    />
+                    <p className="mt-0.5 text-[9px] text-text-muted">From peak</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-accent">
+                      <DollarSign className="h-3 w-3" />
+                      Position %
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      step={5}
+                      value={simParams.positionSizePct}
+                      onChange={(e) => setSimParams((p) => ({ ...p, positionSizePct: Math.max(1, Math.min(100, Number(e.target.value) || 100)) }))}
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                    />
+                    <p className="mt-0.5 text-[9px] text-text-muted">Of cash</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Portfolio Display */}
             <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-lg bg-bg-hover/50 p-2.5">
@@ -1090,6 +1348,28 @@ export function SimulatorPage() {
                 </p>
               </div>
             </div>
+
+            {/* Position info bar (when holding shares) */}
+            {shares > 0 && avgCost > 0 && (
+              <div className="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-border/40 bg-bg-hover/20 px-3 py-1.5 text-[10px] text-text-muted">
+                <span>Avg Cost: <strong className="text-text-primary">{fmtCurrency(avgCost)}</strong></span>
+                <span>Unrealized: <strong className={currentPrice >= avgCost ? "text-emerald-400" : "text-red-400"}>
+                  {currentPrice >= avgCost ? "+" : ""}{fmtCurrency((currentPrice - avgCost) * shares)} ({((currentPrice - avgCost) / avgCost * 100).toFixed(1)}%)
+                </strong></span>
+                {simParams.stopLoss > 0 && (
+                  <span>SL: <strong className="text-red-400">{fmtCurrency(avgCost * (1 - simParams.stopLoss / 100))}</strong></span>
+                )}
+                {simParams.takeProfit1 > 0 && !tp1Hit && (
+                  <span>TP1: <strong className="text-emerald-400">{fmtCurrency(avgCost * (1 + simParams.takeProfit1 / 100))}</strong></span>
+                )}
+                {simParams.takeProfit2 > 0 && (
+                  <span>TP2: <strong className="text-emerald-400">{fmtCurrency(avgCost * (1 + simParams.takeProfit2 / 100))}</strong></span>
+                )}
+                {simParams.trailingStop > 0 && highSinceEntry > 0 && (
+                  <span>Trail: <strong className="text-amber-400">{fmtCurrency(highSinceEntry * (1 - simParams.trailingStop / 100))}</strong></span>
+                )}
+              </div>
+            )}
 
             {/* Buy / Sell Buttons */}
             {!finished && (
@@ -1491,12 +1771,23 @@ export function SimulatorPage() {
                     key={i}
                     className="flex items-center justify-between rounded-md bg-bg-hover/30 px-3 py-1.5 text-xs"
                   >
-                    <span
-                      className={`font-bold ${t.type === "buy" ? "text-emerald-400" : "text-red-400"}`}
-                    >
-                      {t.type === "buy" ? "BOUGHT" : "SOLD"} {t.shares} shares @{" "}
-                      {fmtCurrency(t.price)}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`font-bold ${t.type === "buy" ? "text-emerald-400" : "text-red-400"}`}
+                      >
+                        {t.type === "buy" ? "BOUGHT" : "SOLD"} {t.shares} shares @{" "}
+                        {fmtCurrency(t.price)}
+                      </span>
+                      {t.reason && t.reason !== "manual" && (
+                        <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase ${
+                          t.reason === "stop-loss" ? "bg-red-500/20 text-red-400" :
+                          t.reason === "trailing-stop" ? "bg-amber-500/20 text-amber-400" :
+                          "bg-emerald-500/20 text-emerald-400"
+                        }`}>
+                          {t.reason.replace("-", " ")}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-text-muted">
                       {formatDate(t.datetime)} {formatTime(t.datetime)}
                     </span>
