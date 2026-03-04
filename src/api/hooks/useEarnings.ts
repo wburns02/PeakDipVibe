@@ -12,6 +12,7 @@ import {
   EventLibrarySchema,
   RandomEventSchema,
   EventAnalysisSchema,
+  AIDecisionsResponseSchema,
 } from "../types/earnings";
 
 export function useImpactSummary() {
@@ -135,6 +136,26 @@ export function useEventAnalysis(ticker: string, signalDate: string) {
         `/earnings/events/${ticker}/${signalDate}/analysis`,
       );
       return EventAnalysisSchema.parse(data);
+    },
+    enabled: !!ticker && !!signalDate,
+    staleTime: STALE_STABLE,
+  });
+}
+
+export function useAIDecisions(
+  ticker: string,
+  signalDate: string,
+  interval: "15m" | "30m" | "60m" = "60m",
+  days: number = 5,
+) {
+  return useQuery({
+    queryKey: ["earnings", "ai-decisions", ticker, signalDate, interval, days],
+    queryFn: async () => {
+      const { data } = await api.get(
+        `/earnings/simulate/${ticker}/${signalDate}/ai-decisions`,
+        { params: { interval, days } },
+      );
+      return AIDecisionsResponseSchema.parse(data);
     },
     enabled: !!ticker && !!signalDate,
     staleTime: STALE_STABLE,

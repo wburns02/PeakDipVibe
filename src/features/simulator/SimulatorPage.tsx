@@ -17,13 +17,14 @@ import {
   useEventLibrary,
   useRandomEvent,
   useEventAnalysis,
+  useAIDecisions,
 } from "@/api/hooks/useEarnings";
 import { useSectors } from "@/api/hooks/useMarket";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { Card } from "@/components/ui/Card";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { MiniLesson } from "@/components/education/MiniLesson";
-import type { LibraryEvent, IntradayBar } from "@/api/types/earnings";
+import type { LibraryEvent, IntradayBar, AIDecision } from "@/api/types/earnings";
 import { getCatalystConfig } from "@/lib/catalystTypes";
 import {
   Shuffle,
@@ -52,6 +53,8 @@ import {
   Shield,
   Target,
   Settings2,
+  Brain,
+  Bot,
 } from "lucide-react";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -312,8 +315,10 @@ export function SimulatorPage() {
   );
 
   const { data: analysis } = useEventAnalysis(activeTicker, activeDate);
+  const { data: aiData } = useAIDecisions(activeTicker, activeDate, barInterval, simDays);
 
   const [analysisExpanded, setAnalysisExpanded] = useState(false);
+  const [showAI, setShowAI] = useState(true);
 
   const bars = intradaySim?.bars ?? [];
   const totalBars = bars.length;
@@ -1863,6 +1868,112 @@ export function SimulatorPage() {
               </p>
             )}
           </Card>
+
+          {/* AI Reasoning Panel */}
+          {aiData && aiData.decisions && aiData.decisions.length > 0 && (
+            <Card>
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+                  <Brain className="h-4 w-4 text-purple-400" />
+                  AI Reasoning
+                  <span className="rounded-full bg-purple-500/15 px-2 py-0.5 text-[10px] font-medium text-purple-400">
+                    {aiData.total_events_referenced} events analyzed · {aiData.bounce_rate}% bounce rate
+                  </span>
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowAI((v) => !v)}
+                  className={`rounded-md px-2 py-1 text-[10px] font-medium transition-colors ${
+                    showAI ? "bg-purple-500/15 text-purple-400" : "bg-bg-hover text-text-muted"
+                  }`}
+                >
+                  {showAI ? "Hide" : "Show"}
+                </button>
+              </div>
+
+              {showAI && (
+                <>
+                  {/* Reference events */}
+                  {aiData.references.length > 0 && (
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {aiData.references.map((ref) => (
+                        <div
+                          key={`${ref.ticker}-${ref.signal_date}`}
+                          className="flex items-center gap-1.5 rounded-full border border-border/50 bg-bg-hover/30 px-2.5 py-1 text-[10px]"
+                        >
+                          <span className="font-bold text-text-primary">{ref.ticker}</span>
+                          <span className="text-text-muted">{ref.gap_up_pct > 0 ? "+" : ""}{ref.gap_up_pct}%</span>
+                          <span className={ref.outcome_1d >= 0 ? "text-emerald-400" : "text-red-400"}>
+                            D1: {ref.outcome_1d > 0 ? "+" : ""}{ref.outcome_1d}%
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Current AI decision (highlighted) */}
+                  {(() => {
+                    const currentDecision: AIDecision | undefined = aiData.decisions[currentBarIndex];
+                    if (!currentDecision) return null;
+                    const actionColor =
+                      currentDecision.action === "BUY" ? "border-emerald-500/40 bg-emerald-500/10" :
+                      currentDecision.action === "SELL" ? "border-red-500/40 bg-red-500/10" :
+                      "border-border/40 bg-bg-hover/30";
+                    const actionBadge =
+                      currentDecision.action === "BUY" ? "bg-emerald-500/20 text-emerald-400" :
+                      currentDecision.action === "SELL" ? "bg-red-500/20 text-red-400" :
+                      "bg-amber-500/20 text-amber-400";
+                    return (
+                      <div className={`mb-3 rounded-lg border p-3 ${actionColor}`}>
+                        <div className="flex items-center gap-2">
+                          <Bot className="h-4 w-4 text-purple-400" />
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${actionBadge}`}>
+                            {currentDecision.action}
+                          </span>
+                          <span className="text-[10px] text-text-muted">
+                            {currentDecision.confidence}% confidence · {currentDecision.phase}
+                          </span>
+                        </div>
+                        <p className="mt-1.5 text-xs leading-relaxed text-text-secondary">
+                          {currentDecision.reasoning}
+                        </p>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Scrolling decision log */}
+                  <div className="max-h-32 space-y-1 overflow-y-auto">
+                    {aiData.decisions
+                      .filter((_d, i) => i <= currentBarIndex)
+                      .slice(-8)
+                      .map((d, i) => (
+                        <div
+                          key={i}
+                          className={`flex items-center gap-2 rounded-md px-2.5 py-1 text-[10px] ${
+                            d.bar_index === currentBarIndex ? "bg-bg-hover/50" : ""
+                          }`}
+                        >
+                          <span className={`inline-block h-1.5 w-1.5 rounded-full ${
+                            d.action === "BUY" ? "bg-emerald-400" :
+                            d.action === "SELL" ? "bg-red-400" : "bg-amber-400/50"
+                          }`} />
+                          <span className="w-14 shrink-0 tabular-nums text-text-muted">
+                            {d.datetime.split("T")[1]?.slice(0, 5) || ""}
+                          </span>
+                          <span className={`w-8 shrink-0 font-bold ${
+                            d.action === "BUY" ? "text-emerald-400" :
+                            d.action === "SELL" ? "text-red-400" : "text-text-muted"
+                          }`}>
+                            {d.action}
+                          </span>
+                          <span className="truncate text-text-muted">{d.reasoning.slice(0, 60)}...</span>
+                        </div>
+                      ))}
+                  </div>
+                </>
+              )}
+            </Card>
+          )}
 
           {/* Trade History */}
           {trades.length > 0 && (

@@ -310,3 +310,39 @@ export const RandomEventSchema = LibraryEventSchema.pick({
 export type LibraryEvent = z.infer<typeof LibraryEventSchema>;
 export type EventLibrary = z.infer<typeof EventLibrarySchema>;
 export type RandomEvent = z.infer<typeof RandomEventSchema>;
+
+// AI Decisions
+export const AIReferenceSchema = z.object({
+  ticker: z.string(),
+  name: z.string(),
+  signal_date: z.string(),
+  gap_up_pct: z.number(),
+  outcome_1d: z.number(),
+  outcome_5d: z.number(),
+});
+
+export const AIDecisionSchema = z.object({
+  bar_index: z.number(),
+  datetime: z.string(),
+  phase: z.string(),
+  action: z.enum(["BUY", "SELL", "HOLD"]),
+  confidence: z.number(),
+  reasoning: z.string(),
+});
+
+export const AIDecisionsResponseSchema = z.object({
+  ticker: z.string(),
+  signal_date: z.string(),
+  interval: z.string(),
+  total_events_referenced: z.number(),
+  bounce_rate: z.number(),
+  avg_outcome_1d: z.number(),
+  avg_outcome_5d: z.number(),
+  catalyst_type: z.string(),
+  references: z.array(AIReferenceSchema),
+  decisions: z.array(AIDecisionSchema),
+});
+
+export type AIReference = z.infer<typeof AIReferenceSchema>;
+export type AIDecision = z.infer<typeof AIDecisionSchema>;
+export type AIDecisionsResponse = z.infer<typeof AIDecisionsResponseSchema>;
