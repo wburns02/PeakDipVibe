@@ -56,6 +56,9 @@ import {
   Settings2,
   Brain,
   Bot,
+  Download,
+  History,
+  Trash2,
 } from "lucide-react";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -109,6 +112,43 @@ function loadSimParams(): SimParams {
     }
   } catch { /* ignore */ }
   return { ...DEFAULT_PARAMS };
+}
+
+/** Saved simulation result */
+interface SimResult {
+  ticker: string;
+  name: string;
+  signalDate: string;
+  startingCash: number;
+  finalValue: number;
+  pnl: number;
+  pnlPct: number;
+  totalBuys: number;
+  totalSells: number;
+  interval: string;
+  completedAt: string; // ISO timestamp
+}
+
+const SIM_HISTORY_KEY = "sim-history";
+const MAX_HISTORY = 20;
+
+function loadSimHistory(): SimResult[] {
+  try {
+    const raw = localStorage.getItem(SIM_HISTORY_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return [];
+}
+
+function saveSimResult(result: SimResult) {
+  const history = loadSimHistory();
+  // Dedupe by ticker+date+completedAt (don't save exact duplicates)
+  const exists = history.some(
+    (h) => h.ticker === result.ticker && h.signalDate === result.signalDate && h.completedAt === result.completedAt
+  );
+  if (exists) return;
+  const updated = [result, ...history].slice(0, MAX_HISTORY);
+  localStorage.setItem(SIM_HISTORY_KEY, JSON.stringify(updated));
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -320,6 +360,8 @@ export function SimulatorPage() {
 
   const [analysisExpanded, setAnalysisExpanded] = useState(false);
   const [showAI, setShowAI] = useState(true);
+  const [simHistory, setSimHistory] = useState<SimResult[]>(loadSimHistory);
+  const savedRef = useRef(false); // prevent double-save
 
   const bars = intradaySim?.bars ?? [];
   const totalBars = bars.length;
@@ -554,6 +596,29 @@ export function SimulatorPage() {
   const portfolioValue = cash + shares * currentPrice;
   const pnl = portfolioValue - startingCash;
   const pnlPct = startingCash > 0 ? (pnl / startingCash) * 100 : 0;
+
+  // Auto-save simulation when finished
+  useEffect(() => {
+    if (finished && !savedRef.current && trades.length > 0 && activeTicker) {
+      savedRef.current = true;
+      const result: SimResult = {
+        ticker: activeTicker,
+        name: intradaySim?.name || activeTicker,
+        signalDate: activeDate,
+        startingCash,
+        finalValue: portfolioValue,
+        pnl,
+        pnlPct,
+        totalBuys: trades.filter((t) => t.type === "buy").length,
+        totalSells: trades.filter((t) => t.type === "sell").length,
+        interval: barInterval,
+        completedAt: new Date().toISOString(),
+      };
+      saveSimResult(result);
+      setSimHistory(loadSimHistory());
+    }
+    if (!finished) savedRef.current = false;
+  }, [finished]);
 
   // Buy handler (uses position sizing %)
   const handleBuy = () => {
@@ -801,6 +866,46 @@ export function SimulatorPage() {
     },
     { profit: 0, buyPrice: 0, sellPrice: 0 },
   );
+
+  // CSV export
+  const exportCSV = useCallback(() => {
+    if (bars.length === 0) return;
+    const header = "Bar,DateTime,Open,High,Low,Close,Volume,PctFromPrevClose,Phase,Action,TradeShares,TradePrice,TradeReason,AIAction,AIConfidence,AIReasoning,PortfolioValue";
+    const rows = bars.map((bar, i) => {
+      const phase = i <= phases.phase1End ? "Pre-Event" : i < phases.phase3Start ? "During-Event" : "Post-Event";
+      const trade = trades.find((t) => t.barIndex === i);
+      const tradeAction = trade ? trade.type.toUpperCase() : "";
+      const tradeShares = trade ? trade.shares : "";
+      const tradePrice = trade ? trade.price.toFixed(2) : "";
+      const tradeReason = trade?.reason ?? "";
+      const aiDec = aiData?.decisions?.[i];
+      const aiAction = aiDec?.action ?? "";
+      const aiConf = aiDec?.confidence ?? "";
+      const aiReason = aiDec ? `"${aiDec.reasoning.replace(/"/g, '""')}"` : "";
+      const eq = equityCurve[i];
+      const pv = eq ? eq.value.toFixed(2) : "";
+      return [
+        i, bar.datetime, bar.open ?? "", bar.high ?? "", bar.low ?? "", bar.close ?? "",
+        bar.volume ?? "", bar.pct_from_prev_close.toFixed(4), phase,
+        tradeAction, tradeShares, tradePrice, tradeReason,
+        aiAction, aiConf, aiReason, pv,
+      ].join(",");
+    });
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `sim_${activeTicker}_${activeDate}_${barInterval}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [bars, trades, aiData, equityCurve, activeTicker, activeDate, barInterval, phases]);
+
+  // Clear history
+  const clearHistory = useCallback(() => {
+    localStorage.removeItem(SIM_HISTORY_KEY);
+    setSimHistory([]);
+  }, []);
 
   // ─── BROWSE MODE ──────────────────────────────────────────────────────────
 
@@ -1097,6 +1202,58 @@ export function SimulatorPage() {
             </div>
           </Link>
         </div>
+
+        {/* Simulation History */}
+        {simHistory.length > 0 && (
+          <Card>
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+                <History className="h-4 w-4 text-accent" />
+                Past Simulations
+                <span className="text-[10px] font-normal text-text-muted">({simHistory.length})</span>
+              </h3>
+              <button
+                type="button"
+                onClick={clearHistory}
+                className="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] text-text-muted hover:bg-bg-hover hover:text-red-400"
+              >
+                <Trash2 className="h-3 w-3" />
+                Clear
+              </button>
+            </div>
+            <div className="max-h-48 space-y-1.5 overflow-y-auto">
+              {simHistory.map((h, i) => (
+                <button
+                  type="button"
+                  key={i}
+                  onClick={() => selectEvent(h.ticker, h.signalDate)}
+                  className="flex w-full items-center justify-between rounded-lg bg-bg-hover/30 px-3 py-2 text-left transition-colors hover:bg-bg-hover/60"
+                >
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <span className="text-sm font-bold text-accent">{h.ticker}</span>
+                      <span className="ml-1.5 text-[10px] text-text-muted">{h.interval}</span>
+                    </div>
+                    <span className="text-[10px] text-text-muted">
+                      {new Date(h.signalDate + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 text-right">
+                    <span className={`text-xs font-bold tabular-nums ${h.pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                      {h.pnl >= 0 ? "+" : ""}{fmtCurrency(h.pnl)}
+                    </span>
+                    <span className={`text-[10px] tabular-nums ${h.pnlPct >= 0 ? "text-emerald-400/70" : "text-red-400/70"}`}>
+                      {h.pnlPct >= 0 ? "+" : ""}{h.pnlPct.toFixed(1)}%
+                    </span>
+                    <span className="text-[10px] text-text-muted">
+                      {h.totalBuys}B/{h.totalSells}S
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
     );
   }
@@ -2203,7 +2360,7 @@ export function SimulatorPage() {
                   </p>
                 )}
 
-                <div className="mt-4 flex justify-center gap-3">
+                <div className="mt-4 flex flex-wrap justify-center gap-3">
                   <button
                     type="button"
                     onClick={resetSim}
@@ -2219,6 +2376,14 @@ export function SimulatorPage() {
                   >
                     <ArrowLeft className="h-4 w-4" />
                     Pick Another
+                  </button>
+                  <button
+                    type="button"
+                    onClick={exportCSV}
+                    className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover"
+                  >
+                    <Download className="h-4 w-4" />
+                    Export CSV
                   </button>
                 </div>
 
