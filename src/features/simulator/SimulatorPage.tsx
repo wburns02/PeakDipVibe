@@ -9,6 +9,7 @@ import {
   Tooltip as ReTooltip,
   ResponsiveContainer,
   ReferenceLine,
+  ReferenceArea,
   ComposedChart,
 } from "recharts";
 import {
@@ -631,6 +632,56 @@ export function SimulatorPage() {
     }
   }
 
+  // ─── Phase Detection ───────────────────────────────────────────────────
+  // Phase 1: Pre-Event (bars before signal_date)
+  // Phase 2: During Event (bars on signal_date)
+  // Phase 3: Post-Event (bars after signal_date)
+  const phases = (() => {
+    if (bars.length === 0 || !activeDate) return { phase1End: -1, phase2Start: 0, phase2End: 0, phase3Start: 0 };
+    let phase1End = -1;   // last bar index of pre-event
+    let phase2Start = 0;  // first bar index of during-event
+    let phase2End = 0;    // last bar index of during-event
+    let phase3Start = -1; // first bar index of post-event
+
+    for (let i = 0; i < bars.length; i++) {
+      const barDate = bars[i].datetime.split("T")[0];
+      if (barDate < activeDate) {
+        phase1End = i;
+      } else if (barDate === activeDate) {
+        if (phase2Start === 0 && (phase1End >= 0 || i === 0)) phase2Start = i;
+        phase2End = i;
+      } else {
+        if (phase3Start < 0) phase3Start = i;
+      }
+    }
+    // If no pre-event bars, phase2 starts at 0
+    if (phase1End < 0) phase2Start = 0;
+    if (phase3Start < 0) phase3Start = bars.length; // no post-event
+    return { phase1End, phase2Start, phase2End, phase3Start };
+  })();
+
+  // Current phase based on currentBarIndex
+  const currentPhase: 1 | 2 | 3 =
+    currentBarIndex <= phases.phase1End ? 1 :
+    currentBarIndex < phases.phase3Start ? 2 : 3;
+
+  // Phase returns
+  const phaseReturns = (() => {
+    if (bars.length === 0) return { phase1: 0, phase2: 0, phase3: 0 };
+    const getReturn = (startIdx: number, endIdx: number) => {
+      if (startIdx < 0 || endIdx < 0 || startIdx >= bars.length || endIdx >= bars.length) return 0;
+      const startPrice = bars[startIdx].close ?? 0;
+      const endPrice = bars[endIdx].close ?? 0;
+      if (startPrice === 0) return 0;
+      return ((endPrice - startPrice) / startPrice) * 100;
+    };
+    return {
+      phase1: phases.phase1End >= 0 ? getReturn(0, phases.phase1End) : 0,
+      phase2: getReturn(phases.phase2Start, phases.phase2End),
+      phase3: phases.phase3Start < bars.length ? getReturn(phases.phase3Start, bars.length - 1) : 0,
+    };
+  })();
+
   // Build chart data (only visible bars up to currentBarIndex)
   const visibleBars = bars.slice(0, currentBarIndex + 1);
 
@@ -1076,6 +1127,53 @@ export function SimulatorPage() {
               </div>
             </div>
           </Card>
+
+          {/* Phase Indicator Bar */}
+          <div className="flex items-center gap-1.5 rounded-xl border border-border bg-bg-card px-4 py-2.5">
+            <span className="mr-1 text-[10px] font-medium text-text-muted">Phase:</span>
+            {/* Phase 1: Pre-Event */}
+            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-colors ${
+              currentPhase === 1
+                ? "bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/40"
+                : currentBarIndex > phases.phase1End
+                  ? "bg-amber-500/10 text-amber-400/50"
+                  : "bg-bg-hover text-text-muted"
+            }`}>
+              <span className={`inline-block h-2 w-2 rounded-full ${currentPhase === 1 ? "bg-amber-400 animate-pulse" : "bg-amber-400/40"}`} />
+              Pre-Event
+              {currentBarIndex > phases.phase1End && phases.phase1End >= 0 && (
+                <span className="ml-0.5 tabular-nums">{phaseReturns.phase1 >= 0 ? "+" : ""}{phaseReturns.phase1.toFixed(1)}%</span>
+              )}
+            </div>
+            <ChevronRight className="h-3 w-3 text-text-muted/50" />
+            {/* Phase 2: During Event */}
+            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-colors ${
+              currentPhase === 2
+                ? "bg-red-500/20 text-red-400 ring-1 ring-red-500/40"
+                : currentBarIndex >= phases.phase3Start
+                  ? "bg-red-500/10 text-red-400/50"
+                  : "bg-bg-hover text-text-muted"
+            }`}>
+              <span className={`inline-block h-2 w-2 rounded-full ${currentPhase === 2 ? "bg-red-400 animate-pulse" : "bg-red-400/40"}`} />
+              During Event
+              {currentBarIndex >= phases.phase3Start && (
+                <span className="ml-0.5 tabular-nums">{phaseReturns.phase2 >= 0 ? "+" : ""}{phaseReturns.phase2.toFixed(1)}%</span>
+              )}
+            </div>
+            <ChevronRight className="h-3 w-3 text-text-muted/50" />
+            {/* Phase 3: Post-Event */}
+            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-colors ${
+              currentPhase === 3
+                ? "bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40"
+                : "bg-bg-hover text-text-muted"
+            }`}>
+              <span className={`inline-block h-2 w-2 rounded-full ${currentPhase === 3 ? "bg-emerald-400 animate-pulse" : "bg-emerald-400/40"}`} />
+              Post-Event
+              {finished && phases.phase3Start < bars.length && (
+                <span className="ml-0.5 tabular-nums">{phaseReturns.phase3 >= 0 ? "+" : ""}{phaseReturns.phase3.toFixed(1)}%</span>
+              )}
+            </div>
+          </div>
 
           {/* Analysis Panel (if enriched) */}
           {analysis?.found && (
@@ -1648,6 +1746,14 @@ export function SimulatorPage() {
                       return [fmtCurrency(v), name];
                     }) as never}
                   />
+                  {/* Phase background zones */}
+                  {phases.phase1End >= 0 && (
+                    <ReferenceArea x1={0} x2={phases.phase1End} fill="rgba(245, 158, 11, 0.04)" fillOpacity={1} />
+                  )}
+                  <ReferenceArea x1={phases.phase2Start} x2={phases.phase2End} fill="rgba(239, 68, 68, 0.06)" fillOpacity={1} />
+                  {phases.phase3Start < bars.length && (
+                    <ReferenceArea x1={phases.phase3Start} x2={bars.length - 1} fill="rgba(34, 197, 94, 0.04)" fillOpacity={1} />
+                  )}
                   {/* Day separator lines */}
                   {dayBoundaries
                     .filter((i) => i <= currentBarIndex)
