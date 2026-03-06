@@ -17,6 +17,7 @@ import {
   FlaskConical,
   Dna,
   ClipboardList,
+  BookOpen,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -68,6 +69,14 @@ export function CommandPalette() {
         icon: <ClipboardList className="h-4 w-4" />,
         action: () => go("/planner"),
         keywords: "planner plan trade setup entry stop target position sizing risk morning game",
+      },
+      {
+        id: "nav-journal",
+        label: "Trade Journal",
+        sublabel: "Track trades and performance analytics",
+        icon: <BookOpen className="h-4 w-4" />,
+        action: () => go("/journal"),
+        keywords: "journal log trade track performance pnl win rate equity curve history",
       },
       {
         id: "nav-dashboard",
