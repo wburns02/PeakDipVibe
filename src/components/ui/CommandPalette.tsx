@@ -16,6 +16,7 @@ import {
   Sunrise,
   FlaskConical,
   Dna,
+  ClipboardList,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -59,6 +60,14 @@ export function CommandPalette() {
         icon: <Sunrise className="h-4 w-4" />,
         action: () => go("/pulse"),
         keywords: "morning pulse briefing daily today setups mood",
+      },
+      {
+        id: "nav-planner",
+        label: "Trade Planner",
+        sublabel: "Morning game plan with entry/stop/targets",
+        icon: <ClipboardList className="h-4 w-4" />,
+        action: () => go("/planner"),
+        keywords: "planner plan trade setup entry stop target position sizing risk morning game",
       },
       {
         id: "nav-dashboard",

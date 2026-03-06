@@ -23,6 +23,7 @@ import {
   Sunrise,
   FlaskConical,
   Dna,
+  ClipboardList,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -38,6 +39,7 @@ const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: st
 
 const navItems = [
   { to: "/pulse", icon: Sunrise, label: "Morning Pulse" },
+  { to: "/planner", icon: ClipboardList, label: "Trade Planner" },
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/signals", icon: Zap, label: "Signals" },
   { to: "/earnings", icon: Newspaper, label: "Earnings" },

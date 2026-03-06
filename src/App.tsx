@@ -42,6 +42,9 @@ const StrategyLabPage = lazy(() =>
 const StockDnaPage = lazy(() =>
   import("@/features/stock-dna/StockDnaPage").then((m) => ({ default: m.StockDnaPage })),
 );
+const TradePlannerPage = lazy(() =>
+  import("@/features/trade-planner/TradePlannerPage").then((m) => ({ default: m.TradePlannerPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
@@ -55,6 +58,7 @@ export const preloadRoute: Record<string, () => void> = {
   "/heatmap": () => { import("@/features/heatmap/HeatmapPage"); },
   "/strategy": () => { import("@/features/strategy-lab/StrategyLabPage"); },
   "/dna": () => { import("@/features/stock-dna/StockDnaPage"); },
+  "/planner": () => { import("@/features/trade-planner/TradePlannerPage"); },
 };
 
 const queryClient = new QueryClient({
@@ -85,6 +89,7 @@ export default function App() {
               <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
               <Route path="/heatmap" element={<Suspense fallback={<PageSpinner />}><HeatmapPage /></Suspense>} />
               <Route path="/strategy" element={<Suspense fallback={<PageSpinner />}><StrategyLabPage /></Suspense>} />
+              <Route path="/planner" element={<Suspense fallback={<PageSpinner />}><TradePlannerPage /></Suspense>} />
               <Route path="/dna" element={<Suspense fallback={<PageSpinner />}><StockDnaPage /></Suspense>} />
               <Route path="/dna/:symbol" element={<Suspense fallback={<PageSpinner />}><StockDnaPage /></Suspense>} />
               <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
