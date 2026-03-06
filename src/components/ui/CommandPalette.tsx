@@ -24,6 +24,7 @@ import {
   CalendarRange,
   TestTubeDiagonal,
   HeartPulse,
+  Trophy,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -171,6 +172,14 @@ export function CommandPalette() {
         icon: <CalendarRange className="h-4 w-4" />,
         action: () => go("/seasonality"),
         keywords: "seasonal monthly calendar pattern best worst month buy sell history",
+      },
+      {
+        id: "nav-strength",
+        label: "RS Rankings",
+        sublabel: "Relative strength stock rankings 1-99",
+        icon: <Trophy className="h-4 w-4" />,
+        action: () => go("/strength"),
+        keywords: "relative strength rs rankings momentum leaders laggards ibd oneil minervini",
       },
       {
         id: "nav-internals",

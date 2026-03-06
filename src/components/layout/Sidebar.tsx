@@ -31,6 +31,7 @@ import {
   CalendarRange,
   TestTubeDiagonal,
   HeartPulse,
+  Trophy,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -59,6 +60,7 @@ const navItems = [
   { to: "/backtest", icon: TestTubeDiagonal, label: "Backtester" },
   { to: "/rotation", icon: RefreshCw, label: "Rotation" },
   { to: "/internals", icon: HeartPulse, label: "Internals" },
+  { to: "/strength", icon: Trophy, label: "RS Rankings" },
   { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
   { to: "/seasonality", icon: CalendarRange, label: "Seasonality" },
   { to: "/xray", icon: Scan, label: "X-Ray" },
