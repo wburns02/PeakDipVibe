@@ -22,6 +22,7 @@ import {
   Scan,
   Bell,
   CalendarRange,
+  TestTubeDiagonal,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -169,6 +170,14 @@ export function CommandPalette() {
         icon: <CalendarRange className="h-4 w-4" />,
         action: () => go("/seasonality"),
         keywords: "seasonal monthly calendar pattern best worst month buy sell history",
+      },
+      {
+        id: "nav-backtest",
+        label: "Strategy Backtester",
+        sublabel: "Test strategies against 7 years of real data",
+        icon: <TestTubeDiagonal className="h-4 w-4" />,
+        action: () => go("/backtest"),
+        keywords: "backtest strategy test simulate historical performance equity curve win rate",
       },
       {
         id: "nav-xray",

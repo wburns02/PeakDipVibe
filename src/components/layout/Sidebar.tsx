@@ -29,6 +29,7 @@ import {
   Scan,
   Bell,
   CalendarRange,
+  TestTubeDiagonal,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -54,6 +55,7 @@ const navItems = [
   { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
   { to: "/dna", icon: Dna, label: "Stock DNA" },
   { to: "/strategy", icon: FlaskConical, label: "Strategy Lab" },
+  { to: "/backtest", icon: TestTubeDiagonal, label: "Backtester" },
   { to: "/rotation", icon: RefreshCw, label: "Rotation" },
   { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
   { to: "/seasonality", icon: CalendarRange, label: "Seasonality" },
