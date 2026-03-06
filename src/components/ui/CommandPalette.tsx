@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Grid3x3,
   Sunrise,
+  FlaskConical,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -97,6 +98,14 @@ export function CommandPalette() {
         icon: <SlidersHorizontal className="h-4 w-4" />,
         action: () => go("/screener"),
         keywords: "filter search stocks scan",
+      },
+      {
+        id: "nav-strategy",
+        label: "Strategy Lab",
+        sublabel: "Build custom stock scanners",
+        icon: <FlaskConical className="h-4 w-4" />,
+        action: () => go("/strategy"),
+        keywords: "strategy lab scanner builder conditions filter custom screener",
       },
       {
         id: "nav-heatmap",

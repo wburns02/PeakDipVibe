@@ -36,6 +36,9 @@ const HeatmapPage = lazy(() =>
 const MorningPulsePage = lazy(() =>
   import("@/features/morning-pulse/MorningPulsePage").then((m) => ({ default: m.MorningPulsePage })),
 );
+const StrategyLabPage = lazy(() =>
+  import("@/features/strategy-lab/StrategyLabPage").then((m) => ({ default: m.StrategyLabPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
@@ -47,6 +50,7 @@ export const preloadRoute: Record<string, () => void> = {
   "/compare": () => { import("@/features/compare/ComparePage"); },
   "/watchlist": () => { import("@/features/watchlist/WatchlistPage"); },
   "/heatmap": () => { import("@/features/heatmap/HeatmapPage"); },
+  "/strategy": () => { import("@/features/strategy-lab/StrategyLabPage"); },
 };
 
 const queryClient = new QueryClient({
@@ -76,6 +80,7 @@ export default function App() {
               <Route path="/screener" element={<Suspense fallback={<PageSpinner />}><ScreenerPage /></Suspense>} />
               <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
               <Route path="/heatmap" element={<Suspense fallback={<PageSpinner />}><HeatmapPage /></Suspense>} />
+              <Route path="/strategy" element={<Suspense fallback={<PageSpinner />}><StrategyLabPage /></Suspense>} />
               <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
