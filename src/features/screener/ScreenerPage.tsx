@@ -222,6 +222,7 @@ export function ScreenerPage() {
     filters.price_min != null ||
     filters.price_max != null ||
     filters.sector ||
+    filters.exchange ||
     filters.above_sma200 != null ||
     filters.above_sma50 != null ||
     filters.golden_cross ||
@@ -263,7 +264,7 @@ export function ScreenerPage() {
       <div>
         <h1 className="text-2xl font-bold text-text-primary">Stock Screener</h1>
         <p className="mt-1 text-sm text-text-muted">
-          Filter S&P 500 stocks by technical indicators
+          Filter stocks by technical indicators
         </p>
       </div>
 
@@ -471,6 +472,21 @@ export function ScreenerPage() {
                     {s.sector} ({s.ticker_count})
                   </option>
                 ))}
+              </select>
+            </div>
+
+            {/* Exchange */}
+            <div>
+              <label className="mb-1 block text-xs text-text-muted">Exchange</label>
+              <select
+                value={filters.exchange ?? ""}
+                onChange={(e) => setFilter("exchange", e.target.value)}
+                aria-label="Filter by exchange"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
+              >
+                <option value="">All Exchanges</option>
+                <option value="NMS">NASDAQ</option>
+                <option value="NYQ">NYSE</option>
               </select>
             </div>
 

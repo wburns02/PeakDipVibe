@@ -6,6 +6,7 @@ export const ScreenerResultSchema = z.object({
   sector: z.string().nullable(),
   industry: z.string().nullable(),
   market_cap: z.number().nullable(),
+  exchange: z.string().nullable(),
   close: z.number().nullable(),
   prev_close: z.number().nullable(),
   change_pct: z.number().nullable(),
@@ -29,6 +30,7 @@ export interface ScreenerFilters {
   golden_cross?: boolean;
   death_cross?: boolean;
   sector?: string;
+  exchange?: string;
   sort_by?: string;
   sort_dir?: string;
   limit?: number;

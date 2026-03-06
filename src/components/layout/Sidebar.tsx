@@ -25,6 +25,7 @@ import {
   Dna,
   ClipboardList,
   BookOpen,
+  RefreshCw,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -49,6 +50,7 @@ const navItems = [
   { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
   { to: "/dna", icon: Dna, label: "Stock DNA" },
   { to: "/strategy", icon: FlaskConical, label: "Strategy Lab" },
+  { to: "/rotation", icon: RefreshCw, label: "Rotation" },
   { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
   { to: "/compare", icon: BarChart3, label: "Compare" },
   { to: "/watchlist", icon: Star, label: "Watchlist" },

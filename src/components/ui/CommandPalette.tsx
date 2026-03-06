@@ -18,6 +18,7 @@ import {
   Dna,
   ClipboardList,
   BookOpen,
+  RefreshCw,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -133,6 +134,14 @@ export function CommandPalette() {
         icon: <FlaskConical className="h-4 w-4" />,
         action: () => go("/strategy"),
         keywords: "strategy lab scanner builder conditions filter custom screener",
+      },
+      {
+        id: "nav-rotation",
+        label: "Sector Rotation",
+        sublabel: "RRG chart — where money is flowing",
+        icon: <RefreshCw className="h-4 w-4" />,
+        action: () => go("/rotation"),
+        keywords: "rotation sector rrg relative strength momentum quadrant leading lagging improving weakening",
       },
       {
         id: "nav-heatmap",
