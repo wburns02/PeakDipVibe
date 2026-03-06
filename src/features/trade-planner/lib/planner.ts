@@ -62,7 +62,7 @@ export function saveRiskPct(val: number) {
   try { localStorage.setItem(RISK_KEY, String(val)); } catch { /* noop */ }
 }
 
-function verdictToAction(verdict: Verdict, score: number): TradeAction {
+function verdictToAction(_verdict: Verdict, score: number): TradeAction {
   if (score >= 75) return "Strong Buy";
   if (score >= 62) return "Buy Dip";
   if (score >= 55) return "Watch Long";

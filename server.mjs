@@ -1,10 +1,15 @@
 import { createServer } from "node:http";
+import { request as httpsRequest } from "node:https";
 import { readFileSync, existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
 const PORT = process.env.PORT || 3000;
 const DIST = join(import.meta.dirname, "dist");
 const DATA = join(import.meta.dirname, "data");
+
+// Upstream API proxy (public HTTPS endpoint on soc-api via Tailscale Funnel)
+const UPSTREAM_HOST = "soc-api.tailad2d5f.ts.net";
+const UPSTREAM_PREFIX = "/stock-api";
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -31,14 +36,9 @@ const indexHtml = readFileSync(join(DIST, "index.html"));
 function resolveApiData(urlPath, query) {
   // Strip /api/ prefix
   const route = urlPath.replace(/^\/api\//, "");
-
-  // Direct file match (e.g. earnings/impact-summary → data/earnings/impact-summary.json)
-  const direct = join(DATA, route + ".json");
-  if (existsSync(direct)) return direct;
-
-  // Parameterized routes — map query params to file variants
   const params = new URLSearchParams(query);
 
+  // --- Earnings ---
   if (route === "earnings/price-journey") {
     const moveSize = params.get("move_size") || "all";
     const file = join(DATA, `earnings/price-journey--${moveSize}.json`);
@@ -63,12 +63,96 @@ function resolveApiData(urlPath, query) {
     if (existsSync(file)) return file;
   }
 
-  if (route === "earnings/this-week") {
-    const file = join(DATA, "earnings/this-week.json");
+  // --- Market ---
+  if (route === "market/upcoming-earnings") {
+    const limit = params.get("limit") || "8";
+    const file = join(DATA, `market/upcoming-earnings--${limit}.json`);
     if (existsSync(file)) return file;
   }
 
+  // --- Signals ---
+  if (route === "signals/patterns") {
+    const days = params.get("days") || "14";
+    const sortBy = params.get("sort_by");
+    const limit = params.get("limit");
+    // Check for specific combo file first (e.g., patterns--14-signal_strength-30)
+    if (sortBy && limit) {
+      const combo = join(DATA, `signals/patterns--${days}-${sortBy}-${limit}.json`);
+      if (existsSync(combo)) return combo;
+    }
+    const file = join(DATA, `signals/patterns--${days}.json`);
+    if (existsSync(file)) return file;
+  }
+
+  if (route === "signals/patterns/stats") {
+    const days = params.get("days") || "14";
+    const file = join(DATA, `signals/stats--${days}.json`);
+    if (existsSync(file)) return file;
+  }
+
+  // --- Screener ---
+  if (route === "screener") {
+    const sortBy = params.get("sort_by");
+    const sortDir = params.get("sort_dir");
+    if (sortBy) {
+      const file = join(DATA, `screener/${sortBy}-${sortDir || "desc"}.json`);
+      if (existsSync(file)) return file;
+    }
+    const file = join(DATA, "screener/default.json");
+    if (existsSync(file)) return file;
+  }
+
+  // --- Direct file match (e.g. earnings/this-week, earnings/impact-summary,
+  //     market/overview, market/breadth, market/sectors, status, tickers) ---
+  const direct = join(DATA, route + ".json");
+  if (existsSync(direct)) return direct;
+
   return null;
+}
+
+/**
+ * Proxy an API request to the upstream R730 stock API via soc-api Tailscale Funnel.
+ */
+function proxyToUpstream(req, res, urlPath, queryString) {
+  const upstreamPath = UPSTREAM_PREFIX + urlPath + (queryString ? "?" + queryString : "");
+
+  const proxyReq = httpsRequest(
+    {
+      hostname: UPSTREAM_HOST,
+      port: 443,
+      path: upstreamPath,
+      method: req.method,
+      headers: {
+        accept: "application/json",
+        "user-agent": "PeakDipVibe-Server/1.0",
+      },
+      timeout: 15000,
+    },
+    (proxyRes) => {
+      const headers = {
+        "Content-Type": proxyRes.headers["content-type"] || "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=60",
+      };
+      res.writeHead(proxyRes.statusCode, headers);
+      proxyRes.pipe(res);
+    },
+  );
+
+  proxyReq.on("error", (err) => {
+    console.error(`Proxy error: ${err.message}`);
+    res.writeHead(502, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "upstream unavailable", detail: err.message }));
+  });
+
+  proxyReq.on("timeout", () => {
+    proxyReq.destroy();
+    res.writeHead(504, { "Content-Type": "application/json" });
+    res.end('{"error":"upstream timeout"}');
+  });
+
+  // For GET requests, just end the proxy request (no body to forward)
+  proxyReq.end();
 }
 
 const server = createServer((req, res) => {
@@ -81,8 +165,27 @@ const server = createServer((req, res) => {
 
   const [urlPath, queryString] = (req.url || "/").split("?");
 
-  // API routes — serve pre-computed JSON data
+  // CORS preflight
+  if (req.method === "OPTIONS" && urlPath.startsWith("/api/")) {
+    res.writeHead(204, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "*",
+      "Access-Control-Max-Age": "86400",
+    });
+    res.end();
+    return;
+  }
+
+  // API routes — serve pre-computed JSON data, fallback to upstream proxy
   if (urlPath.startsWith("/api/")) {
+    // API health shortcut
+    if (urlPath === "/api/health") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end('{"status":"ok"}');
+      return;
+    }
+
     const dataFile = resolveApiData(urlPath, queryString || "");
     if (dataFile) {
       const json = readFileSync(dataFile);
@@ -95,16 +198,8 @@ const server = createServer((req, res) => {
       return;
     }
 
-    // API health
-    if (urlPath === "/api/health") {
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end('{"status":"ok"}');
-      return;
-    }
-
-    // Unknown API route
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end('{"error":"not found"}');
+    // No cached data — proxy to upstream API
+    proxyToUpstream(req, res, urlPath, queryString || "");
     return;
   }
 
@@ -134,4 +229,5 @@ const server = createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.log(`PeakDipVibe server listening on port ${PORT}`);
+  console.log(`Upstream proxy: https://${UPSTREAM_HOST}${UPSTREAM_PREFIX}`);
 });
