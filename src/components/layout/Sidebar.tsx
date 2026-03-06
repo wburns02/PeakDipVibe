@@ -22,6 +22,7 @@ import {
   Grid3x3,
   Sunrise,
   FlaskConical,
+  Dna,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -42,6 +43,7 @@ const navItems = [
   { to: "/earnings", icon: Newspaper, label: "Earnings" },
   { to: "/simulator", icon: PlayCircle, label: "Simulator" },
   { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
+  { to: "/dna", icon: Dna, label: "Stock DNA" },
   { to: "/strategy", icon: FlaskConical, label: "Strategy Lab" },
   { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
   { to: "/compare", icon: BarChart3, label: "Compare" },

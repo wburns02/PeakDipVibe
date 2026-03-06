@@ -15,6 +15,7 @@ import {
   Grid3x3,
   Sunrise,
   FlaskConical,
+  Dna,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -98,6 +99,14 @@ export function CommandPalette() {
         icon: <SlidersHorizontal className="h-4 w-4" />,
         action: () => go("/screener"),
         keywords: "filter search stocks scan",
+      },
+      {
+        id: "nav-dna",
+        label: "Stock DNA",
+        sublabel: "Multi-indicator confluence analysis",
+        icon: <Dna className="h-4 w-4" />,
+        action: () => go("/dna"),
+        keywords: "dna analysis confluence score verdict indicators technical",
       },
       {
         id: "nav-strategy",
