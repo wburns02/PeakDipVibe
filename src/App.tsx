@@ -30,6 +30,9 @@ const ScreenerPage = lazy(() =>
 const ComparePage = lazy(() =>
   import("@/features/compare/ComparePage").then((m) => ({ default: m.ComparePage })),
 );
+const HeatmapPage = lazy(() =>
+  import("@/features/heatmap/HeatmapPage").then((m) => ({ default: m.HeatmapPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
@@ -39,6 +42,7 @@ export const preloadRoute: Record<string, () => void> = {
   "/screener": () => { import("@/features/screener/ScreenerPage"); },
   "/compare": () => { import("@/features/compare/ComparePage"); },
   "/watchlist": () => { import("@/features/watchlist/WatchlistPage"); },
+  "/heatmap": () => { import("@/features/heatmap/HeatmapPage"); },
 };
 
 const queryClient = new QueryClient({
@@ -66,6 +70,7 @@ export default function App() {
               <Route path="/ticker/:symbol" element={<Suspense fallback={<PageSpinner />}><TickerDetailPage /></Suspense>} />
               <Route path="/screener" element={<Suspense fallback={<PageSpinner />}><ScreenerPage /></Suspense>} />
               <Route path="/compare" element={<Suspense fallback={<PageSpinner />}><ComparePage /></Suspense>} />
+              <Route path="/heatmap" element={<Suspense fallback={<PageSpinner />}><HeatmapPage /></Suspense>} />
               <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

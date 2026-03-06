@@ -19,6 +19,7 @@ import {
   X,
   Sun,
   Moon,
+  Grid3x3,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -38,6 +39,7 @@ const navItems = [
   { to: "/earnings", icon: Newspaper, label: "Earnings" },
   { to: "/simulator", icon: PlayCircle, label: "Simulator" },
   { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
+  { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
   { to: "/compare", icon: BarChart3, label: "Compare" },
   { to: "/watchlist", icon: Star, label: "Watchlist" },
 ];

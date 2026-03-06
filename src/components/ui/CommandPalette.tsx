@@ -12,6 +12,7 @@ import {
   TrendingDown,
   TrendingUp,
   ArrowRight,
+  Grid3x3,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -87,6 +88,14 @@ export function CommandPalette() {
         icon: <SlidersHorizontal className="h-4 w-4" />,
         action: () => go("/screener"),
         keywords: "filter search stocks scan",
+      },
+      {
+        id: "nav-heatmap",
+        label: "Heatmap",
+        sublabel: "S&P 500 treemap visualization",
+        icon: <Grid3x3 className="h-4 w-4" />,
+        action: () => go("/heatmap"),
+        keywords: "treemap market cap sector visualization finviz",
       },
       {
         id: "nav-compare",
