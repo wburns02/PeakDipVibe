@@ -20,6 +20,7 @@ import {
   BookOpen,
   RefreshCw,
   Scan,
+  Bell,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -63,6 +64,14 @@ export function CommandPalette() {
         icon: <Sunrise className="h-4 w-4" />,
         action: () => go("/pulse"),
         keywords: "morning pulse briefing daily today setups mood",
+      },
+      {
+        id: "nav-alerts",
+        label: "Market Alerts",
+        sublabel: "Technical events across 500+ stocks",
+        icon: <Bell className="h-4 w-4" />,
+        action: () => go("/alerts"),
+        keywords: "alerts events scanner oversold overbought golden cross death cross bollinger breakout",
       },
       {
         id: "nav-planner",

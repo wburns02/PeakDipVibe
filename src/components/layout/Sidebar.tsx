@@ -27,6 +27,7 @@ import {
   BookOpen,
   RefreshCw,
   Scan,
+  Bell,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -44,6 +45,7 @@ const navItems = [
   { to: "/pulse", icon: Sunrise, label: "Morning Pulse" },
   { to: "/planner", icon: ClipboardList, label: "Trade Planner" },
   { to: "/journal", icon: BookOpen, label: "Journal" },
+  { to: "/alerts", icon: Bell, label: "Alerts" },
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/signals", icon: Zap, label: "Signals" },
   { to: "/earnings", icon: Newspaper, label: "Earnings" },
