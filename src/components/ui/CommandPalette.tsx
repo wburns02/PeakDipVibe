@@ -23,6 +23,7 @@ import {
   Bell,
   CalendarRange,
   TestTubeDiagonal,
+  HeartPulse,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -170,6 +171,14 @@ export function CommandPalette() {
         icon: <CalendarRange className="h-4 w-4" />,
         action: () => go("/seasonality"),
         keywords: "seasonal monthly calendar pattern best worst month buy sell history",
+      },
+      {
+        id: "nav-internals",
+        label: "Market Internals",
+        sublabel: "Breadth, regime, and market health analysis",
+        icon: <HeartPulse className="h-4 w-4" />,
+        action: () => go("/internals"),
+        keywords: "internals breadth health regime advance decline sma rsi sector market",
       },
       {
         id: "nav-backtest",

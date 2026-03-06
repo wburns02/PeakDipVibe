@@ -63,6 +63,9 @@ const SeasonalityPage = lazy(() =>
 const BacktesterPage = lazy(() =>
   import("@/features/backtester/BacktesterPage").then((m) => ({ default: m.BacktesterPage })),
 );
+const MarketInternalsPage = lazy(() =>
+  import("@/features/market-internals/MarketInternalsPage").then((m) => ({ default: m.MarketInternalsPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
@@ -83,6 +86,7 @@ export const preloadRoute: Record<string, () => void> = {
   "/alerts": () => { import("@/features/market-alerts/MarketAlertsPage"); },
   "/seasonality": () => { import("@/features/seasonality/SeasonalityPage"); },
   "/backtest": () => { import("@/features/backtester/BacktesterPage"); },
+  "/internals": () => { import("@/features/market-internals/MarketInternalsPage"); },
 };
 
 const queryClient = new QueryClient({
@@ -122,6 +126,7 @@ export default function App() {
               <Route path="/alerts" element={<Suspense fallback={<PageSpinner />}><MarketAlertsPage /></Suspense>} />
               <Route path="/seasonality" element={<Suspense fallback={<PageSpinner />}><SeasonalityPage /></Suspense>} />
               <Route path="/backtest" element={<Suspense fallback={<PageSpinner />}><BacktesterPage /></Suspense>} />
+              <Route path="/internals" element={<Suspense fallback={<PageSpinner />}><MarketInternalsPage /></Suspense>} />
               <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

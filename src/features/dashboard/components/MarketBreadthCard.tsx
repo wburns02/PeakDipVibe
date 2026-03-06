@@ -135,12 +135,21 @@ export function MarketBreadthCard() {
         </div>
       </div>
 
-      <Link
-        to="/screener"
-        className="mt-3 flex items-center justify-center gap-1 text-xs text-accent hover:underline"
-      >
-        Explore in screener <ArrowRight className="h-3 w-3" />
-      </Link>
+      <div className="mt-3 flex items-center justify-center gap-3">
+        <Link
+          to="/internals"
+          className="flex items-center gap-1 text-xs text-accent hover:underline"
+        >
+          Deep dive <ArrowRight className="h-3 w-3" />
+        </Link>
+        <span className="text-text-muted">|</span>
+        <Link
+          to="/screener"
+          className="flex items-center gap-1 text-xs text-text-muted hover:text-accent hover:underline"
+        >
+          Screener <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
     </Card>
   );
 }
