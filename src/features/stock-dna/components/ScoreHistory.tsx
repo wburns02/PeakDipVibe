@@ -9,7 +9,6 @@ import {
   ReferenceLine,
 } from "recharts";
 import type { IndicatorHistoryRow } from "@/api/types/indicator";
-import { computeConfluence } from "../lib/confluence";
 
 interface Props {
   rsiHistory: IndicatorHistoryRow[];
@@ -110,7 +109,7 @@ export function ScoreHistory({ rsiHistory, macdHistory, sma50History, priceHisto
               fontSize: 12,
             }}
             labelStyle={{ color: "var(--color-text-muted)" }}
-            formatter={(val: number) => [`${val}`, "Score"]}
+            formatter={(val: number | undefined) => [`${val ?? 0}`, "Score"]}
           />
           <Area
             type="monotone"

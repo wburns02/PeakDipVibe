@@ -115,18 +115,6 @@ const SECTOR_COLORS: Record<string, string> = {
   "Materials": "#78716c",
 };
 
-function changeColor(pct: number): string {
-  if (pct > 3) return "#16a34a";
-  if (pct > 1.5) return "#22c55e";
-  if (pct > 0.5) return "#4ade80";
-  if (pct > 0) return "#86efac";
-  if (pct === 0) return "#6b7280";
-  if (pct > -0.5) return "#fca5a5";
-  if (pct > -1.5) return "#f87171";
-  if (pct > -3) return "#ef4444";
-  return "#dc2626";
-}
-
 function changeBg(pct: number): string {
   if (pct > 3) return "rgba(22, 163, 74, 0.85)";
   if (pct > 1.5) return "rgba(34, 197, 94, 0.7)";

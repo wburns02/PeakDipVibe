@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useLatestIndicators, useIndicatorHistory } from "@/api/hooks/useIndicators";
 import { useTicker, useTickerList } from "@/api/hooks/useTickers";
@@ -30,7 +30,6 @@ const POPULAR_TICKERS = ["AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA"
 export function StockDnaPage() {
   usePageTitle("Stock DNA");
 
-  const navigate = useNavigate();
   const { symbol } = useParams<{ symbol?: string }>();
   const [ticker, setTicker] = useState(symbol?.toUpperCase() || "AAPL");
 
@@ -52,10 +51,6 @@ export function StockDnaPage() {
   const { data: rsiHistory } = useIndicatorHistory(ticker, "RSI_14", { limit: 60 });
   const { data: macdHistory } = useIndicatorHistory(ticker, "MACD", { limit: 60 });
   const { data: sma50History } = useIndicatorHistory(ticker, "SMA_50", { limit: 60 });
-
-  const price = indicators?.indicators?.SMA_10
-    ? (priceData?.[0]?.close ?? tickerInfo?.latest_close ?? 0)
-    : (tickerInfo?.latest_close ?? 0);
 
   const actualPrice = priceData?.[0]?.close ?? tickerInfo?.latest_close ?? 0;
 

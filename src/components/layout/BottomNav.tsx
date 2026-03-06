@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   Zap,
   PlayCircle,
-  SlidersHorizontal,
   Star,
   Sunrise,
 } from "lucide-react";

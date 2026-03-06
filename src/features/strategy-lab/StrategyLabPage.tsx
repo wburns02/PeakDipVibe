@@ -19,9 +19,7 @@ import {
   Save,
   Trash2,
   FolderOpen,
-  ChevronDown,
   X,
-  Plus,
 } from "lucide-react";
 
 export function StrategyLabPage() {
