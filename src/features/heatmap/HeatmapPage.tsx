@@ -324,11 +324,11 @@ export function HeatmapPage() {
       </div>
 
       {/* Sector filter pills */}
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex gap-1.5 overflow-x-auto pb-1 sm:flex-wrap scrollbar-none">
         <button
           type="button"
           onClick={() => setSelectedSector(null)}
-          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+          className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
             !selectedSector ? "bg-accent text-white" : "bg-bg-card text-text-secondary border border-border hover:border-accent hover:text-accent"
           }`}
         >
@@ -339,7 +339,7 @@ export function HeatmapPage() {
             key={s}
             type="button"
             onClick={() => setSelectedSector(selectedSector === s ? null : s)}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               selectedSector === s ? "text-white" : "bg-bg-card text-text-secondary border border-border hover:text-accent"
             }`}
             style={selectedSector === s ? { backgroundColor: SECTOR_COLORS[s] ?? "#6366f1" } : undefined}
@@ -351,11 +351,11 @@ export function HeatmapPage() {
 
       {/* Heatmap */}
       {isLoading ? (
-        <Skeleton className="h-[70vh] w-full rounded-xl" />
+        <Skeleton className="h-[50vh] sm:h-[70vh] w-full rounded-xl" />
       ) : (
         <div
           ref={containerRef}
-          className="relative h-[70vh] min-h-[500px] overflow-hidden rounded-xl border border-border bg-bg-card"
+          className="relative h-[50vh] min-h-[320px] sm:h-[70vh] sm:min-h-[500px] overflow-hidden rounded-xl border border-border bg-bg-card"
           onMouseLeave={() => setHovered(null)}
         >
           <svg
