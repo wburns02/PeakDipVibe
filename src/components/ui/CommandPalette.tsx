@@ -25,6 +25,7 @@ import {
   TestTubeDiagonal,
   HeartPulse,
   Trophy,
+  Lightbulb,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -76,6 +77,14 @@ export function CommandPalette() {
         icon: <Bell className="h-4 w-4" />,
         action: () => go("/alerts"),
         keywords: "alerts events scanner oversold overbought golden cross death cross bollinger breakout",
+      },
+      {
+        id: "nav-ideas",
+        label: "Trade Ideas",
+        sublabel: "Auto-generated trade setups with entry/stop/target",
+        icon: <Lightbulb className="h-4 w-4" />,
+        action: () => go("/ideas"),
+        keywords: "ideas setups trade scan pullback oversold bounce momentum breakout entry stop target",
       },
       {
         id: "nav-planner",

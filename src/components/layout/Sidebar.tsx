@@ -32,6 +32,7 @@ import {
   TestTubeDiagonal,
   HeartPulse,
   Trophy,
+  Lightbulb,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -47,6 +48,7 @@ const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: st
 
 const navItems = [
   { to: "/pulse", icon: Sunrise, label: "Morning Pulse" },
+  { to: "/ideas", icon: Lightbulb, label: "Trade Ideas" },
   { to: "/planner", icon: ClipboardList, label: "Trade Planner" },
   { to: "/journal", icon: BookOpen, label: "Journal" },
   { to: "/alerts", icon: Bell, label: "Alerts" },
