@@ -95,13 +95,12 @@ function resolveApiData(urlPath, query) {
     const sortBy = params.get("sort_by");
     const sortDir = params.get("sort_dir");
     const exchange = params.get("exchange");
-    // Exchange-filtered requests always go to upstream (no pre-cached files)
-    if (exchange) return null;
+    const exSuffix = exchange ? `-${exchange}` : "";
     if (sortBy) {
-      const file = join(DATA, `screener/${sortBy}-${sortDir || "desc"}.json`);
+      const file = join(DATA, `screener/${sortBy}-${sortDir || "desc"}${exSuffix}.json`);
       if (existsSync(file)) return file;
     }
-    const file = join(DATA, "screener/default.json");
+    const file = join(DATA, `screener/default${exSuffix}.json`);
     if (existsSync(file)) return file;
   }
 
