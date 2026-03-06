@@ -20,6 +20,7 @@ import {
   Sun,
   Moon,
   Grid3x3,
+  Sunrise,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -34,6 +35,7 @@ const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: st
 });
 
 const navItems = [
+  { to: "/pulse", icon: Sunrise, label: "Morning Pulse" },
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/signals", icon: Zap, label: "Signals" },
   { to: "/earnings", icon: Newspaper, label: "Earnings" },

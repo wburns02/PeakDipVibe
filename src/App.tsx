@@ -33,9 +33,13 @@ const ComparePage = lazy(() =>
 const HeatmapPage = lazy(() =>
   import("@/features/heatmap/HeatmapPage").then((m) => ({ default: m.HeatmapPage })),
 );
+const MorningPulsePage = lazy(() =>
+  import("@/features/morning-pulse/MorningPulsePage").then((m) => ({ default: m.MorningPulsePage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
+  "/pulse": () => { import("@/features/morning-pulse/MorningPulsePage"); },
   "/signals": () => { import("@/features/signals/SignalsPage"); },
   "/earnings": () => { import("@/features/earnings/EarningsPage"); },
   "/simulator": () => { import("@/features/simulator/SimulatorPage"); },
@@ -64,6 +68,7 @@ export default function App() {
           <Routes>
             <Route element={<AppShell />}>
               <Route index element={<DashboardPage />} />
+              <Route path="/pulse" element={<Suspense fallback={<PageSpinner />}><MorningPulsePage /></Suspense>} />
               <Route path="/signals" element={<Suspense fallback={<PageSpinner />}><SignalsPage /></Suspense>} />
               <Route path="/earnings" element={<Suspense fallback={<PageSpinner />}><EarningsPage /></Suspense>} />
               <Route path="/simulator" element={<Suspense fallback={<PageSpinner />}><SimulatorPage /></Suspense>} />

@@ -13,6 +13,7 @@ import {
   TrendingUp,
   ArrowRight,
   Grid3x3,
+  Sunrise,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -49,6 +50,14 @@ export function CommandPalette() {
 
   const navItems: PaletteItem[] = useMemo(
     () => [
+      {
+        id: "nav-pulse",
+        label: "Morning Pulse",
+        sublabel: "Daily trading briefing",
+        icon: <Sunrise className="h-4 w-4" />,
+        action: () => go("/pulse"),
+        keywords: "morning pulse briefing daily today setups mood",
+      },
       {
         id: "nav-dashboard",
         label: "Dashboard",

@@ -6,13 +6,14 @@ import {
   PlayCircle,
   SlidersHorizontal,
   Star,
+  Sunrise,
 } from "lucide-react";
 
 const items = [
+  { to: "/pulse", icon: Sunrise, label: "Pulse" },
   { to: "/", icon: LayoutDashboard, label: "Home" },
   { to: "/signals", icon: Zap, label: "Signals" },
   { to: "/simulator", icon: PlayCircle, label: "Simulate" },
-  { to: "/screener", icon: SlidersHorizontal, label: "Screen" },
   { to: "/watchlist", icon: Star, label: "Watch" },
 ];
 
