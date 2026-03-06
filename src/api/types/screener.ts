@@ -6,7 +6,7 @@ export const ScreenerResultSchema = z.object({
   sector: z.string().nullable(),
   industry: z.string().nullable(),
   market_cap: z.number().nullable(),
-  exchange: z.string().nullable(),
+  exchange: z.string().nullish(),
   close: z.number().nullable(),
   prev_close: z.number().nullable(),
   change_pct: z.number().nullable(),
