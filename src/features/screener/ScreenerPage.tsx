@@ -364,6 +364,7 @@ export function ScreenerPage() {
               if (filters.price_min != null) count++;
               if (filters.price_max != null) count++;
               if (filters.sector) count++;
+              if (filters.exchange) count++;
               if (filters.above_sma200 != null) count++;
               if (filters.above_sma50 != null) count++;
               if (filters.golden_cross) count++;
@@ -551,6 +552,7 @@ export function ScreenerPage() {
         if (filters.price_min != null) chips.push({ label: `Price ≥ $${filters.price_min}`, clear: () => setFilter("price_min", undefined) });
         if (filters.price_max != null) chips.push({ label: `Price ≤ $${filters.price_max}`, clear: () => setFilter("price_max", undefined) });
         if (filters.sector) chips.push({ label: filters.sector, clear: () => setFilter("sector", undefined) });
+        if (filters.exchange) chips.push({ label: filters.exchange === "NMS" ? "NASDAQ" : filters.exchange === "NYQ" ? "NYSE" : filters.exchange, clear: () => setFilter("exchange", undefined) });
         if (filters.above_sma200 === true) chips.push({ label: "Above SMA 200", clear: () => setFilter("above_sma200", undefined) });
         if (filters.above_sma50 === true) chips.push({ label: "Above SMA 50", clear: () => setFilter("above_sma50", undefined) });
         if (filters.above_sma200 === false) chips.push({ label: "Below SMA 200", clear: () => setFilter("above_sma200", undefined) });
@@ -632,7 +634,7 @@ export function ScreenerPage() {
         ) : (
           <ScrollableTable className={`transition-opacity duration-300 ${isRefetching ? "opacity-50" : ""}`}>
             <table className="w-full text-sm">
-              <caption className="sr-only">S&amp;P 500 stock screener results sorted by technical indicators</caption>
+              <caption className="sr-only">Stock screener results sorted by technical indicators</caption>
               <thead>
                 <tr className="border-b border-border text-left text-xs text-text-muted">
                   <th scope="col" className="w-8 pb-2" />
@@ -681,6 +683,13 @@ export function ScreenerPage() {
                       <Link to={`/ticker/${r.ticker}`} className="font-medium text-accent hover:underline">
                         {r.ticker}
                       </Link>
+                      {r.exchange && (
+                        <span className={`ml-1 inline-block rounded px-1 py-0.5 text-[9px] font-semibold leading-none ${
+                          r.exchange === "NMS" ? "bg-blue-500/15 text-blue-400" : "bg-emerald-500/15 text-emerald-400"
+                        }`}>
+                          {r.exchange === "NMS" ? "NASDAQ" : r.exchange === "NYQ" ? "NYSE" : r.exchange}
+                        </span>
+                      )}
                       <span className="ml-1.5 hidden text-xs text-text-muted lg:inline">
                         {r.name}
                       </span>

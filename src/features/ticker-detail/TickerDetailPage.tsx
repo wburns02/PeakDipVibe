@@ -58,7 +58,7 @@ export function TickerDetailPage() {
             Ticker not found
           </p>
           <p className="mt-1 text-sm text-text-muted">
-            "{symbol}" doesn't exist in the S&P 500 database
+            "{symbol}" doesn't exist in our database
           </p>
         </div>
       </div>

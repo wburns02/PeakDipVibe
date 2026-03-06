@@ -114,7 +114,7 @@ export function CommandPalette() {
       {
         id: "nav-screener",
         label: "Screener",
-        sublabel: "Filter S&P 500 stocks",
+        sublabel: "Filter stocks by technicals",
         icon: <SlidersHorizontal className="h-4 w-4" />,
         action: () => go("/screener"),
         keywords: "filter search stocks scan",
@@ -146,7 +146,7 @@ export function CommandPalette() {
       {
         id: "nav-heatmap",
         label: "Heatmap",
-        sublabel: "S&P 500 treemap visualization",
+        sublabel: "Market treemap visualization",
         icon: <Grid3x3 className="h-4 w-4" />,
         action: () => go("/heatmap"),
         keywords: "treemap market cap sector visualization finviz",

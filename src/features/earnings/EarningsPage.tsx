@@ -86,7 +86,7 @@ export function EarningsPage() {
           <span className="font-semibold text-text-primary">
             {summary?.totals.total ?? "..."}
           </span>{" "}
-          of these events across the S&P 500 to find out.
+          of these events across tracked stocks to find out.
         </p>
       </section>
 

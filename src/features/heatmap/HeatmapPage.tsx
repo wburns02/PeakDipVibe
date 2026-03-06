@@ -16,6 +16,7 @@ interface TreeNode {
   ticker: string;
   name: string;
   sector: string;
+  exchange: string | null;
   change: number;
   value: number; // market cap or equal weight
   close: number;
@@ -130,23 +131,24 @@ function changeBg(pct: number): string {
 // ─── Component ──────────────────────────────────────────────────
 
 export function HeatmapPage() {
-  usePageTitle("S&P 500 Heatmap");
+  usePageTitle("Market Heatmap");
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ w: 1200, h: 700 });
   const [hovered, setHovered] = useState<TreeNode | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [sizeBy, setSizeBy] = useState<"mcap" | "equal">("mcap");
+  const [exchangeFilter, setExchangeFilter] = useState<string | null>(null);
   const [selectedSector, setSelectedSector] = useState<string | null>(null);
 
   // Fetch all stocks in 3 batches
   const batches = useQueries({
     queries: [0, 200, 400].map((offset) => ({
-      queryKey: ["heatmap-stocks", offset],
+      queryKey: ["heatmap-stocks", offset, exchangeFilter],
       queryFn: async () => {
-        const { data } = await api.get("/screener", {
-          params: { limit: 200, offset, sort_by: "ticker", sort_dir: "asc" },
-        });
+        const params: Record<string, unknown> = { limit: 200, offset, sort_by: "ticker", sort_dir: "asc" };
+        if (exchangeFilter) params.exchange = exchangeFilter;
+        const { data } = await api.get("/screener", { params });
         return z.array(ScreenerResultSchema).parse(data);
       },
       staleTime: 5 * 60 * 1000,
@@ -180,6 +182,7 @@ export function HeatmapPage() {
         ticker: s.ticker,
         name: s.name ?? s.ticker,
         sector: normalizeSector(s.sector),
+        exchange: s.exchange ?? null,
         change: s.change_pct!,
         value: sizeBy === "mcap" ? (s.market_cap ?? 1e9) : 1,
         close: s.close!,
@@ -279,7 +282,7 @@ export function HeatmapPage() {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">S&P 500 Heatmap</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Market Heatmap</h1>
           <p className="mt-1 text-sm text-text-muted">
             {stats
               ? `${stats.total} stocks — ${stats.up} up, ${stats.down} down (avg ${stats.avgChange >= 0 ? "+" : ""}${stats.avgChange.toFixed(2)}%)`
@@ -287,6 +290,25 @@ export function HeatmapPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          {/* Exchange filter */}
+          <div className="flex rounded-lg border border-border bg-bg-card text-xs">
+            {([
+              [null, "All"],
+              ["NYQ", "NYSE"],
+              ["NMS", "NASDAQ"],
+            ] as const).map(([val, label]) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => setExchangeFilter(val)}
+                className={`px-3 py-1.5 transition-colors first:rounded-l-lg last:rounded-r-lg ${
+                  exchangeFilter === val ? "bg-accent text-white" : "text-text-secondary hover:text-accent"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           {/* Size by toggle */}
           <div className="flex rounded-lg border border-border bg-bg-card text-xs">
             <button
@@ -451,6 +473,12 @@ export function HeatmapPage() {
                 <span className="text-right text-text-primary">${hovered.close.toFixed(2)}</span>
                 <span className="text-text-muted">Sector</span>
                 <span className="text-right text-text-primary">{hovered.sector}</span>
+                {hovered.exchange && (
+                  <>
+                    <span className="text-text-muted">Exchange</span>
+                    <span className="text-right text-text-primary">{hovered.exchange === "NMS" ? "NASDAQ" : hovered.exchange === "NYQ" ? "NYSE" : hovered.exchange}</span>
+                  </>
+                )}
                 {hovered.rsi != null && (
                   <>
                     <span className="text-text-muted">RSI</span>

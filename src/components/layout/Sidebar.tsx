@@ -183,7 +183,7 @@ export function Sidebar() {
           </div>
           <div className="flex items-center gap-2 text-xs text-text-muted">
             <Activity className="h-3 w-3" />
-            <span>S&P 500 Pipeline</span>
+            <span>US Markets</span>
           </div>
         </div>
       </aside>

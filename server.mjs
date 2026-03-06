@@ -94,6 +94,9 @@ function resolveApiData(urlPath, query) {
   if (route === "screener") {
     const sortBy = params.get("sort_by");
     const sortDir = params.get("sort_dir");
+    const exchange = params.get("exchange");
+    // Exchange-filtered requests always go to upstream (no pre-cached files)
+    if (exchange) return null;
     if (sortBy) {
       const file = join(DATA, `screener/${sortBy}-${sortDir || "desc"}.json`);
       if (existsSync(file)) return file;

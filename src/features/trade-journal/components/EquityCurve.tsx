@@ -78,7 +78,7 @@ export function EquityCurve({ dailyPnl }: Props) {
               fontSize: 12,
             }}
             labelStyle={{ color: "var(--color-text-muted)" }}
-            formatter={(val: number) => [`$${val.toFixed(2)}`, "P&L"]}
+            formatter={(val: number | undefined) => [`$${(val ?? 0).toFixed(2)}`, "P&L"]}
           />
           <Area
             type="monotone"

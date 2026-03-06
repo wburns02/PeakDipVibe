@@ -25,7 +25,7 @@ const TOUR_STEPS: TourStep[] = [
     icon: <Rocket className="h-8 w-8 text-accent" />,
     title: "Welcome to PeakDipVibe!",
     description:
-      "This app helps you understand what happens when stocks make big moves. We track gap-ups, sell-offs, and recoveries across the S&P 500 — so you can learn patterns that repeat.",
+      "This app helps you understand what happens when stocks make big moves. We track gap-ups, sell-offs, and recoveries across major US exchanges — so you can learn patterns that repeat.",
     tip: "Everything here is educational. No real money, no financial advice.",
   },
   {

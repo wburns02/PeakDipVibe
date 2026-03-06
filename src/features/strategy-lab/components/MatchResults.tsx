@@ -93,7 +93,7 @@ export function MatchResults({ results, loading, strategyColor }: Props) {
           <span className="text-sm font-semibold text-text-primary">
             {results.length} Match{results.length !== 1 ? "es" : ""}
           </span>
-          <span className="text-xs text-text-muted">out of S&P 500</span>
+          <span className="text-xs text-text-muted">matches found</span>
         </div>
         {expanded ? (
           <ChevronUp className="h-4 w-4 text-text-muted" />

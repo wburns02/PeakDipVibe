@@ -25,7 +25,7 @@ import {
 export function StrategyLabPage() {
   usePageTitle("Strategy Lab");
 
-  // Fetch S&P 500 screener data (max 200, sorted by ticker for even distribution)
+  // Fetch screener data (max 200, sorted by ticker for even distribution)
   const { data: allStocks, isLoading: stocksLoading } = useScreener({
     limit: 200,
     sort_by: "ticker",
@@ -117,7 +117,7 @@ export function StrategyLabPage() {
           <div>
             <h1 className="text-xl font-bold text-text-primary">Strategy Lab</h1>
             <p className="text-sm text-text-muted">
-              Build custom scanners &mdash; combine conditions to find matching S&P 500 stocks
+              Build custom scanners &mdash; combine conditions to find matching stocks
             </p>
           </div>
         </div>
