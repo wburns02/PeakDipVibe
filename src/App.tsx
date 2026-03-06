@@ -51,6 +51,9 @@ const JournalPage = lazy(() =>
 const SectorRotationPage = lazy(() =>
   import("@/features/sector-rotation/SectorRotationPage").then((m) => ({ default: m.SectorRotationPage })),
 );
+const PortfolioXrayPage = lazy(() =>
+  import("@/features/portfolio-xray/PortfolioXrayPage").then((m) => ({ default: m.PortfolioXrayPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
@@ -67,6 +70,7 @@ export const preloadRoute: Record<string, () => void> = {
   "/planner": () => { import("@/features/trade-planner/TradePlannerPage"); },
   "/journal": () => { import("@/features/trade-journal/JournalPage"); },
   "/rotation": () => { import("@/features/sector-rotation/SectorRotationPage"); },
+  "/xray": () => { import("@/features/portfolio-xray/PortfolioXrayPage"); },
 };
 
 const queryClient = new QueryClient({
@@ -102,6 +106,7 @@ export default function App() {
               <Route path="/dna" element={<Suspense fallback={<PageSpinner />}><StockDnaPage /></Suspense>} />
               <Route path="/dna/:symbol" element={<Suspense fallback={<PageSpinner />}><StockDnaPage /></Suspense>} />
               <Route path="/rotation" element={<Suspense fallback={<PageSpinner />}><SectorRotationPage /></Suspense>} />
+              <Route path="/xray" element={<Suspense fallback={<PageSpinner />}><PortfolioXrayPage /></Suspense>} />
               <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

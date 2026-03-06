@@ -19,6 +19,7 @@ import {
   ClipboardList,
   BookOpen,
   RefreshCw,
+  Scan,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -150,6 +151,14 @@ export function CommandPalette() {
         icon: <Grid3x3 className="h-4 w-4" />,
         action: () => go("/heatmap"),
         keywords: "treemap market cap sector visualization finviz",
+      },
+      {
+        id: "nav-xray",
+        label: "Portfolio X-Ray",
+        sublabel: "Correlation matrix & risk analysis",
+        icon: <Scan className="h-4 w-4" />,
+        action: () => go("/xray"),
+        keywords: "xray correlation matrix risk diversification cluster pair hedge portfolio",
       },
       {
         id: "nav-compare",
