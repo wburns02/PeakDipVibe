@@ -21,6 +21,7 @@ import {
   RefreshCw,
   Scan,
   Bell,
+  CalendarRange,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -160,6 +161,14 @@ export function CommandPalette() {
         icon: <Grid3x3 className="h-4 w-4" />,
         action: () => go("/heatmap"),
         keywords: "treemap market cap sector visualization finviz",
+      },
+      {
+        id: "nav-seasonality",
+        label: "Seasonality Explorer",
+        sublabel: "Historical monthly patterns for any stock",
+        icon: <CalendarRange className="h-4 w-4" />,
+        action: () => go("/seasonality"),
+        keywords: "seasonal monthly calendar pattern best worst month buy sell history",
       },
       {
         id: "nav-xray",
