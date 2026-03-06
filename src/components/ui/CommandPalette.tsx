@@ -13,6 +13,8 @@ import {
   TrendingUp,
   ArrowRight,
 } from "lucide-react";
+import { useTickerList } from "@/api/hooks/useTickers";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface PaletteItem {
   id: string;
@@ -32,6 +34,10 @@ export function CommandPalette() {
   const openerRef = useRef<HTMLElement | null>(null);
   const navigate = useNavigate();
 
+  const debouncedQuery = useDebounce(query, 150);
+  const tickerSearch = debouncedQuery.trim().length >= 1 ? debouncedQuery.trim() : undefined;
+  const { data: tickerResults } = useTickerList(tickerSearch);
+
   const go = useCallback(
     (path: string) => {
       navigate(path);
@@ -40,9 +46,8 @@ export function CommandPalette() {
     [navigate],
   );
 
-  const items: PaletteItem[] = useMemo(
+  const navItems: PaletteItem[] = useMemo(
     () => [
-      // Pages
       {
         id: "nav-dashboard",
         label: "Dashboard",
@@ -99,16 +104,12 @@ export function CommandPalette() {
         action: () => go("/watchlist"),
         keywords: "starred favorites portfolio",
       },
-      // Quick actions
       {
         id: "action-oversold",
         label: "Oversold Stocks",
         sublabel: "Screener: RSI < 30",
         icon: <TrendingDown className="h-4 w-4 text-green" />,
-        action: () => {
-          navigate("/screener?preset=oversold");
-          setOpen(false);
-        },
+        action: () => { navigate("/screener?preset=oversold"); setOpen(false); },
         keywords: "rsi low dip buy",
       },
       {
@@ -116,10 +117,7 @@ export function CommandPalette() {
         label: "Overbought Stocks",
         sublabel: "Screener: RSI > 70",
         icon: <TrendingUp className="h-4 w-4 text-red" />,
-        action: () => {
-          navigate("/screener?preset=overbought");
-          setOpen(false);
-        },
+        action: () => { navigate("/screener?preset=overbought"); setOpen(false); },
         keywords: "rsi high sell",
       },
       {
@@ -127,26 +125,37 @@ export function CommandPalette() {
         label: "Golden Cross Stocks",
         sublabel: "SMA 50 > SMA 200",
         icon: <ArrowRight className="h-4 w-4 text-green" />,
-        action: () => {
-          navigate("/screener?preset=golden");
-          setOpen(false);
-        },
+        action: () => { navigate("/screener?preset=golden"); setOpen(false); },
         keywords: "sma bullish trend",
       },
     ],
     [go, navigate],
   );
 
+  // Build ticker items from API results
+  const tickerItems: PaletteItem[] = useMemo(() => {
+    if (!tickerResults || !query.trim()) return [];
+    return tickerResults.slice(0, 8).map((t) => ({
+      id: `ticker-${t.ticker}`,
+      label: t.ticker,
+      sublabel: [t.name, t.sector].filter(Boolean).join(" · "),
+      icon: <TrendingUp className="h-4 w-4" />,
+      action: () => go(`/ticker/${t.ticker}`),
+    }));
+  }, [tickerResults, query, go]);
+
   const filtered = useMemo(() => {
-    if (!query.trim()) return items;
+    if (!query.trim()) return navItems;
     const q = query.toLowerCase();
-    return items.filter(
+    const matchingNav = navItems.filter(
       (item) =>
         item.label.toLowerCase().includes(q) ||
         (item.sublabel?.toLowerCase().includes(q)) ||
         (item.keywords?.toLowerCase().includes(q)),
     );
-  }, [items, query]);
+    // Show tickers first when the query looks like a ticker (uppercase / short)
+    return [...tickerItems, ...matchingNav];
+  }, [navItems, tickerItems, query]);
 
   // Reset selection when filtered results change
   useEffect(() => setSelectedIdx(0), [filtered]);
@@ -225,7 +234,7 @@ export function CommandPalette() {
             value={query}
             onChange={(e) => setQuery(e.target.value.replace(/[^a-zA-Z0-9 .\-]/g, ""))}
             onKeyDown={handleKeyDown}
-            placeholder="Type a command or search..."
+            placeholder="Search stocks, pages, or actions..."
             className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
             aria-label="Command palette search"
             autoComplete="off"

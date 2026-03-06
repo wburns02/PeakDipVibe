@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Filter, ChevronDown, Download, Play, SlidersHorizontal, CalendarDays } from "lucide-react";
+import { Filter, ChevronDown, ChevronLeft, ChevronRight, Download, Play, SlidersHorizontal, CalendarDays } from "lucide-react";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { usePatternSignals, useSignalStats } from "@/api/hooks/useSignals";
 import { useSectors } from "@/api/hooks/useMarket";
@@ -53,22 +53,31 @@ function downloadCSV(signals: PatternSignal[]) {
   URL.revokeObjectURL(url);
 }
 
+const PAGE_SIZE = 50;
+
 export function SignalsPage() {
   usePageTitle("News Catalyst Scanner");
+  const [page, setPage] = useState(0);
   const [filters, setFilters] = useState<SignalFilters>({
     days: 30,
     min_strength: 0,
     sort_by: "signal_date",
-    limit: 50,
+    limit: PAGE_SIZE,
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: signals, isLoading, isFetching, isError, refetch } = usePatternSignals(filters);
+  const actualFilters = { ...filters, offset: page * PAGE_SIZE };
+  const { data: signals, isLoading, isFetching, isError, refetch } = usePatternSignals(actualFilters);
   const isRefetching = isFetching && !isLoading;
   const { data: stats, isLoading: statsLoading } = useSignalStats(filters.days);
   const { data: sectors } = useSectors();
 
+  const totalSignals = stats?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalSignals / PAGE_SIZE));
+  const hasMore = signals?.length === PAGE_SIZE;
+
   const setFilter = (key: keyof SignalFilters, value: unknown) => {
+    setPage(0);
     setFilters((prev) => ({ ...prev, [key]: value || undefined }));
   };
 
@@ -94,11 +103,11 @@ export function SignalsPage() {
             type="button"
             onClick={() => downloadCSV(signals)}
             className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
-            title="Export signals to CSV"
-            aria-label="Export signals to CSV"
+            title={`Export ${signals.length} signals to CSV`}
+            aria-label={`Export ${signals.length} signals to CSV`}
           >
             <Download className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Export CSV</span>
+            <span className="hidden sm:inline">Export CSV ({signals.length})</span>
           </button>
         )}
       </div>
@@ -250,6 +259,33 @@ export function SignalsPage() {
             sortBy={filters.sort_by ?? "signal_date"}
             onSort={handleSort}
           />
+        </div>
+      )}
+
+      {/* Pagination */}
+      {!isLoading && totalSignals > PAGE_SIZE && (
+        <div className="flex items-center justify-center gap-4">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" />
+            Previous
+          </button>
+          <span className="text-xs text-text-muted">
+            Page {page + 1} of {totalPages} ({totalSignals} signals)
+          </span>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={!hasMore}
+            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Next
+            <ChevronRight className="h-3.5 w-3.5" />
+          </button>
         </div>
       )}
 

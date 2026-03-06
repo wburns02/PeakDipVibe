@@ -1919,8 +1919,15 @@ export function SimulatorPage() {
                   />
                   <YAxis
                     tick={{ fontSize: 10, fill: "rgba(255,255,255,0.5)" }}
-                    tickFormatter={(v: number) => `$${v.toFixed(0)}`}
+                    tickFormatter={(v: number) => {
+                      const range = (chartData.length > 0)
+                        ? Math.max(...chartData.filter(d => d.price != null).map(d => d.price!)) - Math.min(...chartData.filter(d => d.price != null).map(d => d.price!))
+                        : 10;
+                      const decimals = range < 2 ? 2 : range < 10 ? 1 : 0;
+                      return `$${v.toFixed(decimals)}`;
+                    }}
                     domain={["dataMin - 0.5", "dataMax + 0.5"]}
+                    allowDecimals
                   />
                   <ReTooltip
                     contentStyle={{

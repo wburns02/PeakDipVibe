@@ -8,6 +8,7 @@ import {
 } from "../types/signals";
 import { z } from "zod";
 import { stripEmptyParams } from "@/lib/params";
+import { normalizeSector } from "@/lib/formatters";
 
 export function usePatternSignals(filters: SignalFilters) {
   return useQuery({
@@ -15,7 +16,8 @@ export function usePatternSignals(filters: SignalFilters) {
     queryFn: async () => {
       const params = stripEmptyParams(filters);
       const { data } = await api.get("/signals/patterns", { params });
-      return z.array(PatternSignalSchema).parse(data);
+      const signals = z.array(PatternSignalSchema).parse(data);
+      return signals.map((s) => ({ ...s, sector: s.sector ? normalizeSector(s.sector) : s.sector }));
     },
     staleTime: STALE_FRESH,
   });

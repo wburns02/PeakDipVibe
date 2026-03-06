@@ -63,4 +63,5 @@ export interface SignalFilters {
   sector?: string;
   sort_by?: string;
   limit?: number;
+  offset?: number;
 }

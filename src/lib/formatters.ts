@@ -47,6 +47,21 @@ export function formatDate(dateStr: string): string {
   });
 }
 
+/** Normalize inconsistent sector names from the API into canonical GICS names. */
+const SECTOR_ALIASES: Record<string, string> = {
+  "Technology": "Information Technology",
+  "Healthcare": "Health Care",
+  "Consumer Cyclical": "Consumer Discretionary",
+  "Consumer Defensive": "Consumer Staples",
+  "Basic Materials": "Materials",
+  "Financial Services": "Financials",
+};
+
+export function normalizeSector(sector: string | null | undefined): string {
+  if (!sector) return "Unknown";
+  return SECTOR_ALIASES[sector] ?? sector;
+}
+
 export function formatRelativeTime(dateStr: string): string {
   const now = Date.now();
   const then = new Date(dateStr.includes("T") ? dateStr : dateStr + "T00:00:00").getTime();
