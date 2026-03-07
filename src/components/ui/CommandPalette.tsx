@@ -29,6 +29,7 @@ import {
   Gauge,
   ArrowDownUp,
   Shapes,
+  Radar,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -184,6 +185,14 @@ export function CommandPalette() {
         icon: <ArrowDownUp className="h-4 w-4" />,
         action: () => go("/divergences"),
         keywords: "divergence rsi bullish bearish reversal swing momentum hidden regular divergences scanner",
+      },
+      {
+        id: "nav-radar",
+        label: "Momentum Radar",
+        sublabel: "Scatter plot of all stocks by RSI and trend",
+        icon: <Radar className="h-4 w-4" />,
+        action: () => go("/radar"),
+        keywords: "momentum radar scatter bubble RSI SMA trend quadrant overbought oversold strong weak sector map",
       },
       {
         id: "nav-patterns",

@@ -36,6 +36,7 @@ import {
   Gauge,
   ArrowDownUp,
   Shapes,
+  Radar,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -69,6 +70,7 @@ const navItems = [
   { to: "/volatility", icon: Gauge, label: "Volatility Lab" },
   { to: "/divergences", icon: ArrowDownUp, label: "Divergences" },
   { to: "/patterns", icon: Shapes, label: "Patterns" },
+  { to: "/radar", icon: Radar, label: "Momentum Radar" },
   { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
   { to: "/seasonality", icon: CalendarRange, label: "Seasonality" },
   { to: "/xray", icon: Scan, label: "X-Ray" },
