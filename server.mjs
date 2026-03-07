@@ -57,6 +57,11 @@ function resolveApiData(urlPath, query) {
     if (existsSync(file)) return file;
   }
 
+  if (route === "earnings/events-all") {
+    const file = join(DATA, "earnings/events-all.json");
+    if (existsSync(file)) return file;
+  }
+
   if (route === "earnings/events") {
     const page = params.get("page") || "1";
     const file = join(DATA, `earnings/events--page-${page}.json`);

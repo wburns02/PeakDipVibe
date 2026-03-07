@@ -38,6 +38,7 @@ import {
   Shapes,
   Radar,
   ChevronRight,
+  Briefcase,
   type LucideIcon,
 } from "lucide-react";
 
@@ -78,6 +79,7 @@ const navSections: NavSection[] = [
       { to: "/planner", icon: ClipboardList, label: "Trade Planner" },
       { to: "/journal", icon: BookOpen, label: "Journal" },
       { to: "/alerts", icon: Bell, label: "Alerts" },
+      { to: "/portfolios", icon: Briefcase, label: "Portfolios" },
     ],
   },
   {

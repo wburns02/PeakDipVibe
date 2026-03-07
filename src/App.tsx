@@ -84,6 +84,9 @@ const PatternScannerPage = lazy(() =>
 const MomentumRadarPage = lazy(() =>
   import("@/features/momentum-radar/MomentumRadarPage").then((m) => ({ default: m.MomentumRadarPage })),
 );
+const StrategyPortfoliosPage = lazy(() =>
+  import("@/features/strategy-portfolios/StrategyPortfoliosPage").then((m) => ({ default: m.StrategyPortfoliosPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
@@ -111,6 +114,7 @@ export const preloadRoute: Record<string, () => void> = {
   "/divergences": () => { import("@/features/divergence-scanner/DivergenceScannerPage"); },
   "/patterns": () => { import("@/features/pattern-scanner/PatternScannerPage"); },
   "/radar": () => { import("@/features/momentum-radar/MomentumRadarPage"); },
+  "/portfolios": () => { import("@/features/strategy-portfolios/StrategyPortfoliosPage"); },
 };
 
 const queryClient = new QueryClient({
@@ -157,6 +161,7 @@ export default function App() {
               <Route path="/divergences" element={<Suspense fallback={<PageSpinner />}><DivergenceScannerPage /></Suspense>} />
               <Route path="/patterns" element={<Suspense fallback={<PageSpinner />}><PatternScannerPage /></Suspense>} />
               <Route path="/radar" element={<Suspense fallback={<PageSpinner />}><MomentumRadarPage /></Suspense>} />
+              <Route path="/portfolios" element={<Suspense fallback={<PageSpinner />}><StrategyPortfoliosPage /></Suspense>} />
               <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

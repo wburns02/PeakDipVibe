@@ -195,6 +195,14 @@ export function CommandPalette() {
         keywords: "momentum radar scatter bubble RSI SMA trend quadrant overbought oversold strong weak sector map",
       },
       {
+        id: "nav-portfolios",
+        label: "Strategy Portfolios",
+        sublabel: "AI-scored picks: short-term, long-term, and short candidates",
+        icon: <BarChart3 className="h-4 w-4" />,
+        action: () => go("/portfolios"),
+        keywords: "strategy portfolio short term long hold buy sell short candidate swing trade invest diversify",
+      },
+      {
         id: "nav-patterns",
         label: "Pattern Scanner",
         sublabel: "Classical chart patterns detected automatically",
