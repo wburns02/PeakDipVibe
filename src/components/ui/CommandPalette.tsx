@@ -26,6 +26,7 @@ import {
   HeartPulse,
   Trophy,
   Lightbulb,
+  Gauge,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -165,6 +166,14 @@ export function CommandPalette() {
         icon: <RefreshCw className="h-4 w-4" />,
         action: () => go("/rotation"),
         keywords: "rotation sector rrg relative strength momentum quadrant leading lagging improving weakening",
+      },
+      {
+        id: "nav-volatility",
+        label: "Volatility Lab",
+        sublabel: "Bollinger Band squeeze scanner",
+        icon: <Gauge className="h-4 w-4" />,
+        action: () => go("/volatility"),
+        keywords: "volatility squeeze bollinger band width contraction expansion coiled spring big move breakout",
       },
       {
         id: "nav-heatmap",

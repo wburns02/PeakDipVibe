@@ -33,6 +33,7 @@ import {
   HeartPulse,
   Trophy,
   Lightbulb,
+  Gauge,
 } from "lucide-react";
 
 const SidebarSparkline = memo(function SidebarSparkline({ ticker }: { ticker: string }) {
@@ -63,6 +64,7 @@ const navItems = [
   { to: "/rotation", icon: RefreshCw, label: "Rotation" },
   { to: "/internals", icon: HeartPulse, label: "Internals" },
   { to: "/strength", icon: Trophy, label: "RS Rankings" },
+  { to: "/volatility", icon: Gauge, label: "Volatility Lab" },
   { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
   { to: "/seasonality", icon: CalendarRange, label: "Seasonality" },
   { to: "/xray", icon: Scan, label: "X-Ray" },
