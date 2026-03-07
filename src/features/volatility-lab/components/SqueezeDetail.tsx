@@ -153,8 +153,8 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
                   borderRadius: 8,
                   fontSize: 11,
                 }}
-                formatter={(value: number) => [(value * 100).toFixed(2) + "%", "BB Width"]}
-                labelFormatter={fmtDate}
+                formatter={(value: number | undefined) => [((value ?? 0) * 100).toFixed(2) + "%", "BB Width"]}
+                labelFormatter={(d: unknown) => fmtDate(String(d))}
               />
               <ReferenceLine
                 y={threshold}
@@ -214,8 +214,8 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
                   borderRadius: 8,
                   fontSize: 11,
                 }}
-                formatter={(value: number, name: string) => [
-                  "$" + value.toFixed(2),
+                formatter={(value: number | undefined, name: string | undefined) => [
+                  "$" + (value ?? 0).toFixed(2),
                   name === "close"
                     ? "Price"
                     : name === "bbUpper"
@@ -224,7 +224,7 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
                         ? "BB Lower"
                         : "BB Middle",
                 ]}
-                labelFormatter={fmtDate}
+                labelFormatter={(d: unknown) => fmtDate(String(d))}
               />
               <Line
                 type="monotone"

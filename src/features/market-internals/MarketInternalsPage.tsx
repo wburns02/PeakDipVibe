@@ -12,7 +12,6 @@ import {
   SAMPLE_TICKERS,
   computeHealthScore,
   classifyRegime,
-  scoreToColor,
   computeHistoricalBreadth,
   computeRsiBuckets,
   buildSectorHealth,

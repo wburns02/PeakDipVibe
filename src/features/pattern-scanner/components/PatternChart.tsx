@@ -45,8 +45,8 @@ export function PatternChart({ pattern: p }: Props) {
             borderRadius: 8,
             fontSize: 11,
           }}
-          formatter={(v: number) => [`$${v.toFixed(2)}`, "Price"]}
-          labelFormatter={(l: string) => l}
+          formatter={(v: number | undefined) => [`$${(v ?? 0).toFixed(2)}`, "Price"]}
+          labelFormatter={(l: unknown) => String(l)}
         />
         <Area
           type="monotone"

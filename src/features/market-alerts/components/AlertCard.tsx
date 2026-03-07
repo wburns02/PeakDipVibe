@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { MarketAlert, AlertType } from "../lib/alerts";
+import type { MarketAlert } from "../lib/alerts";
 import { ALERT_TYPE_META, ALERT_TYPE_LABELS } from "../lib/alerts";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import {

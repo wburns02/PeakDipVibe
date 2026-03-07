@@ -11,7 +11,6 @@ import { z } from "zod";
 import {
   analyzeWidthHistory,
   volRegime,
-  squeezeColor,
 } from "./lib/squeeze-engine";
 import type { SqueezeStock, WidthAnalysis } from "./lib/squeeze-engine";
 import { SqueezeTable } from "./components/SqueezeTable";

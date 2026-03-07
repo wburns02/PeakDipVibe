@@ -77,11 +77,11 @@ export function EquityCurve({ result }: { result: BacktestResult }) {
                 borderRadius: 8,
                 fontSize: 12,
               }}
-              formatter={(value: number) => [
-                `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+              formatter={(value: number | undefined) => [
+                `$${(value ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
                 "Equity",
               ]}
-              labelFormatter={(label: string) => label}
+              labelFormatter={(label: unknown) => String(label)}
             />
             <Area
               type="monotone"

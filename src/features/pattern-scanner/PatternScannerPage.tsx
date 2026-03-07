@@ -76,7 +76,7 @@ export function PatternScannerPage() {
       const stock = stockMap.get(q.data.ticker);
       if (!stock) continue;
       results.push(
-        ...detectPatterns(q.data.rows, stock.ticker, stock.name, stock.sector),
+        ...detectPatterns(q.data.rows, stock.ticker, stock.name ?? "", stock.sector ?? ""),
       );
     }
     return results;

@@ -68,7 +68,7 @@ export function DivergenceScannerPage() {
       const stock = stockMap.get(q.data.ticker);
       if (!stock) continue;
       results.push(
-        ...detectDivergences(q.data.rows, stock.ticker, stock.name, stock.sector),
+        ...detectDivergences(q.data.rows, stock.ticker, stock.name ?? "", stock.sector ?? ""),
       );
     }
     return results.sort((a, b) => b.conviction - a.conviction || a.recencyDays - b.recencyDays);

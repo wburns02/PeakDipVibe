@@ -47,8 +47,8 @@ export function SetupChart({ levels }: Props) {
             width={45}
           />
           <Tooltip
-            formatter={(v: number) => [`$${v.toFixed(2)}`, "Close"]}
-            labelFormatter={fmtDate}
+            formatter={(v: number | undefined) => [`$${(v ?? 0).toFixed(2)}`, "Close"]}
+            labelFormatter={(d: unknown) => fmtDate(String(d))}
             contentStyle={{
               backgroundColor: "var(--color-bg-secondary)",
               border: "1px solid var(--color-border)",
