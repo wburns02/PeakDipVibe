@@ -75,6 +75,9 @@ const TradeIdeasPage = lazy(() =>
 const VolatilityLabPage = lazy(() =>
   import("@/features/volatility-lab/VolatilityLabPage").then((m) => ({ default: m.VolatilityLabPage })),
 );
+const DivergenceScannerPage = lazy(() =>
+  import("@/features/divergence-scanner/DivergenceScannerPage").then((m) => ({ default: m.DivergenceScannerPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
@@ -99,6 +102,7 @@ export const preloadRoute: Record<string, () => void> = {
   "/strength": () => { import("@/features/relative-strength/RelativeStrengthPage"); },
   "/ideas": () => { import("@/features/trade-ideas/TradeIdeasPage"); },
   "/volatility": () => { import("@/features/volatility-lab/VolatilityLabPage"); },
+  "/divergences": () => { import("@/features/divergence-scanner/DivergenceScannerPage"); },
 };
 
 const queryClient = new QueryClient({
@@ -142,6 +146,7 @@ export default function App() {
               <Route path="/strength" element={<Suspense fallback={<PageSpinner />}><RelativeStrengthPage /></Suspense>} />
               <Route path="/ideas" element={<Suspense fallback={<PageSpinner />}><TradeIdeasPage /></Suspense>} />
               <Route path="/volatility" element={<Suspense fallback={<PageSpinner />}><VolatilityLabPage /></Suspense>} />
+              <Route path="/divergences" element={<Suspense fallback={<PageSpinner />}><DivergenceScannerPage /></Suspense>} />
               <Route path="/watchlist" element={<Suspense fallback={<PageSpinner />}><WatchlistPage /></Suspense>} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

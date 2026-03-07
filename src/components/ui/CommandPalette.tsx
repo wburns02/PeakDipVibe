@@ -27,6 +27,7 @@ import {
   Trophy,
   Lightbulb,
   Gauge,
+  ArrowDownUp,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -174,6 +175,14 @@ export function CommandPalette() {
         icon: <Gauge className="h-4 w-4" />,
         action: () => go("/volatility"),
         keywords: "volatility squeeze bollinger band width contraction expansion coiled spring big move breakout",
+      },
+      {
+        id: "nav-divergences",
+        label: "Divergence Scanner",
+        sublabel: "RSI divergence detection across 50 stocks",
+        icon: <ArrowDownUp className="h-4 w-4" />,
+        action: () => go("/divergences"),
+        keywords: "divergence rsi bullish bearish reversal swing momentum hidden regular divergences scanner",
       },
       {
         id: "nav-heatmap",
