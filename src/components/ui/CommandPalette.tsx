@@ -28,6 +28,7 @@ import {
   Lightbulb,
   Gauge,
   ArrowDownUp,
+  Shapes,
 } from "lucide-react";
 import { useTickerList } from "@/api/hooks/useTickers";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -183,6 +184,14 @@ export function CommandPalette() {
         icon: <ArrowDownUp className="h-4 w-4" />,
         action: () => go("/divergences"),
         keywords: "divergence rsi bullish bearish reversal swing momentum hidden regular divergences scanner",
+      },
+      {
+        id: "nav-patterns",
+        label: "Pattern Scanner",
+        sublabel: "Classical chart patterns detected automatically",
+        icon: <Shapes className="h-4 w-4" />,
+        action: () => go("/patterns"),
+        keywords: "pattern chart double bottom top head shoulders flag triangle ascending descending bull bear classical technical",
       },
       {
         id: "nav-heatmap",
