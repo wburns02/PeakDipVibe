@@ -292,7 +292,7 @@ export function ScreenerPage() {
             <button
               type="button"
               onClick={() => deleteSavedPreset(i)}
-              className="absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full bg-red/90 text-white group-hover:flex"
+              className="absolute -right-2 -top-2 hidden h-6 w-6 items-center justify-center rounded-full bg-red/90 text-white group-hover:flex"
               aria-label={`Delete ${p.name} preset`}
             >
               <X className="h-2.5 w-2.5" />
@@ -568,7 +568,7 @@ export function ScreenerPage() {
                 key={c.label}
                 type="button"
                 onClick={c.clear}
-                className="inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+                className="inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
               >
                 {c.label}
                 <X className="h-3 w-3" />
@@ -577,7 +577,7 @@ export function ScreenerPage() {
             <button
               type="button"
               onClick={() => setFilters({ sort_by: "rsi", sort_dir: "asc", limit: 50 })}
-              className="text-xs text-text-muted underline hover:text-text-secondary"
+              className="rounded-lg px-2 py-2 text-xs text-text-muted underline hover:text-text-secondary"
             >
               Clear all
             </button>
@@ -675,7 +675,7 @@ export function ScreenerPage() {
                 {results.map((r) => (
                   <tr key={r.ticker} className="border-b border-border/50 transition-colors hover:bg-bg-hover">
                     <td className="py-2">
-                      <button type="button" onClick={() => toggle(r.ticker)} aria-label={isWatched(r.ticker) ? `Remove ${r.ticker} from watchlist` : `Add ${r.ticker} to watchlist`} className="flex h-9 w-9 items-center justify-center rounded-md text-text-muted hover:text-amber hover:bg-bg-hover transition-colors">
+                      <button type="button" onClick={() => toggle(r.ticker)} aria-label={isWatched(r.ticker) ? `Remove ${r.ticker} from watchlist` : `Add ${r.ticker} to watchlist`} className="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:text-amber hover:bg-bg-hover transition-colors">
                         <Star className={`h-4 w-4 ${isWatched(r.ticker) ? "fill-amber text-amber" : ""}`} />
                       </button>
                     </td>
@@ -758,7 +758,7 @@ export function ScreenerPage() {
                         )}
                         <Link
                           to={`/compare?tickers=${r.ticker}`}
-                          className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
+                          className="rounded-md p-2.5 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
                           title={`Compare ${r.ticker}`}
                           aria-label={`Compare ${r.ticker} with other stocks`}
                         >

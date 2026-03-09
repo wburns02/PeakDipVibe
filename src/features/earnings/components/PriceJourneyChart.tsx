@@ -112,7 +112,7 @@ export function PriceJourneyChart() {
               type="button"
               key={s.value}
               onClick={() => setMoveSize(s.value)}
-              className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
                 moveSize === s.value
                   ? "bg-accent/20 text-accent"
                   : "text-text-muted hover:text-text-secondary"

@@ -68,7 +68,7 @@ export function UpcomingEarningsCard() {
 
       <Link
         to="/earnings"
-        className="mt-3 flex items-center justify-center gap-1 text-xs text-accent hover:underline"
+        className="mt-3 flex items-center justify-center gap-1 rounded-lg px-2 py-2 text-sm text-accent hover:bg-accent/10 hover:underline"
       >
         View earnings analysis <ArrowRight className="h-3 w-3" />
       </Link>

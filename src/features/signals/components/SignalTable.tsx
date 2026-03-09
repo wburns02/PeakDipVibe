@@ -91,7 +91,7 @@ function CopySignalButton({ signal }: { signal: PatternSignal }) {
     <button
       type="button"
       onClick={copy}
-      className="rounded-md p-2.5 text-text-muted hover:bg-bg-hover hover:text-text-secondary transition-colors"
+      className="rounded-md p-3 text-text-muted hover:bg-bg-hover hover:text-text-secondary transition-colors"
       title="Copy signal summary"
       aria-label={`Copy ${signal.ticker} signal to clipboard`}
     >
@@ -258,7 +258,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                       <CopySignalButton signal={s} />
                       <Link
                         to={`/compare?tickers=${s.ticker}`}
-                        className="rounded-md p-2.5 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
+                        className="rounded-md p-3 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
                         title={`Compare ${s.ticker}`}
                         aria-label={`Compare ${s.ticker} with other stocks`}
                       >
@@ -266,7 +266,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                       </Link>
                       <Link
                         to={`/simulator?ticker=${s.ticker}&date=${s.signal_date}`}
-                        className="inline-flex items-center gap-1 rounded-md px-2.5 py-2.5 text-sm text-accent hover:bg-accent/10 transition-colors"
+                        className="inline-flex items-center gap-1 rounded-md px-3 py-3 text-sm text-accent hover:bg-accent/10 transition-colors"
                         title="Simulate this event"
                       >
                         <PlayCircle className="h-3.5 w-3.5" />

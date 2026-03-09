@@ -37,7 +37,7 @@ export function RecentSignalsCard() {
         </div>
         <Link
           to="/signals"
-          className="flex items-center gap-1 text-sm text-accent hover:underline"
+          className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm text-accent hover:bg-accent/10 hover:underline"
         >
           View all <ArrowRight className="h-3 w-3" />
         </Link>

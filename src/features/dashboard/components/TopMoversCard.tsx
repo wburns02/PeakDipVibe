@@ -46,7 +46,7 @@ const MoverRow = memo(function MoverRow({ mover }: { mover: Mover }) {
             showToast(wasWatched ? `${mover.ticker} removed from watchlist` : `${mover.ticker} added to watchlist`);
           }}
           aria-label={isWatched(mover.ticker) ? `Remove ${mover.ticker} from watchlist` : `Add ${mover.ticker} to watchlist`}
-          className="flex h-9 w-9 items-center justify-center rounded-md text-text-muted hover:text-amber hover:bg-bg-hover transition-colors"
+          className="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:text-amber hover:bg-bg-hover transition-colors"
         >
           <Star className={`h-4 w-4 ${isWatched(mover.ticker) ? "fill-amber text-amber" : ""}`} />
         </button>
@@ -96,7 +96,7 @@ export function TopMoversCard({ gainers, losers }: TopMoversCardProps) {
         </div>
         <Link
           to="/screener?sort_by=change&sort_dir=desc"
-          className="mt-3 flex items-center justify-center gap-1 text-sm text-accent hover:underline"
+          className="mt-3 flex items-center justify-center gap-1 rounded-lg px-2 py-2 text-sm text-accent hover:bg-accent/10 hover:underline"
         >
           View all in screener <ArrowRight className="h-3.5 w-3.5" />
         </Link>
@@ -109,7 +109,7 @@ export function TopMoversCard({ gainers, losers }: TopMoversCardProps) {
         </div>
         <Link
           to="/screener?sort_by=change&sort_dir=asc"
-          className="mt-3 flex items-center justify-center gap-1 text-sm text-accent hover:underline"
+          className="mt-3 flex items-center justify-center gap-1 rounded-lg px-2 py-2 text-sm text-accent hover:bg-accent/10 hover:underline"
         >
           View all in screener <ArrowRight className="h-3.5 w-3.5" />
         </Link>

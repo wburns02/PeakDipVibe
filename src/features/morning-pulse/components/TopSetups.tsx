@@ -90,7 +90,7 @@ export function TopSetups({ signals, sectors, loading }: Props) {
         </div>
         <Link
           to="/signals"
-          className="flex items-center gap-1 text-xs text-accent hover:text-accent-hover"
+          className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm text-accent hover:bg-accent/10"
         >
           View all <ChevronRight className="h-3 w-3" />
         </Link>

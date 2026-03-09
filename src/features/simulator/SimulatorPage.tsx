@@ -1215,7 +1215,7 @@ export function SimulatorPage() {
               <button
                 type="button"
                 onClick={clearHistory}
-                className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-text-muted hover:bg-bg-hover hover:text-red-400"
+                className="flex items-center gap-1 rounded-md px-3 py-2 text-xs text-text-muted hover:bg-bg-hover hover:text-red-400"
               >
                 <Trash2 className="h-3 w-3" />
                 Clear

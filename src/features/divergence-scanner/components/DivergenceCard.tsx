@@ -129,7 +129,7 @@ export function DivergenceCard({ divergence: d }: Props) {
         <button
           type="button"
           onClick={() => toggle(d.ticker)}
-          className={`ml-auto flex h-9 w-9 items-center justify-center rounded-md transition-colors ${
+          className={`ml-auto flex h-11 w-11 items-center justify-center rounded-md transition-colors ${
             isWatching
               ? "text-yellow-400"
               : "text-text-muted hover:bg-bg-hover hover:text-text-primary"

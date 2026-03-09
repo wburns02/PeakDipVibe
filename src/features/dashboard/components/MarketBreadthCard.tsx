@@ -138,16 +138,16 @@ export function MarketBreadthCard() {
       <div className="mt-3 flex items-center justify-center gap-3">
         <Link
           to="/internals"
-          className="flex items-center gap-1 text-sm text-accent hover:underline"
+          className="flex items-center gap-1 rounded-lg px-2 py-2.5 text-sm text-accent hover:bg-accent/10 hover:underline"
         >
-          Deep dive <ArrowRight className="h-3 w-3" />
+          Deep dive <ArrowRight className="h-3.5 w-3.5" />
         </Link>
         <span className="text-text-muted">|</span>
         <Link
           to="/screener"
-          className="flex items-center gap-1 text-sm text-text-muted hover:text-accent hover:underline"
+          className="flex items-center gap-1 rounded-lg px-2 py-2.5 text-sm text-text-muted hover:bg-bg-hover hover:text-accent hover:underline"
         >
-          Screener <ArrowRight className="h-3 w-3" />
+          Screener <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     </Card>
