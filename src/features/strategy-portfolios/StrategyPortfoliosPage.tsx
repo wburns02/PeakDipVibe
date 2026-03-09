@@ -464,7 +464,7 @@ export function StrategyPortfoliosPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="flex gap-2 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const count = portfolios[tab.key].length;

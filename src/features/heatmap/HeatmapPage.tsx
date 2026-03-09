@@ -134,7 +134,7 @@ export function HeatmapPage() {
   usePageTitle("Market Heatmap");
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState({ w: 1200, h: 700 });
+  const [containerSize, setContainerSize] = useState({ w: 360, h: 400 });
   const [hovered, setHovered] = useState<TreeNode | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [sizeBy, setSizeBy] = useState<"mcap" | "equal">("mcap");
@@ -334,7 +334,7 @@ export function HeatmapPage() {
       </div>
 
       {/* Sector filter pills */}
-      <div className="flex gap-1.5 overflow-x-auto pb-1 sm:flex-wrap scrollbar-none">
+      <div className="flex flex-wrap gap-1.5 pb-1 scrollbar-none">
         <button
           type="button"
           onClick={() => setSelectedSector(null)}

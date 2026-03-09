@@ -17,7 +17,7 @@ export function Card({
 }: CardProps) {
   return (
     <div
-      className={`rounded-xl border border-border bg-bg-card p-5 ${className}`}
+      className={`min-w-0 rounded-xl border border-border bg-bg-card p-5 ${className}`}
     >
       {(title || action) && (
         <div className="mb-4 flex items-center justify-between">
