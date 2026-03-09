@@ -280,7 +280,7 @@ export function StockDnaPage() {
                       : "border-border bg-bg-secondary text-text-secondary hover:border-amber/30 hover:text-amber"
                   }`}
                 >
-                  <Star className={`h-3 w-3 ${isWatched(ticker) ? "fill-current" : ""}`} />
+                  <Star className={`h-4 w-4 ${isWatched(ticker) ? "fill-current" : ""}`} />
                   {isWatched(ticker) ? "Watched" : "Watch"}
                 </button>
               </div>

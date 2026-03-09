@@ -46,9 +46,9 @@ const MoverRow = memo(function MoverRow({ mover }: { mover: Mover }) {
             showToast(wasWatched ? `${mover.ticker} removed from watchlist` : `${mover.ticker} added to watchlist`);
           }}
           aria-label={isWatched(mover.ticker) ? `Remove ${mover.ticker} from watchlist` : `Add ${mover.ticker} to watchlist`}
-          className="text-text-muted hover:text-amber"
+          className="flex h-9 w-9 items-center justify-center rounded-md text-text-muted hover:text-amber hover:bg-bg-hover transition-colors"
         >
-          <Star className={`h-3 w-3 ${isWatched(mover.ticker) ? "fill-amber text-amber" : ""}`} />
+          <Star className={`h-4 w-4 ${isWatched(mover.ticker) ? "fill-amber text-amber" : ""}`} />
         </button>
         <div
           className={`flex h-8 w-8 items-center justify-center rounded-lg ${

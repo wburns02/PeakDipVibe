@@ -45,10 +45,10 @@ export function ConditionBuilder({ conditions, onChange }: Props) {
           <button
             type="button"
             onClick={() => removeCondition(i)}
-            className="rounded p-1 text-text-muted opacity-0 transition-all hover:bg-red/10 hover:text-red group-hover:opacity-100"
+            className="flex h-8 w-8 items-center justify-center rounded-md text-text-muted md:opacity-0 transition-all hover:bg-red/10 hover:text-red group-hover:opacity-100"
             aria-label="Remove condition"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       ))}
@@ -122,7 +122,7 @@ function AddConditionForm({
         <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
           New Condition
         </span>
-        <button type="button" onClick={onCancel} className="text-text-muted hover:text-text-primary">
+        <button type="button" onClick={onCancel} className="flex h-8 w-8 items-center justify-center rounded-md text-text-muted hover:text-text-primary hover:bg-bg-hover">
           <X className="h-4 w-4" />
         </button>
       </div>

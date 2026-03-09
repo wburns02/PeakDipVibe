@@ -361,7 +361,7 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
               : "border-border text-text-secondary hover:bg-bg-hover"
           }`}
         >
-          <Star className={`h-3.5 w-3.5 ${isWatching ? "fill-yellow-400" : ""}`} />
+          <Star className={`h-4 w-4 ${isWatching ? "fill-yellow-400" : ""}`} />
           {isWatching ? "Watching" : "Watch"}
         </button>
       </div>

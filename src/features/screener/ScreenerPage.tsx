@@ -675,8 +675,8 @@ export function ScreenerPage() {
                 {results.map((r) => (
                   <tr key={r.ticker} className="border-b border-border/50 transition-colors hover:bg-bg-hover">
                     <td className="py-2">
-                      <button type="button" onClick={() => toggle(r.ticker)} aria-label={isWatched(r.ticker) ? `Remove ${r.ticker} from watchlist` : `Add ${r.ticker} to watchlist`} className="text-text-muted hover:text-amber">
-                        <Star className={`h-3.5 w-3.5 ${isWatched(r.ticker) ? "fill-amber text-amber" : ""}`} />
+                      <button type="button" onClick={() => toggle(r.ticker)} aria-label={isWatched(r.ticker) ? `Remove ${r.ticker} from watchlist` : `Add ${r.ticker} to watchlist`} className="flex h-9 w-9 items-center justify-center rounded-md text-text-muted hover:text-amber hover:bg-bg-hover transition-colors">
+                        <Star className={`h-4 w-4 ${isWatched(r.ticker) ? "fill-amber text-amber" : ""}`} />
                       </button>
                     </td>
                     <td className="py-2">

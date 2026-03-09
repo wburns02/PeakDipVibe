@@ -110,29 +110,29 @@ export function AlertCard({ alert }: Props) {
           </div>
 
           {/* Actions */}
-          <div className="mt-2.5 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="mt-2.5 flex items-center gap-2 md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
             <Link
               to={`/dna/${alert.ticker}`}
-              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2 py-1 text-[10px] font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
+              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2.5 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
             >
-              Analyze DNA <ChevronRight className="h-3 w-3" />
+              DNA <ChevronRight className="h-3.5 w-3.5" />
             </Link>
             <Link
               to={`/ticker/${alert.ticker}`}
-              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2 py-1 text-[10px] font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
+              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2.5 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
             >
-              View Chart <ChevronRight className="h-3 w-3" />
+              Chart <ChevronRight className="h-3.5 w-3.5" />
             </Link>
             <button
               type="button"
               onClick={() => toggle(alert.ticker)}
-              className={`flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors ${
+              className={`flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
                 watched
                   ? "bg-accent/10 text-accent"
                   : "bg-bg-secondary text-text-secondary hover:bg-bg-hover hover:text-text-primary"
               }`}
             >
-              <Star className={`h-3 w-3 ${watched ? "fill-accent" : ""}`} />
+              <Star className={`h-4 w-4 ${watched ? "fill-accent" : ""}`} />
               {watched ? "Watched" : "Watch"}
             </button>
           </div>

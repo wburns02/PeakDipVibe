@@ -138,19 +138,19 @@ export function SignalCalendar() {
           <button
             type="button"
             onClick={goToPrevMonth}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
             aria-label="Previous month"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             type="button"
             onClick={goToNextMonth}
             disabled={isCurrentMonth}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Next month"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-5 w-5" />
           </button>
         </div>
       </div>

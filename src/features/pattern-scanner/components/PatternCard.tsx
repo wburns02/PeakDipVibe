@@ -117,32 +117,32 @@ export function PatternCard({ pattern: p }: Props) {
       <div className="flex items-center gap-1.5 border-t border-border px-3 py-2">
         <Link
           to={`/planner?add=${p.ticker}`}
-          className="flex items-center gap-1 rounded-md bg-accent/10 px-2 py-1 text-[10px] font-medium text-accent transition-colors hover:bg-accent/20"
+          className="flex items-center gap-1 rounded-md bg-accent/10 px-2.5 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
         >
-          <ClipboardList className="h-3 w-3" /> Plan Trade
+          <ClipboardList className="h-3.5 w-3.5" /> Plan Trade
         </Link>
         <Link
           to={`/dna/${p.ticker}`}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
         >
-          <Dna className="h-3 w-3" /> DNA
+          <Dna className="h-3.5 w-3.5" /> DNA
         </Link>
         <Link
           to={`/ticker/${p.ticker}`}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
         >
-          <ExternalLink className="h-3 w-3" /> Chart
+          <ExternalLink className="h-3.5 w-3.5" /> Chart
         </Link>
         <button
           type="button"
           onClick={() => toggle(p.ticker)}
-          className={`ml-auto flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors ${
+          className={`ml-auto flex h-9 w-9 items-center justify-center rounded-md transition-colors ${
             isWatching
               ? "text-yellow-400"
               : "text-text-muted hover:bg-bg-hover hover:text-text-primary"
           }`}
         >
-          <Star className={`h-3 w-3 ${isWatching ? "fill-yellow-400" : ""}`} />
+          <Star className={`h-4 w-4 ${isWatching ? "fill-yellow-400" : ""}`} />
         </button>
       </div>
     </div>

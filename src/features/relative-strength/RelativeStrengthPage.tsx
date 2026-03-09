@@ -376,13 +376,13 @@ export function RelativeStrengthPage() {
                 <button
                   type="button"
                   onClick={() => isInWatchlist ? removeFromWatchlist(selectedStock.ticker) : addToWatchlist(selectedStock.ticker)}
-                  className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition-colors ${
                     isInWatchlist
                       ? "border-accent bg-accent/10 text-accent"
                       : "border-border text-text-secondary hover:bg-bg-hover hover:text-text-primary"
                   }`}
                 >
-                  <Star className={`h-3 w-3 ${isInWatchlist ? "fill-accent" : ""}`} />
+                  <Star className={`h-4 w-4 ${isInWatchlist ? "fill-accent" : ""}`} />
                   {isInWatchlist ? "Watching" : "Watch"}
                 </button>
               </div>

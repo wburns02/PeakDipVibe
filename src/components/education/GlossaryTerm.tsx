@@ -33,10 +33,10 @@ export function GlossaryTerm({ term }: GlossaryTermProps) {
             (e.currentTarget as HTMLElement).focus();
           }
         }}
-        className="ml-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-bg-hover text-text-muted transition-colors hover:bg-accent/20 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+        className="ml-0.5 inline-flex h-8 w-8 items-center justify-center rounded-full bg-bg-hover text-text-muted transition-colors hover:bg-accent/20 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
         aria-label={`What is ${entry.term}?`}
       >
-        <Info className="h-2.5 w-2.5" />
+        <Info className="h-3.5 w-3.5" />
       </span>
     </Tooltip>
   );

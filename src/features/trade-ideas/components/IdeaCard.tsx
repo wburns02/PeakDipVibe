@@ -136,35 +136,35 @@ export function IdeaCard({ idea }: Props) {
           <div className="flex flex-wrap gap-2">
             <Link
               to={`/planner?ticker=${idea.ticker}&entry=${idea.entry}&stop=${idea.stopLoss}&target=${idea.target}`}
-              className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-[11px] font-medium text-white transition-colors hover:bg-accent/90"
+              className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-accent/90"
             >
-              <ClipboardList className="h-3 w-3" />
+              <ClipboardList className="h-3.5 w-3.5" />
               Add to Planner
             </Link>
             <Link
               to={`/dna/${idea.ticker}`}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-[11px] text-text-secondary transition-colors hover:bg-bg-hover"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
             >
-              <Dna className="h-3 w-3" />
+              <Dna className="h-3.5 w-3.5" />
               Stock DNA
             </Link>
             <Link
               to={`/ticker/${idea.ticker}`}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-[11px] text-text-secondary transition-colors hover:bg-bg-hover"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
             >
-              <ArrowUpRight className="h-3 w-3" />
+              <ArrowUpRight className="h-3.5 w-3.5" />
               Full Chart
             </Link>
             <button
               type="button"
               onClick={() => isWatching ? remove(idea.ticker) : add(idea.ticker)}
-              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] transition-colors ${
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs transition-colors ${
                 isWatching
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-border text-text-secondary hover:bg-bg-hover"
               }`}
             >
-              <Star className={`h-3 w-3 ${isWatching ? "fill-accent" : ""}`} />
+              <Star className={`h-4 w-4 ${isWatching ? "fill-accent" : ""}`} />
               {isWatching ? "Watching" : "Watch"}
             </button>
           </div>

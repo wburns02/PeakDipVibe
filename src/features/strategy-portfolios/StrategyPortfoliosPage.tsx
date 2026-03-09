@@ -286,13 +286,13 @@ function StockRow({ stock, rank }: { stock: ScoredStock; rank: number }) {
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); toggle(stock.ticker); }}
-              className={`flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium ${
+              className={`flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium ${
                 isWatching
                   ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
                   : "border-border text-text-secondary hover:bg-bg-hover"
               }`}
             >
-              <Star className={`h-3 w-3 ${isWatching ? "fill-yellow-400" : ""}`} />
+              <Star className={`h-4 w-4 ${isWatching ? "fill-yellow-400" : ""}`} />
               {isWatching ? "Watching" : "Watch"}
             </button>
           </div>
