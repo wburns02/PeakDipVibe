@@ -40,13 +40,13 @@ export function DivergenceCard({ divergence: d }: Props) {
                 {d.ticker}
               </Link>
               <span
-                className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                className="rounded-full px-2 py-0.5 text-[11px] font-bold text-white"
                 style={{ backgroundColor: color }}
               >
                 {isBull ? "Bullish" : "Bearish"}
               </span>
             </div>
-            <p className="text-[10px] text-text-muted">
+            <p className="text-[11px] text-text-muted">
               {d.name} &middot; {d.sector}
             </p>
           </div>
@@ -65,7 +65,7 @@ export function DivergenceCard({ divergence: d }: Props) {
                 }}
               />
             ))}
-            <span className="ml-1 text-[10px] text-text-muted">{d.conviction}/5</span>
+            <span className="ml-1 text-[11px] text-text-muted">{d.conviction}/5</span>
           </div>
         </div>
       </div>
@@ -87,21 +87,21 @@ export function DivergenceCard({ divergence: d }: Props) {
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-px border-t border-border bg-border">
         <div className="bg-bg-secondary px-3 py-2 text-center">
-          <p className="text-[9px] uppercase tracking-wider text-text-muted">Price Move</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Price Move</p>
           <p className={`text-xs font-bold ${isBull ? "text-red" : "text-green"}`}>
             {d.priceDelta >= 0 ? "+" : ""}
             {d.priceDelta.toFixed(1)}%
           </p>
         </div>
         <div className="bg-bg-secondary px-3 py-2 text-center">
-          <p className="text-[9px] uppercase tracking-wider text-text-muted">RSI Divergence</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">RSI Divergence</p>
           <p className={`text-xs font-bold ${isBull ? "text-green" : "text-red"}`}>
             {d.rsiDelta >= 0 ? "+" : ""}
             {d.rsiDelta.toFixed(1)}
           </p>
         </div>
         <div className="bg-bg-secondary px-3 py-2 text-center">
-          <p className="text-[9px] uppercase tracking-wider text-text-muted">RSI Now</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">RSI Now</p>
           <p className="text-xs font-bold text-text-primary">{d.currentRsi.toFixed(0)}</p>
         </div>
       </div>

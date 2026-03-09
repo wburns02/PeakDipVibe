@@ -49,13 +49,13 @@ export function PatternCard({ pattern: p }: Props) {
                 {p.ticker}
               </Link>
               <span
-                className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                className="rounded-full px-2 py-0.5 text-[11px] font-bold text-white"
                 style={{ backgroundColor: color }}
               >
                 {p.label}
               </span>
             </div>
-            <p className="text-[10px] text-text-muted">
+            <p className="text-[11px] text-text-muted">
               {p.name} &middot; {p.sector}
             </p>
           </div>
@@ -73,7 +73,7 @@ export function PatternCard({ pattern: p }: Props) {
                 }}
               />
             ))}
-            <span className="ml-1 text-[10px] text-text-muted">{p.conviction}/5</span>
+            <span className="ml-1 text-[11px] text-text-muted">{p.conviction}/5</span>
           </div>
         </div>
       </div>
@@ -86,27 +86,27 @@ export function PatternCard({ pattern: p }: Props) {
       {/* Trade levels */}
       <div className="grid grid-cols-4 gap-px border-t border-border bg-border">
         <div className="bg-bg-secondary px-2 py-2 text-center">
-          <p className="text-[9px] uppercase tracking-wider text-text-muted">Target</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Target</p>
           <p className="flex items-center justify-center gap-0.5">
             <Target className="h-2.5 w-2.5 text-green" />
             <span className="text-xs font-bold text-green">${p.targetPrice.toFixed(2)}</span>
           </p>
         </div>
         <div className="bg-bg-secondary px-2 py-2 text-center">
-          <p className="text-[9px] uppercase tracking-wider text-text-muted">Stop</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Stop</p>
           <p className="flex items-center justify-center gap-0.5">
             <ShieldAlert className="h-2.5 w-2.5 text-red" />
             <span className="text-xs font-bold text-red">${p.stopPrice.toFixed(2)}</span>
           </p>
         </div>
         <div className="bg-bg-secondary px-2 py-2 text-center">
-          <p className="text-[9px] uppercase tracking-wider text-text-muted">Potential</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Potential</p>
           <p className={`text-xs font-bold ${isBull ? "text-green" : "text-red"}`}>
             {isBull ? "+" : "-"}{p.potentialPct.toFixed(1)}%
           </p>
         </div>
         <div className="bg-bg-secondary px-2 py-2 text-center">
-          <p className="text-[9px] uppercase tracking-wider text-text-muted">R:R</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">R:R</p>
           <p className="text-xs font-bold text-accent">
             {p.riskReward.toFixed(1)}
           </p>

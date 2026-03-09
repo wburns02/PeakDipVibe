@@ -115,9 +115,9 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
           },
         ].map((s) => (
           <div key={s.label} className="rounded-xl border border-border bg-bg-primary p-2.5 text-center">
-            <p className="text-[9px] uppercase tracking-wider text-text-muted">{s.label}</p>
+            <p className="text-[11px] uppercase tracking-wider text-text-muted">{s.label}</p>
             <p className="mt-0.5 text-base font-bold text-text-primary">{s.value}</p>
-            <p className="text-[9px] text-text-muted">{s.sub}</p>
+            <p className="text-[11px] text-text-muted">{s.sub}</p>
           </div>
         ))}
       </div>

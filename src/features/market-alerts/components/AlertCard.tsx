@@ -75,16 +75,16 @@ export function AlertCard({ alert }: Props) {
             </Link>
             <span className="truncate text-xs text-text-muted">{alert.name}</span>
             <span
-              className="rounded-md px-1.5 py-0.5 text-[9px] font-semibold"
+              className="rounded-md px-1.5 py-0.5 text-[11px] font-semibold"
               style={{ backgroundColor: meta.bgColor, color: meta.color }}
             >
               {ALERT_TYPE_LABELS[alert.type]}
             </span>
-            <span className={`rounded-md border px-1.5 py-0.5 text-[9px] font-semibold ${sevBadge.className}`}>
+            <span className={`rounded-md border px-1.5 py-0.5 text-[11px] font-semibold ${sevBadge.className}`}>
               {sevBadge.label}
             </span>
             {alert.isWatchlisted && (
-              <span className="flex items-center gap-0.5 text-[9px] font-semibold text-accent">
+              <span className="flex items-center gap-0.5 text-[11px] font-semibold text-accent">
                 <Star className="h-2.5 w-2.5 fill-accent" /> Watchlist
               </span>
             )}

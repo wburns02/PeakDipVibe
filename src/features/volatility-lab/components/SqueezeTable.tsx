@@ -99,7 +99,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
                 >
                   {stock.ticker}
                 </p>
-                <p className="truncate text-[9px] text-text-muted">{stock.name}</p>
+                <p className="truncate text-[11px] text-text-muted">{stock.name}</p>
               </div>
 
               {/* Squeeze Meter */}
@@ -124,19 +124,19 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
               {/* Status */}
               <div className="w-16 shrink-0 text-center">
                 {stock.fired ? (
-                  <span className="inline-flex items-center gap-0.5 rounded-full bg-orange-500/15 px-1.5 py-0.5 text-[9px] font-bold text-orange-400 animate-pulse">
+                  <span className="inline-flex items-center gap-0.5 rounded-full bg-orange-500/15 px-1.5 py-0.5 text-[11px] font-bold text-orange-400 animate-pulse">
                     <Zap className="h-2.5 w-2.5" /> Fired!
                   </span>
                 ) : stock.inSqueeze ? (
-                  <span className="inline-flex rounded-full bg-green-500/15 px-1.5 py-0.5 text-[9px] font-medium text-green-400">
+                  <span className="inline-flex rounded-full bg-green-500/15 px-1.5 py-0.5 text-[11px] font-medium text-green-400">
                     Squeeze
                   </span>
                 ) : stock.bbWidthPercentile <= 30 ? (
-                  <span className="text-[9px] font-medium text-yellow-400">
+                  <span className="text-[11px] font-medium text-yellow-400">
                     {squeezeLabel(stock.bbWidthPercentile)}
                   </span>
                 ) : (
-                  <span className="text-[9px] text-text-muted">
+                  <span className="text-[11px] text-text-muted">
                     {squeezeLabel(stock.bbWidthPercentile)}
                   </span>
                 )}

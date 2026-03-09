@@ -130,7 +130,7 @@ export function PlanCard({ plan, rank }: Props) {
             >
               {plan.opportunityScore}
             </div>
-            <span className="text-[9px] text-text-muted mt-0.5">score</span>
+            <span className="text-[11px] text-text-muted mt-0.5">score</span>
           </div>
           {expanded ? (
             <ChevronUp className="h-4 w-4 text-text-muted" />

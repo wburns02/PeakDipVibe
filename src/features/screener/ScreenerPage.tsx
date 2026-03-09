@@ -684,7 +684,7 @@ export function ScreenerPage() {
                         {r.ticker}
                       </Link>
                       {r.exchange && (
-                        <span className={`ml-1 inline-block rounded px-1 py-0.5 text-[9px] font-semibold leading-none ${
+                        <span className={`ml-1 inline-block rounded px-1 py-0.5 text-[11px] font-semibold leading-none ${
                           r.exchange === "NMS" ? "bg-blue-500/15 text-blue-400" : "bg-emerald-500/15 text-emerald-400"
                         }`}>
                           {r.exchange === "NMS" ? "NASDAQ" : r.exchange === "NYQ" ? "NYSE" : r.exchange}

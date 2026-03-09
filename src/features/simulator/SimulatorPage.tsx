@@ -1541,7 +1541,7 @@ export function SimulatorPage() {
                       onChange={(e) => setSimParams((p) => ({ ...p, stopLoss: Math.max(0, Math.min(50, Number(e.target.value) || 0)) }))}
                       className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
                     />
-                    <p className="mt-0.5 text-[9px] text-text-muted">0 = off</p>
+                    <p className="mt-0.5 text-[11px] text-text-muted">0 = off</p>
                   </div>
                   <div>
                     <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-emerald-400">
@@ -1557,7 +1557,7 @@ export function SimulatorPage() {
                       onChange={(e) => setSimParams((p) => ({ ...p, takeProfit1: Math.max(0, Math.min(100, Number(e.target.value) || 0)) }))}
                       className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
                     />
-                    <p className="mt-0.5 text-[9px] text-text-muted">Sells half</p>
+                    <p className="mt-0.5 text-[11px] text-text-muted">Sells half</p>
                   </div>
                   <div>
                     <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-emerald-400">
@@ -1573,7 +1573,7 @@ export function SimulatorPage() {
                       onChange={(e) => setSimParams((p) => ({ ...p, takeProfit2: Math.max(0, Math.min(200, Number(e.target.value) || 0)) }))}
                       className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
                     />
-                    <p className="mt-0.5 text-[9px] text-text-muted">Sells rest</p>
+                    <p className="mt-0.5 text-[11px] text-text-muted">Sells rest</p>
                   </div>
                   <div>
                     <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-amber-400">
@@ -1589,7 +1589,7 @@ export function SimulatorPage() {
                       onChange={(e) => setSimParams((p) => ({ ...p, trailingStop: Math.max(0, Math.min(50, Number(e.target.value) || 0)) }))}
                       className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
                     />
-                    <p className="mt-0.5 text-[9px] text-text-muted">From peak</p>
+                    <p className="mt-0.5 text-[11px] text-text-muted">From peak</p>
                   </div>
                   <div>
                     <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-accent">
@@ -1605,7 +1605,7 @@ export function SimulatorPage() {
                       onChange={(e) => setSimParams((p) => ({ ...p, positionSizePct: Math.max(1, Math.min(100, Number(e.target.value) || 100)) }))}
                       className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
                     />
-                    <p className="mt-0.5 text-[9px] text-text-muted">Of cash</p>
+                    <p className="mt-0.5 text-[11px] text-text-muted">Of cash</p>
                   </div>
                 </div>
               )}
@@ -2285,7 +2285,7 @@ export function SimulatorPage() {
                           {fmtCurrency(t.price)}
                         </span>
                         {t.reason && t.reason !== "manual" && (
-                          <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase ${
+                          <span className={`rounded-full px-1.5 py-0.5 text-[11px] font-bold uppercase ${
                             t.reason === "stop-loss" ? "bg-red-500/20 text-red-400" :
                             t.reason === "trailing-stop" ? "bg-amber-500/20 text-amber-400" :
                             "bg-emerald-500/20 text-emerald-400"
@@ -2497,7 +2497,7 @@ function EventBrowserCard({
             {ev.ticker}
           </p>
           {ev.has_analysis && (
-            <span className="flex items-center gap-0.5 rounded bg-indigo-500/15 px-1.5 py-0.5 text-[9px] font-bold text-indigo-400">
+            <span className="flex items-center gap-0.5 rounded bg-indigo-500/15 px-1.5 py-0.5 text-[11px] font-bold text-indigo-400">
               <FileText className="h-2.5 w-2.5" />
               ANALYZED
             </span>

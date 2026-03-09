@@ -240,7 +240,7 @@ function EventCard({ event }: { event: WeekEvent }) {
                     {o.toFixed(1)}%
                   </span>{" "}
                   <span
-                    className={`rounded px-1 py-px text-[8px] font-bold ${
+                    className={`rounded px-1 py-px text-[11px] font-bold ${
                       a.status === "confirmed"
                         ? "bg-emerald-500/15 text-emerald-400"
                         : a.status === "failed"

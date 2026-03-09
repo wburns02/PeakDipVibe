@@ -78,7 +78,7 @@ export function TradeHistory({ trades, onUpdate }: Props) {
                   <td className="px-3 py-2.5">
                     <div className="flex flex-wrap gap-1">
                       {t.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="rounded bg-accent/10 px-1.5 py-0.5 text-[9px] text-accent">
+                        <span key={tag} className="rounded bg-accent/10 px-1.5 py-0.5 text-[11px] text-accent">
                           {tag}
                         </span>
                       ))}

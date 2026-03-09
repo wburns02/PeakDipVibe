@@ -61,7 +61,7 @@ function SectorRow({
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold text-text-primary">{s.sector}</span>
             <span
-              className="rounded-md px-1.5 py-0.5 text-[9px] font-semibold"
+              className="rounded-md px-1.5 py-0.5 text-[11px] font-semibold"
               style={{ backgroundColor: qMeta.color + "18", color: qMeta.color }}
             >
               {qMeta.label}
