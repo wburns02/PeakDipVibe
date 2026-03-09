@@ -119,7 +119,7 @@ export function RsLeaderboard({ stocks, selectedTicker, onSelect }: Props) {
         <button
           type="button"
           onClick={() => setShowAll(true)}
-          className="mt-2 w-full rounded-lg border border-border py-2 text-xs text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="mt-2 w-full rounded-lg border border-border py-3 text-sm text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
         >
           Show all {sorted.length} stocks
         </button>
@@ -128,7 +128,7 @@ export function RsLeaderboard({ stocks, selectedTicker, onSelect }: Props) {
         <button
           type="button"
           onClick={() => setShowAll(false)}
-          className="mt-2 w-full rounded-lg border border-border py-2 text-xs text-text-muted transition-colors hover:bg-bg-hover"
+          className="mt-2 w-full rounded-lg border border-border py-3 text-sm text-text-muted transition-colors hover:bg-bg-hover"
         >
           Show top 25
         </button>

@@ -137,7 +137,7 @@ export function RelativeStrengthPage() {
         <button
           type="button"
           onClick={() => setGuideOpen((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <Info className="h-3.5 w-3.5" />
           How It Works
@@ -215,7 +215,7 @@ export function RelativeStrengthPage() {
               key={tab.key}
               type="button"
               onClick={() => setFilter(tab.key)}
-              className={`px-3 py-2 text-xs font-medium transition-colors ${
+              className={`px-3 py-3 text-sm font-medium transition-colors ${
                 filter === tab.key
                   ? "bg-accent text-white"
                   : "text-text-muted hover:text-text-primary"
@@ -231,7 +231,7 @@ export function RelativeStrengthPage() {
         <select
           value={sectorFilter}
           onChange={(e) => setSectorFilter(e.target.value)}
-          className="rounded-lg border border-border bg-bg-secondary px-2 py-2 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+          className="rounded-lg border border-border bg-bg-secondary px-2 py-3 text-sm text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
         >
           <option value="">All Sectors</option>
           {sectors.map((s) => (
@@ -376,7 +376,7 @@ export function RelativeStrengthPage() {
                 <button
                   type="button"
                   onClick={() => isInWatchlist ? removeFromWatchlist(selectedStock.ticker) : addToWatchlist(selectedStock.ticker)}
-                  className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2 text-xs transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-3 text-sm transition-colors ${
                     isInWatchlist
                       ? "border-accent bg-accent/10 text-accent"
                       : "border-border text-text-secondary hover:bg-bg-hover hover:text-text-primary"

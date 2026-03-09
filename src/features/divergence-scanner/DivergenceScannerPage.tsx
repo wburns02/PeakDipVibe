@@ -112,7 +112,7 @@ export function DivergenceScannerPage() {
         <button
           type="button"
           onClick={() => setGuideOpen((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <Info className="h-3.5 w-3.5" />
           How It Works
@@ -162,13 +162,13 @@ export function DivergenceScannerPage() {
       {/* Stats bar */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[11px] uppercase tracking-wider text-text-muted">Divergences</p>
+          <p className="text-sm uppercase tracking-wider text-text-muted">Divergences</p>
           <p className="mt-1 text-xl font-bold text-text-primary">
             {isLoading ? "\u2014" : allDivergences.length}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[11px] uppercase tracking-wider text-text-muted">Bullish</p>
+          <p className="text-sm uppercase tracking-wider text-text-muted">Bullish</p>
           <p className="mt-1 text-xl font-bold text-green">
             {isLoading ? "\u2014" : bullishCount}
           </p>
@@ -177,7 +177,7 @@ export function DivergenceScannerPage() {
           )}
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[11px] uppercase tracking-wider text-text-muted">Bearish</p>
+          <p className="text-sm uppercase tracking-wider text-text-muted">Bearish</p>
           <p className="mt-1 text-xl font-bold text-red">
             {isLoading ? "\u2014" : bearishCount}
           </p>
@@ -186,7 +186,7 @@ export function DivergenceScannerPage() {
           )}
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[11px] uppercase tracking-wider text-text-muted">Strongest</p>
+          <p className="text-sm uppercase tracking-wider text-text-muted">Strongest</p>
           <p className="mt-1 text-xl font-bold text-accent">
             {isLoading ? "\u2014" : strongest?.ticker ?? "None"}
           </p>
@@ -221,7 +221,7 @@ export function DivergenceScannerPage() {
               key={tab.key}
               type="button"
               onClick={() => setFilter(tab.key)}
-              className={`rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
+              className={`rounded-lg border px-3 py-3 text-sm font-medium transition-colors ${
                 filter === tab.key
                   ? "text-white"
                   : "border-border text-text-muted hover:text-text-primary hover:bg-bg-hover"

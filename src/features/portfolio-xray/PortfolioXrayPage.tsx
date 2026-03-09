@@ -149,7 +149,7 @@ export function PortfolioXrayPage() {
                 key={days}
                 type="button"
                 onClick={() => setLookback(days)}
-                className={`px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`px-3 py-2.5 text-sm font-medium transition-colors ${
                   lookback === days
                     ? "bg-accent/15 text-accent"
                     : "text-text-muted hover:text-text-primary"
@@ -163,7 +163,7 @@ export function PortfolioXrayPage() {
           <button
             type="button"
             onClick={() => setShowGuide((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
           >
             <Info className="h-3.5 w-3.5" />
             Guide

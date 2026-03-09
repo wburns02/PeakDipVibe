@@ -152,12 +152,12 @@ function KpiCard({
           <Icon className="h-4 w-4 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">{label}</p>
+          <p className="text-sm font-medium uppercase tracking-wider text-text-muted">{label}</p>
           <div className="flex items-baseline gap-1.5">
             <span className="text-sm font-bold text-accent">{ticker}</span>
             <span className="text-xs font-medium text-text-primary">{metric}</span>
           </div>
-          <p className="truncate text-[11px] text-text-muted">{sub}</p>
+          <p className="truncate text-sm text-text-muted">{sub}</p>
         </div>
       </div>
     </div>
@@ -184,7 +184,7 @@ function SectorLegend({
             key={s}
             type="button"
             onClick={() => onToggle(s)}
-            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-2.5 text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-3 text-sm font-medium transition-all ${
               active
                 ? "border-transparent bg-bg-hover text-text-primary"
                 : "border-border bg-transparent text-text-muted opacity-40 hover:opacity-70"
@@ -400,8 +400,8 @@ export function MomentumRadarPage() {
             return (
               <div key={q} className={`rounded-lg border p-2.5 text-center ${colors[q]}`}>
                 <p className="text-lg font-bold">{count}</p>
-                <p className="text-[11px] font-medium uppercase tracking-wider">{q}</p>
-                <p className="text-[11px] opacity-70">{pct}% of market</p>
+                <p className="text-sm font-medium uppercase tracking-wider">{q}</p>
+                <p className="text-sm opacity-70">{pct}% of market</p>
               </div>
             );
           })}
@@ -417,7 +417,7 @@ export function MomentumRadarPage() {
             <button
               type="button"
               onClick={() => setActiveSectors(new Set(allSectors))}
-              className="ml-auto text-[11px] text-accent hover:underline"
+              className="ml-auto text-sm text-accent hover:underline"
             >
               Show all
             </button>
@@ -431,13 +431,13 @@ export function MomentumRadarPage() {
         <div className="mb-2 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-semibold text-text-primary">Market Momentum Map</h3>
-            <p className="text-[11px] text-text-muted">Click any dot to view stock detail. Dot size = daily change magnitude.</p>
+            <p className="text-sm text-text-muted">Click any dot to view stock detail. Dot size = daily change magnitude.</p>
           </div>
           {highlighted && (
             <div className="flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
               <span className="text-xs font-bold text-accent">{highlighted.ticker}</span>
-              <span className="text-[11px] text-text-muted">
+              <span className="text-sm text-text-muted">
                 RSI {highlighted.rsi.toFixed(0)} / {highlighted.distFromSma200 >= 0 ? "+" : ""}{highlighted.distFromSma200.toFixed(1)}%
               </span>
             </div>
@@ -538,7 +538,7 @@ export function MomentumRadarPage() {
         </div>
 
         {/* Quadrant labels overlay */}
-        <div className="mt-3 grid grid-cols-2 gap-2 text-center text-[11px] font-medium md:grid-cols-4">
+        <div className="mt-3 grid grid-cols-2 gap-2 text-center text-sm font-medium md:grid-cols-4">
           <div className="rounded bg-yellow-500/10 py-1.5 text-yellow-400">
             Pullback Zone (RSI &lt; 50, Above SMA-200)
           </div>
@@ -579,7 +579,7 @@ export function MomentumRadarPage() {
             <Card key={q} className={c.border}>
               <div className="mb-3 flex items-center justify-between">
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${c.badge}`}>{q}</span>
-                <span className="text-[11px] text-text-muted">{filteredPoints.filter((p) => p.quadrant === q).length} stocks</span>
+                <span className="text-sm text-text-muted">{filteredPoints.filter((p) => p.quadrant === q).length} stocks</span>
               </div>
               {qStocks.length === 0 ? (
                 <p className="py-4 text-center text-xs text-text-muted">No stocks in this quadrant</p>
@@ -593,9 +593,9 @@ export function MomentumRadarPage() {
                       className="flex w-full items-center gap-3 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-bg-hover"
                     >
                       <span className="w-14 text-xs font-bold text-accent">{s.ticker}</span>
-                      <span className="min-w-0 flex-1 truncate text-[11px] text-text-secondary">{s.name}</span>
-                      <span className="text-[11px] text-text-muted">RSI {s.rsi.toFixed(0)}</span>
-                      <span className={`w-16 text-right text-[11px] font-medium ${s.distFromSma200 >= 0 ? "text-green-400" : "text-red-400"}`}>
+                      <span className="min-w-0 flex-1 truncate text-sm text-text-secondary">{s.name}</span>
+                      <span className="text-sm text-text-muted">RSI {s.rsi.toFixed(0)}</span>
+                      <span className={`w-16 text-right text-sm font-medium ${s.distFromSma200 >= 0 ? "text-green-400" : "text-red-400"}`}>
                         {s.distFromSma200 >= 0 ? "+" : ""}{s.distFromSma200.toFixed(1)}%
                       </span>
                     </button>

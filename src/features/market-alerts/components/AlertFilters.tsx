@@ -25,7 +25,7 @@ export function AlertFilters({
       <button
         type="button"
         onClick={onWatchlistToggle}
-        className={`rounded-lg border px-3 py-2.5 text-xs font-medium transition-all ${
+        className={`rounded-lg border px-3 py-3 text-sm font-medium transition-all ${
           watchlistOnly
             ? "border-accent/40 bg-accent/10 text-accent"
             : "border-border bg-bg-card text-text-secondary hover:border-border"
@@ -41,7 +41,7 @@ export function AlertFilters({
             key={bias}
             type="button"
             onClick={() => onBiasChange(biasFilter === bias ? null : bias)}
-            className={`px-2.5 py-2.5 text-xs font-medium transition-colors ${
+            className={`px-2.5 py-3 text-sm font-medium transition-colors ${
               biasFilter === bias
                 ? bias === "bullish"
                   ? "bg-green/15 text-green"
@@ -61,7 +61,7 @@ export function AlertFilters({
         <select
           value={sectorFilter ?? ""}
           onChange={(e) => onSectorChange(e.target.value || null)}
-          className="rounded-lg border border-border bg-bg-card px-2.5 py-2.5 text-xs text-text-secondary outline-none transition-colors hover:border-accent/30 focus:border-accent/50"
+          className="rounded-lg border border-border bg-bg-card px-2.5 py-3 text-sm text-text-secondary outline-none transition-colors hover:border-accent/30 focus:border-accent/50"
         >
           <option value="">All Sectors</option>
           {sectors.map((s) => (

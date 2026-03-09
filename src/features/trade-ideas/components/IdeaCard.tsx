@@ -45,12 +45,12 @@ export function IdeaCard({ idea }: Props) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span
-              className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
+              className="rounded-full px-2 py-0.5 text-sm font-semibold"
               style={{ backgroundColor: color + "20", color }}
             >
               {idea.setup}
             </span>
-            <span className="rounded-full bg-bg-hover px-2 py-0.5 text-[11px] text-text-muted">
+            <span className="rounded-full bg-bg-hover px-2 py-0.5 text-sm text-text-muted">
               {idea.timeframe}
             </span>
           </div>
@@ -79,7 +79,7 @@ export function IdeaCard({ idea }: Props) {
         {/* R/R summary */}
         <div className="shrink-0 text-right">
           <p className="text-sm font-bold text-green">{idea.riskReward}:1</p>
-          <p className="text-[11px] text-text-muted">Risk/Reward</p>
+          <p className="text-sm text-text-muted">Risk/Reward</p>
           {expanded ? <ChevronUp className="ml-auto mt-1 h-4 w-4 text-text-muted" /> : <ChevronDown className="ml-auto mt-1 h-4 w-4 text-text-muted" />}
         </div>
       </button>
@@ -87,18 +87,18 @@ export function IdeaCard({ idea }: Props) {
       {/* Levels bar */}
       <div className="grid grid-cols-3 gap-px border-t border-border bg-border">
         <div className="bg-bg-secondary px-4 py-2">
-          <p className="text-[11px] font-medium uppercase text-text-muted">Entry</p>
+          <p className="text-sm font-medium uppercase text-text-muted">Entry</p>
           <p className="text-sm font-bold text-blue-400">${idea.entry.toFixed(2)}</p>
         </div>
         <div className="bg-bg-secondary px-4 py-2">
-          <p className="text-[11px] font-medium uppercase text-text-muted">Stop Loss</p>
+          <p className="text-sm font-medium uppercase text-text-muted">Stop Loss</p>
           <p className="text-sm font-bold text-red">${idea.stopLoss.toFixed(2)}</p>
-          <p className="text-[11px] text-red">-{idea.riskPct}%</p>
+          <p className="text-sm text-red">-{idea.riskPct}%</p>
         </div>
         <div className="bg-bg-secondary px-4 py-2">
-          <p className="text-[11px] font-medium uppercase text-text-muted">Target</p>
+          <p className="text-sm font-medium uppercase text-text-muted">Target</p>
           <p className="text-sm font-bold text-green">${idea.target.toFixed(2)}</p>
-          <p className="text-[11px] text-green">+{idea.rewardPct}%</p>
+          <p className="text-sm text-green">+{idea.rewardPct}%</p>
         </div>
       </div>
 
@@ -107,7 +107,7 @@ export function IdeaCard({ idea }: Props) {
         <div className="border-t border-border p-4">
           {/* Evidence */}
           <div className="mb-4">
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-text-muted">
               Why This Setup
             </p>
             <ul className="space-y-1.5">
@@ -125,7 +125,7 @@ export function IdeaCard({ idea }: Props) {
             <Skeleton className="mb-4 h-[160px]" />
           ) : levels && levels.data.length > 2 ? (
             <div className="mb-4">
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+              <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-text-muted">
                 Setup Visualization
               </p>
               <SetupChart levels={levels} />
@@ -136,21 +136,21 @@ export function IdeaCard({ idea }: Props) {
           <div className="flex flex-wrap gap-2">
             <Link
               to={`/planner?ticker=${idea.ticker}&entry=${idea.entry}&stop=${idea.stopLoss}&target=${idea.target}`}
-              className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-accent/90"
+              className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-3 text-sm font-medium text-white transition-colors hover:bg-accent/90"
             >
               <ClipboardList className="h-3.5 w-3.5" />
               Add to Planner
             </Link>
             <Link
               to={`/dna/${idea.ticker}`}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
             >
               <Dna className="h-3.5 w-3.5" />
               Stock DNA
             </Link>
             <Link
               to={`/ticker/${idea.ticker}`}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
             >
               <ArrowUpRight className="h-3.5 w-3.5" />
               Full Chart
@@ -158,7 +158,7 @@ export function IdeaCard({ idea }: Props) {
             <button
               type="button"
               onClick={() => isWatching ? remove(idea.ticker) : add(idea.ticker)}
-              className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs transition-colors ${
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-3 text-sm transition-colors ${
                 isWatching
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-border text-text-secondary hover:bg-bg-hover"

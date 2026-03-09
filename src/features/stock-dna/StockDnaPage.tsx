@@ -135,7 +135,7 @@ export function StockDnaPage() {
                       key={t}
                       type="button"
                       onClick={() => selectTicker(t)}
-                      className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
                         t === ticker
                           ? "border-accent bg-accent/10 text-accent"
                           : "border-border bg-bg-primary text-text-secondary hover:border-accent/30 hover:text-accent"
@@ -259,14 +259,14 @@ export function StockDnaPage() {
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
                 <Link
                   to={`/compare?tickers=${ticker}`}
-                  className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
+                  className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
                 >
                   <BarChart3 className="h-3 w-3" />
                   Compare
                 </Link>
                 <Link
                   to={`/simulator`}
-                  className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
+                  className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
                 >
                   <PlayCircle className="h-3 w-3" />
                   Simulate
@@ -274,7 +274,7 @@ export function StockDnaPage() {
                 <button
                   type="button"
                   onClick={() => toggle(ticker)}
-                  className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
                     isWatched(ticker)
                       ? "border-amber/30 bg-amber/5 text-amber"
                       : "border-border bg-bg-secondary text-text-secondary hover:border-amber/30 hover:text-amber"

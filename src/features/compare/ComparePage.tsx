@@ -135,7 +135,7 @@ function CorrelationSuggestions({
 
       {/* Correlation insight */}
       {avgCorr != null && (
-        <div className={`mb-3 rounded-lg px-3 py-2 text-xs ${highCorr ? "bg-amber/10 text-amber" : "bg-green/10 text-green"}`}>
+        <div className={`mb-3 rounded-lg px-3 py-3 text-sm ${highCorr ? "bg-amber/10 text-amber" : "bg-green/10 text-green"}`}>
           {highCorr ? (
             <>
               <strong>High correlation detected</strong> (avg |r| = {avgCorr.toFixed(2)}). Your stocks move together — consider adding an uncorrelated asset for diversification.
@@ -163,7 +163,7 @@ function CorrelationSuggestions({
                 key={t}
                 type="button"
                 onClick={() => onAdd(t)}
-                className="flex items-center gap-1 rounded-lg border border-border bg-bg-primary px-2.5 py-2 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+                className="flex items-center gap-1 rounded-lg border border-border bg-bg-primary px-2.5 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
               >
                 <Plus className="h-3 w-3" />
                 {t}
@@ -186,7 +186,7 @@ function CorrelationSuggestions({
                 key={t}
                 type="button"
                 onClick={() => onAdd(t)}
-                className="flex items-center gap-1 rounded-lg border border-dashed border-green/40 bg-green/5 px-2.5 py-2 text-xs font-medium text-green transition-colors hover:border-green hover:bg-green/10"
+                className="flex items-center gap-1 rounded-lg border border-dashed border-green/40 bg-green/5 px-2.5 py-3 text-sm font-medium text-green transition-colors hover:border-green hover:bg-green/10"
               >
                 <Plus className="h-3 w-3" />
                 {t}
@@ -343,7 +343,7 @@ export function ComparePage() {
               <button
                 type="button"
                 onClick={downloadCSV}
-                className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+                className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
                 title="Download comparison as CSV"
               >
                 <Download className="h-3.5 w-3.5" />
@@ -353,7 +353,7 @@ export function ComparePage() {
             <button
               type="button"
               onClick={copyLink}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
               title="Copy shareable link"
             >
               {copied ? <Check className="h-3.5 w-3.5 text-green" /> : <Link2 className="h-3.5 w-3.5" />}
@@ -368,7 +368,7 @@ export function ComparePage() {
         <button
           type="button"
           onClick={() => setTab("stocks")}
-          className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+          className={`flex items-center gap-1.5 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
             tab === "stocks"
               ? "bg-bg-card text-text-primary shadow-sm"
               : "text-text-muted hover:text-text-secondary"
@@ -380,7 +380,7 @@ export function ComparePage() {
         <button
           type="button"
           onClick={() => setTab("events")}
-          className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+          className={`flex items-center gap-1.5 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
             tab === "events"
               ? "bg-bg-card text-text-primary shadow-sm"
               : "text-text-muted hover:text-text-secondary"
@@ -466,7 +466,7 @@ export function ComparePage() {
               type="button"
               key={g.label}
               onClick={() => setTickers(g.tickers)}
-              className="rounded-lg border border-border bg-bg-primary px-2.5 py-2 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              className="rounded-lg border border-border bg-bg-primary px-2.5 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
             >
               {g.label}
             </button>
@@ -482,7 +482,7 @@ export function ComparePage() {
               onClick={() => setPeriod(p.days)}
               aria-pressed={period === p.days}
               aria-label={`Show ${p.label} performance`}
-              className={`rounded-lg px-3 py-2 text-xs font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
+              className={`rounded-lg px-3 py-3 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
                 period === p.days
                   ? "bg-accent text-white"
                   : "text-text-secondary hover:bg-bg-hover"

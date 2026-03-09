@@ -179,14 +179,14 @@ export function PlanCard({ plan, rank }: Props) {
           <div className="flex gap-2 pt-1">
             <Link
               to={`/dna/${plan.ticker}`}
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
+              className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
             >
               <Dna className="h-3 w-3" />
               Full DNA
             </Link>
             <Link
               to={`/ticker/${plan.ticker}`}
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
+              className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
             >
               <ExternalLink className="h-3 w-3" />
               Detail

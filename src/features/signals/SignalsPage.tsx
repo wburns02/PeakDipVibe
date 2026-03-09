@@ -102,7 +102,7 @@ export function SignalsPage() {
           <button
             type="button"
             onClick={() => downloadCSV(signals)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
             title={`Export ${signals.length} signals to CSV`}
             aria-label={`Export ${signals.length} signals to CSV`}
           >
@@ -149,7 +149,7 @@ export function SignalsPage() {
           <div id="signal-filters" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {/* Lookback days */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">
+              <label className="mb-1 block text-sm text-text-muted">
                 Lookback (days)
               </label>
               <input
@@ -161,13 +161,13 @@ export function SignalsPage() {
                 min={1}
                 max={365}
                 aria-label="Lookback period in days"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-3 text-sm text-text-primary"
               />
             </div>
 
             {/* Min strength */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">
+              <label className="mb-1 block text-sm text-text-muted">
                 Min Strength ({filters.min_strength ?? 0})
               </label>
               <input
@@ -189,14 +189,14 @@ export function SignalsPage() {
 
             {/* Status */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">
+              <label className="mb-1 block text-sm text-text-muted">
                 Status
               </label>
               <select
                 value={filters.status ?? ""}
                 onChange={(e) => setFilter("status", e.target.value)}
                 aria-label="Filter by signal status"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-3 text-sm text-text-primary"
               >
                 {STATUS_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -208,14 +208,14 @@ export function SignalsPage() {
 
             {/* Catalyst type */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">
+              <label className="mb-1 block text-sm text-text-muted">
                 Catalyst Type
               </label>
               <select
                 value={filters.catalyst_type ?? ""}
                 onChange={(e) => setFilter("catalyst_type", e.target.value)}
                 aria-label="Filter by catalyst type"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-3 text-sm text-text-primary"
               >
                 {CATALYST_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -227,14 +227,14 @@ export function SignalsPage() {
 
             {/* Sector */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">
+              <label className="mb-1 block text-sm text-text-muted">
                 Sector
               </label>
               <select
                 value={filters.sector ?? ""}
                 onChange={(e) => setFilter("sector", e.target.value)}
                 aria-label="Filter by sector"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-3 text-sm text-text-primary"
               >
                 <option value="">All Sectors</option>
                 {sectors?.map((s) => (
@@ -269,7 +269,7 @@ export function SignalsPage() {
             type="button"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
             Previous
@@ -281,7 +281,7 @@ export function SignalsPage() {
             type="button"
             onClick={() => setPage((p) => p + 1)}
             disabled={!hasMore}
-            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Next
             <ChevronRight className="h-3.5 w-3.5" />

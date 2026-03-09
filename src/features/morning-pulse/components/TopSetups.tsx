@@ -236,14 +236,14 @@ export function TopSetups({ signals, sectors, loading }: Props) {
                 <div className="mt-3 flex flex-wrap gap-2 border-t border-border pt-3">
                   <Link
                     to={`/ticker/${s.ticker}`}
-                    className="flex items-center gap-1.5 rounded-lg bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+                    className="flex items-center gap-1.5 rounded-lg bg-accent/10 px-3 py-2.5 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
                   >
                     <Eye className="h-3 w-3" />
                     View Chart
                   </Link>
                   <Link
                     to={`/simulator?ticker=${s.ticker}&date=${s.signal_date}`}
-                    className="flex items-center gap-1.5 rounded-lg bg-bg-hover px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-accent/10 hover:text-accent"
+                    className="flex items-center gap-1.5 rounded-lg bg-bg-hover px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-accent/10 hover:text-accent"
                   >
                     <PlayCircle className="h-3 w-3" />
                     Simulate
@@ -251,7 +251,7 @@ export function TopSetups({ signals, sectors, loading }: Props) {
                   <button
                     type="button"
                     onClick={() => toggle(s.ticker)}
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                       watched
                         ? "bg-amber-500/10 text-amber-400"
                         : "bg-bg-hover text-text-secondary hover:bg-amber-500/10 hover:text-amber-400"

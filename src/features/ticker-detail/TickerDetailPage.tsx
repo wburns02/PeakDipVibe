@@ -87,7 +87,7 @@ export function TickerDetailPage() {
             toggle(ticker.ticker);
             showToast(wasWatched ? `${ticker.ticker} removed from watchlist` : `${ticker.ticker} added to watchlist`);
           }}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary transition-colors hover:border-amber hover:text-amber"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:border-amber hover:text-amber"
         >
           <Star
             className={`h-4 w-4 ${

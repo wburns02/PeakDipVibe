@@ -39,7 +39,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
             <button
               type="button"
               onClick={() => { setDirection("below"); setThreshold(30); }}
-              className={`rounded-md px-3 py-1.5 text-xs ${
+              className={`rounded-md px-3 py-2.5 text-sm ${
                 direction === "below" ? "bg-green/15 text-green" : "text-text-muted hover:bg-bg-hover"
               }`}
             >
@@ -48,7 +48,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
             <button
               type="button"
               onClick={() => { setDirection("above"); setThreshold(70); }}
-              className={`rounded-md px-3 py-1.5 text-xs ${
+              className={`rounded-md px-3 py-2.5 text-sm ${
                 direction === "above" ? "bg-red/15 text-red" : "text-text-muted hover:bg-bg-hover"
               }`}
             >
@@ -64,7 +64,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
                 type="button"
                 key={d}
                 onClick={() => setHoldDays(d)}
-                className={`rounded-md px-3 py-1.5 text-xs ${
+                className={`rounded-md px-3 py-2.5 text-sm ${
                   holdDays === d ? "bg-accent/15 text-accent" : "text-text-muted hover:bg-bg-hover"
                 }`}
               >

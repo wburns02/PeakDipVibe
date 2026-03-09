@@ -35,7 +35,7 @@ export function ConditionBuilder({ conditions, onChange }: Props) {
           className="group flex items-center gap-2 rounded-lg border border-border bg-bg-secondary px-3 py-2 transition-colors hover:border-accent/30"
         >
           {i > 0 && (
-            <span className="rounded bg-accent/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-accent">
+            <span className="rounded bg-accent/10 px-1.5 py-0.5 text-sm font-semibold uppercase tracking-wider text-accent">
               AND
             </span>
           )}

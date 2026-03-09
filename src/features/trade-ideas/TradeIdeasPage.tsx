@@ -77,7 +77,7 @@ export function TradeIdeasPage() {
         <button
           type="button"
           onClick={() => setGuideOpen((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <Info className="h-3.5 w-3.5" />
           How It Works
@@ -160,7 +160,7 @@ export function TradeIdeasPage() {
               key={tab.key}
               type="button"
               onClick={() => setFilter(tab.key)}
-              className={`rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${
+              className={`rounded-lg border px-3 py-3 text-sm font-medium transition-colors ${
                 isActive
                   ? "text-white"
                   : "border-border text-text-muted hover:text-text-primary hover:bg-bg-hover"

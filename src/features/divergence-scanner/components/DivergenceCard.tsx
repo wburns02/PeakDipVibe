@@ -40,13 +40,13 @@ export function DivergenceCard({ divergence: d }: Props) {
                 {d.ticker}
               </Link>
               <span
-                className="rounded-full px-2 py-0.5 text-[11px] font-bold text-white"
+                className="rounded-full px-2 py-0.5 text-sm font-bold text-white"
                 style={{ backgroundColor: color }}
               >
                 {isBull ? "Bullish" : "Bearish"}
               </span>
             </div>
-            <p className="text-[11px] text-text-muted">
+            <p className="text-sm text-text-muted">
               {d.name} &middot; {d.sector}
             </p>
           </div>
@@ -65,7 +65,7 @@ export function DivergenceCard({ divergence: d }: Props) {
                 }}
               />
             ))}
-            <span className="ml-1 text-[11px] text-text-muted">{d.conviction}/5</span>
+            <span className="ml-1 text-sm text-text-muted">{d.conviction}/5</span>
           </div>
         </div>
       </div>
@@ -87,21 +87,21 @@ export function DivergenceCard({ divergence: d }: Props) {
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-px border-t border-border bg-border">
         <div className="bg-bg-secondary px-3 py-2 text-center">
-          <p className="text-[11px] uppercase tracking-wider text-text-muted">Price Move</p>
+          <p className="text-sm uppercase tracking-wider text-text-muted">Price Move</p>
           <p className={`text-xs font-bold ${isBull ? "text-red" : "text-green"}`}>
             {d.priceDelta >= 0 ? "+" : ""}
             {d.priceDelta.toFixed(1)}%
           </p>
         </div>
         <div className="bg-bg-secondary px-3 py-2 text-center">
-          <p className="text-[11px] uppercase tracking-wider text-text-muted">RSI Divergence</p>
+          <p className="text-sm uppercase tracking-wider text-text-muted">RSI Divergence</p>
           <p className={`text-xs font-bold ${isBull ? "text-green" : "text-red"}`}>
             {d.rsiDelta >= 0 ? "+" : ""}
             {d.rsiDelta.toFixed(1)}
           </p>
         </div>
         <div className="bg-bg-secondary px-3 py-2 text-center">
-          <p className="text-[11px] uppercase tracking-wider text-text-muted">RSI Now</p>
+          <p className="text-sm uppercase tracking-wider text-text-muted">RSI Now</p>
           <p className="text-xs font-bold text-text-primary">{d.currentRsi.toFixed(0)}</p>
         </div>
       </div>
@@ -110,19 +110,19 @@ export function DivergenceCard({ divergence: d }: Props) {
       <div className="flex items-center gap-1.5 border-t border-border px-3 py-2">
         <Link
           to={`/planner?add=${d.ticker}`}
-          className="flex items-center gap-1 rounded-md bg-accent/10 px-2.5 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+          className="flex items-center gap-1 rounded-md bg-accent/10 px-2.5 py-2.5 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
         >
           <ClipboardList className="h-3.5 w-3.5" /> Plan Trade
         </Link>
         <Link
           to={`/dna/${d.ticker}`}
-          className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="flex items-center gap-1 rounded-md px-2.5 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
         >
           <Dna className="h-3.5 w-3.5" /> DNA
         </Link>
         <Link
           to={`/ticker/${d.ticker}`}
-          className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+          className="flex items-center gap-1 rounded-md px-2.5 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
         >
           <ExternalLink className="h-3.5 w-3.5" /> Chart
         </Link>

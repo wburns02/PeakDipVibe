@@ -52,7 +52,7 @@ export function QuickStats({ ticker }: QuickStatsProps) {
       <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-3 py-2">
         <TrendingUp className="h-3.5 w-3.5 text-green" />
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">52W High</p>
+          <p className="text-sm font-medium uppercase tracking-wider text-text-muted">52W High</p>
           <p className="text-sm font-semibold text-text-primary">{fmt(stats.high52)}</p>
         </div>
       </div>
@@ -61,7 +61,7 @@ export function QuickStats({ ticker }: QuickStatsProps) {
       <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-3 py-2">
         <TrendingDown className="h-3.5 w-3.5 text-red" />
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">52W Low</p>
+          <p className="text-sm font-medium uppercase tracking-wider text-text-muted">52W Low</p>
           <p className="text-sm font-semibold text-text-primary">{fmt(stats.low52)}</p>
         </div>
       </div>
@@ -75,7 +75,7 @@ export function QuickStats({ ticker }: QuickStatsProps) {
             <ArrowDown className="h-3.5 w-3.5 text-red" />
           )}
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">From High</p>
+            <p className="text-sm font-medium uppercase tracking-wider text-text-muted">From High</p>
             <p className={`text-sm font-semibold ${stats.fromHigh >= 0 ? "text-green" : "text-red"}`}>
               {stats.fromHigh >= 0 ? "+" : ""}{stats.fromHigh.toFixed(1)}%
             </p>
@@ -88,7 +88,7 @@ export function QuickStats({ ticker }: QuickStatsProps) {
         <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-3 py-2">
           <BarChart2 className="h-3.5 w-3.5 text-accent" />
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">Avg Vol</p>
+            <p className="text-sm font-medium uppercase tracking-wider text-text-muted">Avg Vol</p>
             <p className="text-sm font-semibold text-text-primary">{fmtVol(stats.avgVol)}</p>
           </div>
         </div>
@@ -99,7 +99,7 @@ export function QuickStats({ ticker }: QuickStatsProps) {
         <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-3 py-2">
           <Activity className="h-3.5 w-3.5 text-amber" />
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">Day Chg</p>
+            <p className="text-sm font-medium uppercase tracking-wider text-text-muted">Day Chg</p>
             <p className={`text-sm font-semibold ${stats.dailyChange >= 0 ? "text-green" : "text-red"}`}>
               {stats.dailyChange >= 0 ? "+" : ""}{stats.dailyChange.toFixed(2)}%
             </p>

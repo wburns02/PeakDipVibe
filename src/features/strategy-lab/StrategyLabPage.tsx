@@ -125,7 +125,7 @@ export function StrategyLabPage() {
           <button
             type="button"
             onClick={() => setShowSaved((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
           >
             <FolderOpen className="h-3.5 w-3.5" />
             Saved
@@ -251,7 +251,7 @@ export function StrategyLabPage() {
               type="button"
               onClick={handleSave}
               disabled={conditions.length === 0}
-              className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Save className="h-3.5 w-3.5" />
               Save
@@ -259,7 +259,7 @@ export function StrategyLabPage() {
             <button
               type="button"
               onClick={handleReset}
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-1.5 text-xs font-medium text-text-muted transition-colors hover:border-red/30 hover:text-red"
+              className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-sm font-medium text-text-muted transition-colors hover:border-red/30 hover:text-red"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Reset
@@ -273,7 +273,7 @@ export function StrategyLabPage() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Brief description (optional)..."
-          className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-1.5 text-xs text-text-secondary placeholder:text-text-muted focus:border-accent focus:outline-none"
+          className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-sm text-text-secondary placeholder:text-text-muted focus:border-accent focus:outline-none"
         />
 
         {/* Conditions */}

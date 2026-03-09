@@ -29,11 +29,11 @@ export function PresetPicker({ onSelect }: Props) {
                 {preset.name}
               </span>
             </div>
-            <p className="text-xs leading-relaxed text-text-muted line-clamp-2">
+            <p className="text-sm leading-relaxed text-text-muted line-clamp-2">
               {preset.description}
             </p>
             <div className="mt-auto flex items-center gap-1 pt-1">
-              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-sm font-medium text-accent">
                 {preset.conditions.length} condition{preset.conditions.length !== 1 ? "s" : ""}
               </span>
             </div>

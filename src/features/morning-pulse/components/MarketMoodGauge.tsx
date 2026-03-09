@@ -124,7 +124,7 @@ export function MarketMoodGauge({ mood, loading }: Props) {
           {mood.factors.map((f) => (
             <div
               key={f.label}
-              className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs ${
+              className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2.5 text-sm ${
                 f.positive
                   ? "border-green/20 bg-green/5 text-green"
                   : "border-red/20 bg-red/5 text-red"

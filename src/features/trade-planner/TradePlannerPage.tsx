@@ -156,7 +156,7 @@ export function TradePlannerPage() {
           <button
             type="button"
             onClick={() => setShowAddTicker((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-accent"
           >
             <Plus className="h-3.5 w-3.5" />
             Add
@@ -164,7 +164,7 @@ export function TradePlannerPage() {
           <button
             type="button"
             onClick={() => setShowSettings((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-2 text-xs font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent/30 hover:text-text-primary"
           >
             <Settings2 className="h-3.5 w-3.5" />
             Settings

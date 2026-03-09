@@ -275,7 +275,7 @@ export function ScreenerPage() {
             type="button"
             key={p.label}
             onClick={() => applyPreset(p)}
-            className="rounded-lg border border-border bg-bg-card px-3 py-2.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+            className="rounded-lg border border-border bg-bg-card px-3 py-3 text-sm text-text-secondary transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
           >
             {p.label}
           </button>
@@ -285,7 +285,7 @@ export function ScreenerPage() {
             <button
               type="button"
               onClick={() => setFilters({ ...p.filters, limit: 50 })}
-              className="rounded-lg border border-accent/30 bg-accent/5 px-3 py-2.5 text-xs font-medium text-accent transition-colors hover:bg-accent/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              className="rounded-lg border border-accent/30 bg-accent/5 px-3 py-3 text-sm font-medium text-accent transition-colors hover:bg-accent/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
             >
               {p.name}
             </button>
@@ -303,7 +303,7 @@ export function ScreenerPage() {
           <button
             type="button"
             onClick={() => setShowSaveInput(true)}
-            className="inline-flex items-center gap-1 rounded-lg border border-dashed border-border px-3 py-2.5 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+            className="inline-flex items-center gap-1 rounded-lg border border-dashed border-border px-3 py-3 text-sm text-text-muted transition-colors hover:border-accent hover:text-accent"
           >
             <Save className="h-3 w-3" />
             Save filters
@@ -321,13 +321,13 @@ export function ScreenerPage() {
               }}
               placeholder="Preset name..."
               autoFocus
-              className="w-32 rounded-lg border border-accent bg-bg-primary px-2 py-2 text-xs text-text-primary placeholder:text-text-muted focus:outline-none"
+              className="w-32 rounded-lg border border-accent bg-bg-primary px-2.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
             />
             <button
               type="button"
               onClick={saveCurrentFilters}
               disabled={!saveName.trim() || isDuplicateName}
-              className="rounded-lg bg-accent px-2.5 py-2 text-xs font-medium text-white transition-colors hover:bg-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="rounded-lg bg-accent px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Save
             </button>
@@ -337,7 +337,7 @@ export function ScreenerPage() {
             <button
               type="button"
               onClick={() => { setShowSaveInput(false); setSaveName(""); }}
-              className="rounded-lg px-2 py-2 text-xs text-text-muted hover:text-text-primary"
+              className="rounded-lg px-3 py-2.5 text-sm text-text-muted hover:text-text-primary"
             >
               Cancel
             </button>
@@ -402,7 +402,7 @@ export function ScreenerPage() {
           <div id="screener-filters" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {/* RSI Range */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">RSI Range</label>
+              <label className="mb-1 block text-sm text-text-muted">RSI Range</label>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -413,7 +413,7 @@ export function ScreenerPage() {
                   min={0}
                   max={100}
                   aria-label="Minimum RSI value"
-                  className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                  className="w-full rounded-lg border border-border bg-bg-primary px-2.5 py-2.5 text-sm text-text-primary"
                 />
                 <input
                   type="number"
@@ -424,14 +424,14 @@ export function ScreenerPage() {
                   min={0}
                   max={100}
                   aria-label="Maximum RSI value"
-                  className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                  className="w-full rounded-lg border border-border bg-bg-primary px-2.5 py-2.5 text-sm text-text-primary"
                 />
               </div>
             </div>
 
             {/* Price Range */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">Price Range ($)</label>
+              <label className="mb-1 block text-sm text-text-muted">Price Range ($)</label>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -442,7 +442,7 @@ export function ScreenerPage() {
                   min={0}
                   step={1}
                   aria-label="Minimum price"
-                  className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                  className="w-full rounded-lg border border-border bg-bg-primary px-2.5 py-2.5 text-sm text-text-primary"
                 />
                 <input
                   type="number"
@@ -453,19 +453,19 @@ export function ScreenerPage() {
                   min={0}
                   step={1}
                   aria-label="Maximum price"
-                  className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                  className="w-full rounded-lg border border-border bg-bg-primary px-2.5 py-2.5 text-sm text-text-primary"
                 />
               </div>
             </div>
 
             {/* Sector */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">Sector</label>
+              <label className="mb-1 block text-sm text-text-muted">Sector</label>
               <select
                 value={filters.sector ?? ""}
                 onChange={(e) => setFilter("sector", e.target.value)}
                 aria-label="Filter by sector"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2.5 py-2.5 text-sm text-text-primary"
               >
                 <option value="">All Sectors</option>
                 {sectors?.map((s) => (
@@ -478,12 +478,12 @@ export function ScreenerPage() {
 
             {/* Exchange */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">Exchange</label>
+              <label className="mb-1 block text-sm text-text-muted">Exchange</label>
               <select
                 value={filters.exchange ?? ""}
                 onChange={(e) => setFilter("exchange", e.target.value)}
                 aria-label="Filter by exchange"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2.5 py-2.5 text-sm text-text-primary"
               >
                 <option value="">All Exchanges</option>
                 <option value="NMS">NASDAQ</option>
@@ -493,9 +493,9 @@ export function ScreenerPage() {
 
             {/* SMA Position */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">SMA Position</label>
+              <label className="mb-1 block text-sm text-text-muted">SMA Position</label>
               <div className="flex flex-col gap-1">
-                <label className="flex items-center gap-2 text-xs text-text-secondary">
+                <label className="flex items-center gap-2 text-sm text-text-secondary">
                   <input
                     type="checkbox"
                     checked={filters.above_sma200 === true}
@@ -504,7 +504,7 @@ export function ScreenerPage() {
                   />
                   Above 200-day SMA
                 </label>
-                <label className="flex items-center gap-2 text-xs text-text-secondary">
+                <label className="flex items-center gap-2 text-sm text-text-secondary">
                   <input
                     type="checkbox"
                     checked={filters.above_sma50 === true}
@@ -518,9 +518,9 @@ export function ScreenerPage() {
 
             {/* Crosses */}
             <div>
-              <label className="mb-1 block text-xs text-text-muted">Moving Average Cross</label>
+              <label className="mb-1 block text-sm text-text-muted">Moving Average Cross</label>
               <div className="flex flex-col gap-1">
-                <label className="flex items-center gap-2 text-xs text-text-secondary">
+                <label className="flex items-center gap-2 text-sm text-text-secondary">
                   <input
                     type="checkbox"
                     checked={filters.golden_cross === true}
@@ -529,7 +529,7 @@ export function ScreenerPage() {
                   />
                   Golden Cross (50 &gt; 200)<GlossaryTerm term="golden_cross" />
                 </label>
-                <label className="flex items-center gap-2 text-xs text-text-secondary">
+                <label className="flex items-center gap-2 text-sm text-text-secondary">
                   <input
                     type="checkbox"
                     checked={filters.death_cross === true}
@@ -599,7 +599,7 @@ export function ScreenerPage() {
                     const tickers = results.slice(0, 3).map((r) => r.ticker).join(",");
                     navigate(`/compare?tickers=${tickers}`);
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:border-accent hover:text-accent"
                 >
                   <GitCompareArrows className="h-3.5 w-3.5" />
                   Compare top {Math.min(3, results.length)}
@@ -608,7 +608,7 @@ export function ScreenerPage() {
               <button
                 type="button"
                 onClick={exportCSV}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm text-text-secondary transition-colors hover:border-accent hover:text-accent"
               >
                 <Download className="h-3.5 w-3.5" />
                 Export CSV
@@ -636,26 +636,26 @@ export function ScreenerPage() {
             <table className="w-full text-sm">
               <caption className="sr-only">Stock screener results sorted by technical indicators</caption>
               <thead>
-                <tr className="border-b border-border text-left text-xs text-text-muted">
+                <tr className="border-b border-border text-left text-sm text-text-muted">
                   <th scope="col" className="w-8 pb-2" />
                   <th scope="col" className="pb-2" aria-sort={filters.sort_by === "ticker" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
-                    <button type="button" onClick={() => toggleSort("ticker")} className="flex items-center gap-1 py-2">
+                    <button type="button" onClick={() => toggleSort("ticker")} className="flex items-center gap-1 py-3">
                       Ticker {sortIcon("ticker")}
                     </button>
                   </th>
                   <th scope="col" className="pb-2">7d</th>
                   <th scope="col" className="pb-2" aria-sort={filters.sort_by === "price" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
-                    <button type="button" onClick={() => toggleSort("price")} className="flex items-center gap-1 py-2">
+                    <button type="button" onClick={() => toggleSort("price")} className="flex items-center gap-1 py-3">
                       Price {sortIcon("price")}
                     </button>
                   </th>
                   <th scope="col" className="pb-2" aria-sort={filters.sort_by === "change" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
-                    <button type="button" onClick={() => toggleSort("change")} className="flex items-center gap-1 py-2">
+                    <button type="button" onClick={() => toggleSort("change")} className="flex items-center gap-1 py-3">
                       Change {sortIcon("change")}
                     </button>
                   </th>
                   <th scope="col" className="pb-2" aria-sort={filters.sort_by === "rsi" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
-                    <button type="button" onClick={() => toggleSort("rsi")} className="flex items-center gap-1 py-2">
+                    <button type="button" onClick={() => toggleSort("rsi")} className="flex items-center gap-1 py-3">
                       RSI<GlossaryTerm term="rsi" /> {sortIcon("rsi")}
                     </button>
                   </th>
@@ -664,7 +664,7 @@ export function ScreenerPage() {
                   </th>
                   <th scope="col" className="pb-2">SMA 200</th>
                   <th scope="col" className="pb-2" aria-sort={filters.sort_by === "sector" ? (filters.sort_dir === "asc" ? "ascending" : "descending") : "none"}>
-                    <button type="button" onClick={() => toggleSort("sector")} className="flex items-center gap-1 py-2">
+                    <button type="button" onClick={() => toggleSort("sector")} className="flex items-center gap-1 py-3">
                       Sector {sortIcon("sector")}
                     </button>
                   </th>

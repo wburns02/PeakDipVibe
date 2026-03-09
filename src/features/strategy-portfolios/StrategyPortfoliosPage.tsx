@@ -267,26 +267,26 @@ function StockRow({ stock, rank }: { stock: ScoredStock; rank: number }) {
           <div className="mt-3 flex flex-wrap gap-2">
             <Link
               to={`/ticker/${stock.ticker}`}
-              className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-[11px] font-medium text-text-secondary hover:bg-bg-hover"
+              className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-text-secondary hover:bg-bg-hover"
             >
               <ExternalLink className="h-3 w-3" /> Chart
             </Link>
             <Link
               to={`/dna/${stock.ticker}`}
-              className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-[11px] font-medium text-text-secondary hover:bg-bg-hover"
+              className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-text-secondary hover:bg-bg-hover"
             >
               <Dna className="h-3 w-3" /> DNA
             </Link>
             <Link
               to={`/planner?add=${stock.ticker}`}
-              className="flex items-center gap-1 rounded-lg bg-accent/10 px-2.5 py-1.5 text-[11px] font-medium text-accent hover:bg-accent/20"
+              className="flex items-center gap-1 rounded-lg bg-accent/10 px-2.5 py-1.5 text-sm font-medium text-accent hover:bg-accent/20"
             >
               <Target className="h-3 w-3" /> Plan Trade
             </Link>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); toggle(stock.ticker); }}
-              className={`flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium ${
+              className={`flex items-center gap-1 rounded-lg border px-2.5 py-2.5 text-sm font-medium ${
                 isWatching
                   ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
                   : "border-border text-text-secondary hover:bg-bg-hover"
@@ -397,7 +397,7 @@ export function StrategyPortfoliosPage() {
         <button
           type="button"
           onClick={() => setShowGuide(!showGuide)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-sm text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <Info className="h-3.5 w-3.5" />
           How It Works
@@ -441,23 +441,23 @@ export function StrategyPortfoliosPage() {
       {stats && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[11px] uppercase tracking-wider text-text-muted">Stocks Analyzed</p>
+            <p className="text-sm uppercase tracking-wider text-text-muted">Stocks Analyzed</p>
             <p className="mt-1 text-xl font-bold text-text-primary">{stats.total}</p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[11px] uppercase tracking-wider text-text-muted">Above SMA-50</p>
+            <p className="text-sm uppercase tracking-wider text-text-muted">Above SMA-50</p>
             <p className="mt-1 text-xl font-bold text-green">
               {((stats.aboveSma50 / stats.total) * 100).toFixed(0)}%
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[11px] uppercase tracking-wider text-text-muted">Above SMA-200</p>
+            <p className="text-sm uppercase tracking-wider text-text-muted">Above SMA-200</p>
             <p className="mt-1 text-xl font-bold text-green">
               {((stats.aboveSma200 / stats.total) * 100).toFixed(0)}%
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[11px] uppercase tracking-wider text-text-muted">Avg RSI</p>
+            <p className="text-sm uppercase tracking-wider text-text-muted">Avg RSI</p>
             <p className="mt-1 text-xl font-bold text-text-primary">{stats.avgRsi.toFixed(1)}</p>
           </div>
         </div>

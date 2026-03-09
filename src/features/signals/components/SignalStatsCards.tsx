@@ -53,7 +53,7 @@ export function SignalStatsCards({ stats, isLoading }: SignalStatsCardsProps) {
         <Card key={key}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="flex items-center text-xs text-text-muted">
+              <p className="flex items-center text-sm text-text-muted">
                 {label}
                 {"glossary" in rest && rest.glossary && <GlossaryTerm term={rest.glossary as string} />}
               </p>

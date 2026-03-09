@@ -75,16 +75,16 @@ export function AlertCard({ alert }: Props) {
             </Link>
             <span className="truncate text-xs text-text-muted">{alert.name}</span>
             <span
-              className="rounded-md px-1.5 py-0.5 text-[11px] font-semibold"
+              className="rounded-md px-1.5 py-0.5 text-sm font-semibold"
               style={{ backgroundColor: meta.bgColor, color: meta.color }}
             >
               {ALERT_TYPE_LABELS[alert.type]}
             </span>
-            <span className={`rounded-md border px-1.5 py-0.5 text-[11px] font-semibold ${sevBadge.className}`}>
+            <span className={`rounded-md border px-1.5 py-0.5 text-sm font-semibold ${sevBadge.className}`}>
               {sevBadge.label}
             </span>
             {alert.isWatchlisted && (
-              <span className="flex items-center gap-0.5 text-[11px] font-semibold text-accent">
+              <span className="flex items-center gap-0.5 text-sm font-semibold text-accent">
                 <Star className="h-2.5 w-2.5 fill-accent" /> Watchlist
               </span>
             )}
@@ -97,7 +97,7 @@ export function AlertCard({ alert }: Props) {
           <p className="mt-0.5 text-xs leading-relaxed text-text-secondary">{alert.description}</p>
 
           {/* Metrics row */}
-          <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px]">
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
             <span className="font-mono font-semibold text-text-primary">${alert.price.toFixed(2)}</span>
             <span className={`font-mono font-semibold ${alert.changePct >= 0 ? "text-green" : "text-red"}`}>
               {alert.changePct >= 0 ? "+" : ""}{alert.changePct.toFixed(2)}%
@@ -113,20 +113,20 @@ export function AlertCard({ alert }: Props) {
           <div className="mt-2.5 flex items-center gap-2 md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
             <Link
               to={`/dna/${alert.ticker}`}
-              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2.5 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
+              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2.5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
             >
               DNA <ChevronRight className="h-3.5 w-3.5" />
             </Link>
             <Link
               to={`/ticker/${alert.ticker}`}
-              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2.5 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
+              className="flex items-center gap-1 rounded-md bg-bg-secondary px-2.5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
             >
               Chart <ChevronRight className="h-3.5 w-3.5" />
             </Link>
             <button
               type="button"
               onClick={() => toggle(alert.ticker)}
-              className={`flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
+              className={`flex items-center gap-1 rounded-md px-2.5 py-2.5 text-sm font-medium transition-colors ${
                 watched
                   ? "bg-accent/10 text-accent"
                   : "bg-bg-secondary text-text-secondary hover:bg-bg-hover hover:text-text-primary"

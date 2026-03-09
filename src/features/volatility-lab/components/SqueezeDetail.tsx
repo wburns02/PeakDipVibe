@@ -115,9 +115,9 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
           },
         ].map((s) => (
           <div key={s.label} className="rounded-xl border border-border bg-bg-primary p-2.5 text-center">
-            <p className="text-[11px] uppercase tracking-wider text-text-muted">{s.label}</p>
+            <p className="text-sm uppercase tracking-wider text-text-muted">{s.label}</p>
             <p className="mt-0.5 text-base font-bold text-text-primary">{s.value}</p>
-            <p className="text-[11px] text-text-muted">{s.sub}</p>
+            <p className="text-sm text-text-muted">{s.sub}</p>
           </div>
         ))}
       </div>
@@ -271,19 +271,19 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
             <div className="grid grid-cols-2 gap-3">
               <div className="text-center">
                 <p className="text-2xl font-bold text-text-primary">{squeezeStats.count}</p>
-                <p className="text-[11px] text-text-muted">Squeezes (6mo)</p>
+                <p className="text-sm text-text-muted">Squeezes (6mo)</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-green">{squeezeStats.upRate}%</p>
-                <p className="text-[11px] text-text-muted">Resolved Up</p>
+                <p className="text-sm text-text-muted">Resolved Up</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-text-primary">{squeezeStats.avgMove}%</p>
-                <p className="text-[11px] text-text-muted">Avg Move</p>
+                <p className="text-sm text-text-muted">Avg Move</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-text-primary">{squeezeStats.avgDuration}d</p>
-                <p className="text-[11px] text-text-muted">Avg Duration</p>
+                <p className="text-sm text-text-muted">Avg Duration</p>
               </div>
             </div>
           </div>
@@ -305,10 +305,10 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
                       ) : (
                         <TrendingDown className="h-3 w-3 text-red" />
                       )}
-                      <span className="text-[11px] text-text-muted">{fmtDate(ev.fireDate)}</span>
+                      <span className="text-sm text-text-muted">{fmtDate(ev.fireDate)}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] text-text-muted">{ev.durationDays}d</span>
+                      <span className="text-sm text-text-muted">{ev.durationDays}d</span>
                       <span
                         className={`text-xs font-bold ${ev.direction === "up" ? "text-green" : "text-red"}`}
                       >
@@ -336,26 +336,26 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
       <div className="flex flex-wrap gap-2">
         <Link
           to={`/planner?add=${stock.ticker}`}
-          className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-accent/80"
+          className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-3 text-sm font-medium text-white transition-colors hover:bg-accent/80"
         >
           <ClipboardList className="h-3.5 w-3.5" /> Plan Trade
         </Link>
         <Link
           to={`/dna/${stock.ticker}`}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <Dna className="h-3.5 w-3.5" /> Stock DNA
         </Link>
         <Link
           to={`/ticker/${stock.ticker}`}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-medium text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <ExternalLink className="h-3.5 w-3.5" /> Full Chart
         </Link>
         <button
           type="button"
           onClick={() => toggle(stock.ticker)}
-          className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
+          className={`flex items-center gap-1.5 rounded-lg border px-3 py-3 text-sm font-medium transition-colors ${
             isWatching
               ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
               : "border-border text-text-secondary hover:bg-bg-hover"

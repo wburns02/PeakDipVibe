@@ -986,7 +986,7 @@ export function SimulatorPage() {
                     page: 1,
                   }))
                 }
-                className={`rounded-full px-3 py-2.5 text-xs font-medium transition-colors ${
+                className={`rounded-full px-3 py-3 text-sm font-medium transition-colors ${
                   filters.gap_size === s
                     ? "bg-accent text-white"
                     : "bg-bg-hover text-text-secondary hover:bg-bg-hover/80"
@@ -1016,7 +1016,7 @@ export function SimulatorPage() {
                     page: 1,
                   }))
                 }
-                className={`rounded-full px-3 py-2.5 text-xs font-medium transition-colors ${
+                className={`rounded-full px-3 py-3 text-sm font-medium transition-colors ${
                   filters.outcome === o
                     ? o === "Bounced"
                       ? "bg-emerald-500/20 text-emerald-400"
@@ -1041,7 +1041,7 @@ export function SimulatorPage() {
                   page: 1,
                 }))
               }
-              className="rounded-full border border-border bg-bg-hover px-3 py-2.5 text-xs font-medium text-text-secondary focus:border-accent focus:outline-none"
+              className="rounded-full border border-border bg-bg-hover px-3 py-3 text-sm font-medium text-text-secondary focus:border-accent focus:outline-none"
             >
               <option value="">All Sectors</option>
               {sectors?.map((s) => (
@@ -1130,7 +1130,7 @@ export function SimulatorPage() {
                     }))
                   }
                   disabled={library.page <= 1}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="rounded-lg border border-border px-3 py-2.5 text-sm text-text-secondary hover:bg-bg-hover disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -1146,7 +1146,7 @@ export function SimulatorPage() {
                     }))
                   }
                   disabled={library.page >= library.total_pages}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="rounded-lg border border-border px-3 py-2.5 text-sm text-text-secondary hover:bg-bg-hover disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -1539,7 +1539,7 @@ export function SimulatorPage() {
                       step={0.5}
                       value={simParams.stopLoss}
                       onChange={(e) => setSimParams((p) => ({ ...p, stopLoss: Math.max(0, Math.min(50, Number(e.target.value) || 0)) }))}
-                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-2.5 text-sm text-text-primary outline-none focus:border-accent"
                     />
                     <p className="mt-0.5 text-[11px] text-text-muted">0 = off</p>
                   </div>
@@ -1555,7 +1555,7 @@ export function SimulatorPage() {
                       step={0.5}
                       value={simParams.takeProfit1}
                       onChange={(e) => setSimParams((p) => ({ ...p, takeProfit1: Math.max(0, Math.min(100, Number(e.target.value) || 0)) }))}
-                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-2.5 text-sm text-text-primary outline-none focus:border-accent"
                     />
                     <p className="mt-0.5 text-[11px] text-text-muted">Sells half</p>
                   </div>
@@ -1571,7 +1571,7 @@ export function SimulatorPage() {
                       step={0.5}
                       value={simParams.takeProfit2}
                       onChange={(e) => setSimParams((p) => ({ ...p, takeProfit2: Math.max(0, Math.min(200, Number(e.target.value) || 0)) }))}
-                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-2.5 text-sm text-text-primary outline-none focus:border-accent"
                     />
                     <p className="mt-0.5 text-[11px] text-text-muted">Sells rest</p>
                   </div>
@@ -1587,7 +1587,7 @@ export function SimulatorPage() {
                       step={0.5}
                       value={simParams.trailingStop}
                       onChange={(e) => setSimParams((p) => ({ ...p, trailingStop: Math.max(0, Math.min(50, Number(e.target.value) || 0)) }))}
-                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-2.5 text-sm text-text-primary outline-none focus:border-accent"
                     />
                     <p className="mt-0.5 text-[11px] text-text-muted">From peak</p>
                   </div>
@@ -1603,7 +1603,7 @@ export function SimulatorPage() {
                       step={5}
                       value={simParams.positionSizePct}
                       onChange={(e) => setSimParams((p) => ({ ...p, positionSizePct: Math.max(1, Math.min(100, Number(e.target.value) || 100)) }))}
-                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                      className="w-full rounded-md border border-border bg-bg-secondary px-2 py-2.5 text-sm text-text-primary outline-none focus:border-accent"
                     />
                     <p className="mt-0.5 text-[11px] text-text-muted">Of cash</p>
                   </div>
@@ -1743,7 +1743,7 @@ export function SimulatorPage() {
                     setAutoPlay(!autoPlay);
                   }}
                   aria-label={autoPlay ? "Pause auto-play (Space key)" : finished ? "Restart simulation" : "Start auto-play (Space key)"}
-                  className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                  className={`flex items-center gap-1 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
                     autoPlay
                       ? "bg-amber-500/20 text-amber-400"
                       : "bg-accent text-white hover:bg-accent/80"
@@ -2275,7 +2275,7 @@ export function SimulatorPage() {
                   return (
                     <div
                       key={i}
-                      className="flex items-center justify-between rounded-md bg-bg-hover/30 px-3 py-1.5 text-xs"
+                      className="flex items-center justify-between rounded-md bg-bg-hover/30 px-3 py-2.5 text-sm"
                     >
                       <div className="flex items-center gap-2">
                         <span

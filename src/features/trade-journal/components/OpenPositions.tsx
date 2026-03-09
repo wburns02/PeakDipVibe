@@ -158,14 +158,14 @@ function PositionRow({ trade, onUpdate }: { trade: TradeWithPnl; onUpdate: () =>
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-lg bg-green/10 px-4 py-1.5 text-xs font-semibold text-green transition-colors hover:bg-green/20"
+            className="rounded-lg bg-green/10 px-4 py-2.5 text-sm font-semibold text-green transition-colors hover:bg-green/20"
           >
             Close Trade
           </button>
           <button
             type="button"
             onClick={() => setShowClose(false)}
-            className="rounded-lg px-3 py-1.5 text-xs text-text-muted hover:text-text-primary"
+            className="rounded-lg px-3 py-2.5 text-sm text-text-muted hover:text-text-primary"
           >
             <X className="inline h-3 w-3" /> Cancel
           </button>

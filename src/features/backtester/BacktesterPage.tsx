@@ -165,7 +165,7 @@ export function BacktesterPage() {
         <button
           type="button"
           onClick={() => setShowGuide((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-muted transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-sm text-text-muted transition-colors hover:bg-bg-hover"
         >
           <Info className="h-3.5 w-3.5" />
           How It Works
@@ -249,7 +249,7 @@ export function BacktesterPage() {
               <button
                 type="button"
                 onClick={() => setUniverse("watchlist")}
-                className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+                className={`flex-1 rounded-lg px-3 py-3 text-sm font-medium transition-colors ${
                   universe === "watchlist"
                     ? "bg-accent text-white"
                     : "bg-bg-hover text-text-secondary hover:text-text-primary"
@@ -260,7 +260,7 @@ export function BacktesterPage() {
               <button
                 type="button"
                 onClick={() => setUniverse("top50")}
-                className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+                className={`flex-1 rounded-lg px-3 py-3 text-sm font-medium transition-colors ${
                   universe === "top50"
                     ? "bg-accent text-white"
                     : "bg-bg-hover text-text-secondary hover:text-text-primary"
@@ -282,7 +282,7 @@ export function BacktesterPage() {
                   key={y}
                   type="button"
                   onClick={() => setStartYear(y)}
-                  className={`flex-1 rounded-lg py-2 text-xs font-medium transition-colors ${
+                  className={`flex-1 rounded-lg py-3 text-sm font-medium transition-colors ${
                     startYear === y
                       ? "bg-accent text-white"
                       : "bg-bg-hover text-text-secondary hover:text-text-primary"
@@ -423,7 +423,7 @@ export function BacktesterPage() {
             <button
               type="button"
               onClick={handleReset}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-xs text-text-muted transition-colors hover:bg-bg-hover"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-3 text-sm text-text-muted transition-colors hover:bg-bg-hover"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Reset

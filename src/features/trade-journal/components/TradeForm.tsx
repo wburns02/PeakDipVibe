@@ -93,7 +93,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
                 key={s}
                 type="button"
                 onClick={() => setSide(s)}
-                className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${
+                className={`flex-1 rounded-md py-2.5 text-sm font-semibold transition-colors ${
                   side === s
                     ? s === "long"
                       ? "bg-green/10 text-green"
@@ -214,7 +214,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Why are you taking this trade?"
               rows={2}
-              className="w-full resize-none rounded-lg border border-border bg-bg-primary px-3 py-2 text-xs text-text-secondary placeholder:text-text-muted focus:border-accent focus:outline-none"
+              className="w-full resize-none rounded-lg border border-border bg-bg-primary px-3 py-3 text-sm text-text-secondary placeholder:text-text-muted focus:border-accent focus:outline-none"
             />
           </div>
         </div>
@@ -224,14 +224,14 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-border px-4 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text-primary"
+            className="rounded-lg border border-border px-4 py-3 text-sm font-medium text-text-muted transition-colors hover:text-text-primary"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleSubmit}
-            className="rounded-lg bg-accent px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-accent-hover"
+            className="rounded-lg bg-accent px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
           >
             Log Trade
           </button>

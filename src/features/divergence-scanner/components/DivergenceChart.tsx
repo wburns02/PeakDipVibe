@@ -36,7 +36,7 @@ export function DivergenceChart({
     <div className="space-y-1">
       {/* Price panel */}
       <div>
-        <p className="mb-0.5 text-[11px] uppercase tracking-wider text-text-muted">Price</p>
+        <p className="mb-0.5 text-sm uppercase tracking-wider text-text-muted">Price</p>
         <ResponsiveContainer width="100%" height={70}>
           <LineChart data={data} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
             <XAxis dataKey="date" hide />
@@ -71,7 +71,7 @@ export function DivergenceChart({
 
       {/* RSI panel */}
       <div>
-        <p className="mb-0.5 text-[11px] uppercase tracking-wider text-text-muted">RSI (14)</p>
+        <p className="mb-0.5 text-sm uppercase tracking-wider text-text-muted">RSI (14)</p>
         <ResponsiveContainer width="100%" height={50}>
           <LineChart data={data} margin={{ top: 2, right: 4, left: 4, bottom: 0 }}>
             <XAxis dataKey="date" hide />
@@ -110,15 +110,15 @@ export function DivergenceChart({
       <div className="flex items-center justify-center gap-3 pt-0.5">
         <div className="flex items-center gap-1">
           <div className="h-1.5 w-3 rounded-full bg-accent" />
-          <span className="text-[11px] text-text-muted">Price</span>
+          <span className="text-sm text-text-muted">Price</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="h-1.5 w-3 rounded-full" style={{ backgroundColor: "#818cf8" }} />
-          <span className="text-[11px] text-text-muted">RSI</span>
+          <span className="text-sm text-text-muted">RSI</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
-          <span className="text-[11px] text-text-muted">Swing</span>
+          <span className="text-sm text-text-muted">Swing</span>
         </div>
       </div>
     </div>
