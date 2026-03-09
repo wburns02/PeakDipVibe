@@ -84,7 +84,7 @@ export function PerformanceStats({ stats }: Props) {
 
       {/* Win rate bar */}
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-[11px]">
+        <div className="flex items-center justify-between text-xs">
           <span className="text-text-muted">
             {stats.closedTrades} closed trades
           </span>
@@ -102,7 +102,7 @@ export function PerformanceStats({ stats }: Props) {
             style={{ width: `${100 - stats.winRate}%` }}
           />
         </div>
-        <div className="flex justify-between text-[10px] text-text-muted">
+        <div className="flex justify-between text-xs text-text-muted">
           <span className="text-green">
             {Math.round((stats.winRate / 100) * stats.closedTrades)} wins
           </span>
@@ -132,10 +132,10 @@ function StatCard({
     <div className="rounded-xl bg-bg-secondary p-3 space-y-1">
       <div className="flex items-center gap-1.5 text-text-muted">
         {icon}
-        <span className="text-[10px] font-semibold uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-semibold uppercase tracking-wider">{label}</span>
       </div>
       <p className={`text-sm font-bold ${color}`}>{value}</p>
-      {sub && <p className="text-[10px] text-text-muted">{sub}</p>}
+      {sub && <p className="text-xs text-text-muted">{sub}</p>}
     </div>
   );
 }

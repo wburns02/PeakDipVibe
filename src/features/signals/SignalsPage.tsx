@@ -274,7 +274,7 @@ export function SignalsPage() {
             <ChevronLeft className="h-3.5 w-3.5" />
             Previous
           </button>
-          <span className="text-xs text-text-muted">
+          <span className="text-sm text-text-muted">
             Page {page + 1} of {totalPages} ({totalSignals} signals)
           </span>
           <button
@@ -301,7 +301,7 @@ export function SignalsPage() {
             </div>
             <div>
               <p className="text-sm font-semibold text-text-primary group-hover:text-accent">Practice Trading</p>
-              <p className="text-xs text-text-muted">Replay events with virtual money</p>
+              <p className="text-sm text-text-muted">Replay events with virtual money</p>
             </div>
           </Link>
           <Link
@@ -313,7 +313,7 @@ export function SignalsPage() {
             </div>
             <div>
               <p className="text-sm font-semibold text-text-primary group-hover:text-accent">Screen Stocks</p>
-              <p className="text-xs text-text-muted">Filter by RSI, price & sector</p>
+              <p className="text-sm text-text-muted">Filter by RSI, price & sector</p>
             </div>
           </Link>
           <Link
@@ -325,7 +325,7 @@ export function SignalsPage() {
             </div>
             <div>
               <p className="text-sm font-semibold text-text-primary group-hover:text-accent">Earnings Calendar</p>
-              <p className="text-xs text-text-muted">Upcoming reports & analysis</p>
+              <p className="text-sm text-text-muted">Upcoming reports & analysis</p>
             </div>
           </Link>
         </div>

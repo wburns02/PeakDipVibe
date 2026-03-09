@@ -596,7 +596,7 @@ export function ComparePage() {
               </tbody>
             </table>
           </ScrollableTable>
-          <p className="mt-2 text-[10px] text-text-muted">
+          <p className="mt-2 text-xs text-text-muted">
             Values near +1.0 mean stocks move together. Near -1.0 means they move opposite. Near 0 means little relationship.
           </p>
         </Card>

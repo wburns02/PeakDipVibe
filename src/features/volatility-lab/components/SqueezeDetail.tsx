@@ -66,13 +66,13 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-text-primary">{stock.ticker}</h3>
             <span
-              className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+              className="rounded-full px-2 py-0.5 text-xs font-bold text-white"
               style={{ backgroundColor: color }}
             >
               {squeezeLabel(stock.bbWidthPercentile)}
             </span>
             {stock.fired && (
-              <span className="animate-pulse rounded-full bg-orange-500/15 px-2 py-0.5 text-[10px] font-bold text-orange-400">
+              <span className="animate-pulse rounded-full bg-orange-500/15 px-2 py-0.5 text-xs font-bold text-orange-400">
                 FIRED!
               </span>
             )}

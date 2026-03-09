@@ -85,10 +85,10 @@ export function SectorConcentration({ sectors }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-text-primary">Sector Exposure</h3>
-          <p className="text-[11px] text-text-muted">Where your capital is concentrated</p>
+          <p className="text-xs text-text-muted">Where your capital is concentrated</p>
         </div>
         <span
-          className="rounded-md px-2 py-0.5 text-[10px] font-semibold"
+          className="rounded-md px-2 py-0.5 text-xs font-semibold"
           style={{ backgroundColor: riskColor + "18", color: riskColor }}
         >
           {concentrationRisk} Concentration
@@ -128,7 +128,7 @@ export function SectorConcentration({ sectors }: Props) {
           ))}
 
           {topSectorPct > 50 && (
-            <p className="mt-2 text-[10px] text-amber-400">
+            <p className="mt-2 text-xs text-amber-400">
               {sectors[0].sector} dominates at {topSectorPct.toFixed(0)}% — consider diversifying
             </p>
           )}

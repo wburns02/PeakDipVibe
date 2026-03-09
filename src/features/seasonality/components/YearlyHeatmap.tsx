@@ -197,14 +197,14 @@ export function YearlyHeatmap({ ticker }: { ticker: string }) {
         <h3 className="text-sm font-semibold text-text-primary">
           Year-over-Year Monthly Returns
         </h3>
-        <span className="text-[10px] text-text-muted">
+        <span className="text-xs text-text-muted">
           {grid.years[0]}&ndash;{grid.years[grid.years.length - 1]}
         </span>
       </div>
       <div className="overflow-x-auto">
         <canvas ref={canvasRef} className="block" />
       </div>
-      <div className="mt-3 flex items-center justify-center gap-4 text-[10px] text-text-muted">
+      <div className="mt-3 flex items-center justify-center gap-4 text-xs text-text-muted">
         <div className="flex items-center gap-1">
           <div className="h-3 w-3 rounded-sm bg-red" />
           <span>Negative</span>

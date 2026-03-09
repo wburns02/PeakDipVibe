@@ -203,7 +203,7 @@ export function TradeIdeasPage() {
 
       {/* Disclaimer */}
       {filtered.length > 0 && (
-        <p className="text-center text-[10px] text-text-muted">
+        <p className="text-center text-xs text-text-muted">
           Trade ideas are generated algorithmically from technical data and are not financial advice.
           Always do your own research and manage risk appropriately.
         </p>

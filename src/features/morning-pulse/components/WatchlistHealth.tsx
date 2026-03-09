@@ -66,7 +66,7 @@ export function WatchlistHealth() {
           <h2 className="text-lg font-bold text-text-primary">
             Watchlist Health
           </h2>
-          <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+          <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
             {watchlist.length} stocks
           </span>
         </div>
@@ -114,7 +114,7 @@ export function WatchlistHealth() {
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-accent">{ticker}</span>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${assessment.bg} ${assessment.color}`}
+                      className={`rounded-full px-2 py-0.5 text-xs font-semibold ${assessment.bg} ${assessment.color}`}
                     >
                       {assessment.label}
                     </span>
@@ -127,7 +127,7 @@ export function WatchlistHealth() {
                 {/* RSI badge */}
                 {rsi != null && (
                   <div className="shrink-0 text-right">
-                    <p className="text-[10px] text-text-muted">RSI</p>
+                    <p className="text-xs text-text-muted">RSI</p>
                     <p
                       className={`text-sm font-bold ${rsi > 70 ? "text-red" : rsi < 30 ? "text-green" : "text-text-primary"}`}
                     >

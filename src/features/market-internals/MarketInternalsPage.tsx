@@ -215,7 +215,7 @@ export function MarketInternalsPage() {
             <h2 className="text-sm font-semibold text-text-primary">Breadth Timeline</h2>
             <p className="text-xs text-text-muted">% of stocks above key moving averages (22-stock proxy)</p>
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
+          <div className="flex items-center gap-4 text-xs">
             <span className="flex items-center gap-1.5">
               <span className="inline-block h-2 w-4 rounded bg-green/70" />
               Above SMA-50
@@ -246,7 +246,7 @@ export function MarketInternalsPage() {
             <h2 className="text-sm font-semibold text-text-primary">RSI Distribution</h2>
             <p className="text-xs text-text-muted">How 200 stocks are distributed across RSI levels</p>
           </div>
-          <div className="mb-2 flex items-center gap-4 text-[10px] text-text-muted">
+          <div className="mb-2 flex items-center gap-4 text-xs text-text-muted">
             <span className="flex items-center gap-1">
               <span className="inline-block h-2 w-3 rounded bg-green/70" />
               Oversold (&lt;30)
@@ -329,10 +329,10 @@ function StatCard({
     <div className="rounded-xl border border-border bg-bg-secondary p-3">
       <div className="mb-1 flex items-center gap-1.5">
         {icon && <span style={{ color }}>{icon}</span>}
-        <span className="text-[10px] font-medium uppercase tracking-wider text-text-muted">{label}</span>
+        <span className="text-xs font-medium uppercase tracking-wider text-text-muted">{label}</span>
       </div>
       <p className="text-lg font-bold tabular-nums" style={{ color }}>{value}</p>
-      <p className="mt-0.5 text-[10px] text-text-muted">{sub}</p>
+      <p className="mt-0.5 text-xs text-text-muted">{sub}</p>
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-bg-hover">
         <div
           className="h-full rounded-full transition-all duration-700"

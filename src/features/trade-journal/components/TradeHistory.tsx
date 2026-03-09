@@ -25,7 +25,7 @@ export function TradeHistory({ trades, onUpdate }: Props) {
       >
         <h3 className="text-sm font-semibold text-text-primary">
           Closed Trades
-          <span className="ml-2 rounded-full bg-bg-secondary px-2 py-0.5 text-[10px] font-semibold text-text-muted">
+          <span className="ml-2 rounded-full bg-bg-secondary px-2 py-0.5 text-xs font-semibold text-text-muted">
             {closed.length}
           </span>
         </h3>
@@ -40,7 +40,7 @@ export function TradeHistory({ trades, onUpdate }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-t border-border text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+              <tr className="border-t border-border text-xs font-semibold uppercase tracking-wider text-text-muted">
                 <th className="px-5 py-2">Ticker</th>
                 <th className="px-3 py-2">Side</th>
                 <th className="px-3 py-2">Entry</th>
@@ -58,10 +58,10 @@ export function TradeHistory({ trades, onUpdate }: Props) {
                 <tr key={t.id} className="hover:bg-bg-hover transition-colors">
                   <td className="px-5 py-2.5">
                     <span className="font-semibold text-text-primary">{t.ticker}</span>
-                    <span className="ml-1.5 text-[10px] text-text-muted">{t.exitDate}</span>
+                    <span className="ml-1.5 text-xs text-text-muted">{t.exitDate}</span>
                   </td>
                   <td className="px-3 py-2.5">
-                    <span className={`text-[10px] font-semibold uppercase ${t.side === "long" ? "text-green" : "text-red"}`}>
+                    <span className={`text-xs font-semibold uppercase ${t.side === "long" ? "text-green" : "text-red"}`}>
                       {t.side}
                     </span>
                   </td>
@@ -78,7 +78,7 @@ export function TradeHistory({ trades, onUpdate }: Props) {
                   <td className="px-3 py-2.5">
                     <div className="flex flex-wrap gap-1">
                       {t.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="rounded bg-accent/10 px-1.5 py-0.5 text-[11px] text-accent">
+                        <span key={tag} className="rounded bg-accent/10 px-1.5 py-0.5 text-xs text-accent">
                           {tag}
                         </span>
                       ))}

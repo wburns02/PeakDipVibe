@@ -27,11 +27,11 @@ export function PlanSummary({ plans, accountSize }: Props) {
       <div className="rounded-xl border border-border bg-bg-card p-3 space-y-1">
         <div className="flex items-center gap-1.5 text-text-muted">
           <Target className="h-3.5 w-3.5" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider">Setups</span>
+          <span className="text-xs font-semibold uppercase tracking-wider">Setups</span>
         </div>
         <div className="flex items-baseline gap-2">
           <span className="text-2xl font-bold text-text-primary">{plans.length}</span>
-          <div className="flex gap-1.5 text-[11px]">
+          <div className="flex gap-1.5 text-xs">
             <span className="text-green">{bullish.length} bull</span>
             <span className="text-text-muted">{neutral.length} flat</span>
             <span className="text-red">{bearish.length} bear</span>
@@ -42,7 +42,7 @@ export function PlanSummary({ plans, accountSize }: Props) {
       <div className="rounded-xl border border-border bg-bg-card p-3 space-y-1">
         <div className="flex items-center gap-1.5 text-text-muted">
           <TrendingUp className="h-3.5 w-3.5" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider">Top Pick</span>
+          <span className="text-xs font-semibold uppercase tracking-wider">Top Pick</span>
         </div>
         {topPick ? (
           <div className="flex items-baseline gap-2">
@@ -57,7 +57,7 @@ export function PlanSummary({ plans, accountSize }: Props) {
       <div className="rounded-xl border border-border bg-bg-card p-3 space-y-1">
         <div className="flex items-center gap-1.5 text-text-muted">
           <TrendingDown className="h-3.5 w-3.5" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider">Avg R/R</span>
+          <span className="text-xs font-semibold uppercase tracking-wider">Avg R/R</span>
         </div>
         <div className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-text-primary">{avgRR.toFixed(1)}</span>
@@ -68,7 +68,7 @@ export function PlanSummary({ plans, accountSize }: Props) {
       <div className="rounded-xl border border-border bg-bg-card p-3 space-y-1">
         <div className="flex items-center gap-1.5 text-text-muted">
           <Shield className="h-3.5 w-3.5" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider">Total Risk</span>
+          <span className="text-xs font-semibold uppercase tracking-wider">Total Risk</span>
         </div>
         <div className="flex items-baseline gap-1">
           <DollarSign className="h-4 w-4 text-text-muted" />

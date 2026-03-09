@@ -29,7 +29,7 @@ export function SeasonalTrendsCard({ ticker }: { ticker: string }) {
         <h3 className="text-sm font-semibold text-text-primary">
           Seasonal Trends
         </h3>
-        <span className="ml-auto text-[10px] text-text-muted">
+        <span className="ml-auto text-xs text-text-muted">
           {seasonal.years_analyzed} yrs
         </span>
       </div>
@@ -99,7 +99,7 @@ export function SeasonalTrendsCard({ ticker }: { ticker: string }) {
         <div className="flex items-center gap-1.5 rounded-lg bg-green/10 px-2 py-1.5">
           <TrendingUp className="h-3 w-3 text-green" />
           <div>
-            <p className="text-[10px] text-text-muted">Best Month</p>
+            <p className="text-xs text-text-muted">Best Month</p>
             <p className="text-xs font-semibold text-green">
               {best.label} +{best.avg_return}%
             </p>
@@ -108,7 +108,7 @@ export function SeasonalTrendsCard({ ticker }: { ticker: string }) {
         <div className="flex items-center gap-1.5 rounded-lg bg-red/10 px-2 py-1.5">
           <TrendingDown className="h-3 w-3 text-red" />
           <div>
-            <p className="text-[10px] text-text-muted">Worst Month</p>
+            <p className="text-xs text-text-muted">Worst Month</p>
             <p className="text-xs font-semibold text-red">
               {worst.label} {worst.avg_return}%
             </p>

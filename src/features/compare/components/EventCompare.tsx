@@ -114,7 +114,7 @@ export function EventCompare() {
                 <span className="text-xs text-text-muted">
                   {event.signal_date.slice(5)}
                 </span>
-                <Badge variant={catalyst.variant} className="text-[10px]">
+                <Badge variant={catalyst.variant} className="text-xs">
                   +{event.gap_up_pct?.toFixed(1)}%
                 </Badge>
                 <button
@@ -381,7 +381,7 @@ export function EventCompare() {
                         key={`${e.ticker}-${e.signal_date}-catalyst`}
                         className="py-2 px-2 text-center"
                       >
-                        <Badge variant={catalyst.variant} className="text-[10px]">
+                        <Badge variant={catalyst.variant} className="text-xs">
                           {catalyst.label}
                         </Badge>
                       </td>

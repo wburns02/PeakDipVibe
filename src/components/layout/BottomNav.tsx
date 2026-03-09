@@ -32,7 +32,7 @@ export function BottomNav() {
             aria-current={active ? "page" : undefined}
             onMouseEnter={() => preloadRoute[to]?.()}
             onFocus={() => preloadRoute[to]?.()}
-            className={`relative flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] transition-colors duration-200 ${
+            className={`relative flex flex-1 flex-col items-center gap-0.5 py-2 text-xs transition-colors duration-200 ${
               active
                 ? "text-accent"
                 : "text-text-muted"

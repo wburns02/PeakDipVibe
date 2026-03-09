@@ -28,7 +28,7 @@ export function IndicatorExplainer({
           {meta.zones && !zone && (
             <div className="space-y-1">
               {meta.zones.map((z) => (
-                <p key={z.label} className="text-[11px]">
+                <p key={z.label} className="text-xs">
                   <strong>{z.label}</strong>: {z.meaning}
                 </p>
               ))}

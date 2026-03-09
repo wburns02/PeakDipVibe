@@ -242,7 +242,7 @@ export function BacktesterPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {/* Universe */}
           <div>
-            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
               Stock Universe
             </label>
             <div className="flex gap-2">
@@ -273,7 +273,7 @@ export function BacktesterPage() {
 
           {/* Date Range */}
           <div>
-            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
               Start Year
             </label>
             <div className="flex gap-1">
@@ -296,7 +296,7 @@ export function BacktesterPage() {
 
           {/* Take Profit */}
           <div>
-            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
               Take Profit
             </label>
             <div className="flex items-center gap-2">
@@ -316,7 +316,7 @@ export function BacktesterPage() {
 
           {/* Stop Loss */}
           <div>
-            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
               Stop Loss
             </label>
             <div className="flex items-center gap-2">
@@ -339,7 +339,7 @@ export function BacktesterPage() {
         {showAdvanced && (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-4">
             <div>
-              <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+              <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
                 Entry Signal
               </label>
               <select
@@ -355,7 +355,7 @@ export function BacktesterPage() {
 
             {ENTRY_PARAM_LABELS[entry] && (
               <div>
-                <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
                   {ENTRY_PARAM_LABELS[entry]}
                 </label>
                 <input
@@ -368,7 +368,7 @@ export function BacktesterPage() {
             )}
 
             <div>
-              <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+              <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
                 Trend Filter
               </label>
               <select
@@ -383,7 +383,7 @@ export function BacktesterPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-text-muted">
+              <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-muted">
                 Max Hold Days
               </label>
               <input

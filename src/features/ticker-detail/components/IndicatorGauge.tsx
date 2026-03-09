@@ -71,7 +71,7 @@ export function IndicatorGauge({ indicatorKey, value }: IndicatorGaugeProps) {
           {/* Zone label */}
           {zone && (
             <p
-              className={`mt-1 text-[10px] font-medium ${zoneColors[zone.color] ?? "text-text-muted"}`}
+              className={`mt-1 text-xs font-medium ${zoneColors[zone.color] ?? "text-text-muted"}`}
             >
               {zone.label}
             </p>
@@ -82,7 +82,7 @@ export function IndicatorGauge({ indicatorKey, value }: IndicatorGaugeProps) {
       {/* Non-gauge zone labels */}
       {!showGauge && zone && (
         <p
-          className={`mt-1 text-[10px] font-medium ${zoneColors[zone.color] ?? "text-text-muted"}`}
+          className={`mt-1 text-xs font-medium ${zoneColors[zone.color] ?? "text-text-muted"}`}
         >
           {zone.label}
         </p>

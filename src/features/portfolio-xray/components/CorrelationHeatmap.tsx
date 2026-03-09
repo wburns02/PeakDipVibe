@@ -174,7 +174,7 @@ export function CorrelationHeatmap({ data }: Props) {
             <span className="text-accent">{tooltip.tickerB}</span>
           </div>
           <div className="mt-1 flex items-center gap-2">
-            <span className="text-[10px] text-text-muted">Correlation:</span>
+            <span className="text-xs text-text-muted">Correlation:</span>
             <span
               className={`text-sm font-bold font-mono ${
                 tooltip.corr >= 0.7 ? "text-red" : tooltip.corr >= 0.3 ? "text-yellow-400" : tooltip.corr >= 0 ? "text-text-secondary" : "text-blue-400"
@@ -183,7 +183,7 @@ export function CorrelationHeatmap({ data }: Props) {
               {tooltip.corr > 0 ? "+" : ""}{tooltip.corr.toFixed(2)}
             </span>
           </div>
-          <p className="mt-0.5 text-[10px] text-text-muted">
+          <p className="mt-0.5 text-xs text-text-muted">
             {tooltip.corr >= 0.7
               ? "Strongly correlated — similar risk"
               : tooltip.corr >= 0.3
@@ -196,7 +196,7 @@ export function CorrelationHeatmap({ data }: Props) {
       )}
 
       {/* Color legend */}
-      <div className="mt-3 flex items-center justify-center gap-4 text-[10px] text-text-muted">
+      <div className="mt-3 flex items-center justify-center gap-4 text-xs text-text-muted">
         <div className="flex items-center gap-1">
           <div className="h-2.5 w-5 rounded-sm bg-blue-500/50" />
           <span>Negative</span>

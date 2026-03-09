@@ -103,7 +103,7 @@ export function SeasonalityPage() {
             <Calendar className="h-6 w-6 text-accent" />
           </div>
           <div>
-            <p className="text-[10px] text-text-muted uppercase tracking-wider">
+            <p className="text-xs text-text-muted uppercase tracking-wider">
               We're in
             </p>
             <h2 className="text-2xl font-bold text-accent">{monthLabel}</h2>

@@ -24,7 +24,7 @@ export function MarketBreadthCard() {
 
       {/* Advance/Decline bar */}
       <div className="mb-3">
-        <div className="mb-1 flex items-center justify-between text-[11px]">
+        <div className="mb-1 flex items-center justify-between text-xs">
           <span className="flex items-center gap-1 text-green">
             <TrendingUp className="h-3 w-3" />
             {breadth.advancers} Advancers
@@ -44,7 +44,7 @@ export function MarketBreadthCard() {
             style={{ width: `${(breadth.decliners / breadth.total_stocks) * 100}%` }}
           />
         </div>
-        <p className="mt-1 text-center text-[10px] text-text-muted">
+        <p className="mt-1 text-center text-xs text-text-muted">
           A/D Ratio: {breadth.advance_decline_ratio.toFixed(2)} ({breadth.total_stocks} stocks)
         </p>
       </div>
@@ -53,13 +53,13 @@ export function MarketBreadthCard() {
       <div className="mb-3 flex flex-wrap gap-2">
         <Link
           to="/screener?rsi_max=30&sort_by=rsi&sort_dir=asc"
-          className="rounded-md border border-border px-2 py-0.5 text-[10px] text-green transition-colors hover:border-green hover:bg-green/10"
+          className="rounded-md border border-border px-2.5 py-2 text-xs text-green transition-colors hover:border-green hover:bg-green/10"
         >
           Oversold stocks ({breadth.pct_oversold}%)
         </Link>
         <Link
           to="/screener?rsi_min=70&sort_by=rsi&sort_dir=desc"
-          className="rounded-md border border-border px-2 py-0.5 text-[10px] text-red transition-colors hover:border-red hover:bg-red/10"
+          className="rounded-md border border-border px-2.5 py-2 text-xs text-red transition-colors hover:border-red hover:bg-red/10"
         >
           Overbought stocks ({breadth.pct_overbought}%)
         </Link>
@@ -69,7 +69,7 @@ export function MarketBreadthCard() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {/* Above SMA 50 */}
         <div>
-          <div className="flex items-center justify-between text-[11px] text-text-muted">
+          <div className="flex items-center justify-between text-xs text-text-muted">
             <span>Above SMA 50</span>
             <span className="font-medium text-text-primary">{breadth.pct_above_sma50}%</span>
           </div>
@@ -83,7 +83,7 @@ export function MarketBreadthCard() {
 
         {/* Above SMA 200 */}
         <div>
-          <div className="flex items-center justify-between text-[11px] text-text-muted">
+          <div className="flex items-center justify-between text-xs text-text-muted">
             <span>Above SMA 200</span>
             <span className="font-medium text-text-primary">{breadth.pct_above_sma200}%</span>
           </div>
@@ -97,7 +97,7 @@ export function MarketBreadthCard() {
 
         {/* Avg RSI */}
         <div>
-          <div className="flex items-center justify-between text-[11px] text-text-muted">
+          <div className="flex items-center justify-between text-xs text-text-muted">
             <span>Avg RSI</span>
             <span className={`font-medium ${
               breadth.avg_rsi != null
@@ -117,7 +117,7 @@ export function MarketBreadthCard() {
 
         {/* Oversold / Overbought */}
         <div>
-          <div className="flex items-center justify-between text-[11px] text-text-muted">
+          <div className="flex items-center justify-between text-xs text-text-muted">
             <span className="text-green">{breadth.pct_oversold}% Oversold</span>
             <span className="text-red">{breadth.pct_overbought}% Overbought</span>
           </div>
@@ -138,14 +138,14 @@ export function MarketBreadthCard() {
       <div className="mt-3 flex items-center justify-center gap-3">
         <Link
           to="/internals"
-          className="flex items-center gap-1 text-xs text-accent hover:underline"
+          className="flex items-center gap-1 text-sm text-accent hover:underline"
         >
           Deep dive <ArrowRight className="h-3 w-3" />
         </Link>
         <span className="text-text-muted">|</span>
         <Link
           to="/screener"
-          className="flex items-center gap-1 text-xs text-text-muted hover:text-accent hover:underline"
+          className="flex items-center gap-1 text-sm text-text-muted hover:text-accent hover:underline"
         >
           Screener <ArrowRight className="h-3 w-3" />
         </Link>

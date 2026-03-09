@@ -39,7 +39,7 @@ export function MiniLesson({ icon, title, points, defaultOpen = false }: MiniLes
           <ul className="space-y-2">
             {points.map((p, i) => (
               <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-text-secondary">
-                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent/15 text-[10px] font-bold text-accent">
+                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent/15 text-xs font-bold text-accent">
                   {i + 1}
                 </span>
                 {p}

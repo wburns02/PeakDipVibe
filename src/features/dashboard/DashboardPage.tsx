@@ -186,7 +186,7 @@ export function DashboardPage() {
         {/* Recent searches */}
         {showRecent && (
           <div id="search-recent" role="listbox" aria-label="Recent searches" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
-            <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] text-text-muted">
+            <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-xs text-text-muted">
               <Clock className="h-3 w-3" />
               Recent Searches
             </div>
@@ -207,7 +207,7 @@ export function DashboardPage() {
         {/* Popular tickers — shown for first-time users with no search history */}
         {showPopular && (
           <div id="search-popular" role="listbox" aria-label="Popular stocks" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border bg-bg-secondary shadow-xl">
-            <div className="px-4 pt-2 pb-1 text-[10px] text-text-muted">
+            <div className="px-4 pt-2 pb-1 text-xs text-text-muted">
               Popular Stocks
             </div>
             {["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "TSLA"].map((t) => (

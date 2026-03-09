@@ -73,14 +73,14 @@ export function SectorRotationPage() {
                 <div key={q} className="rounded-lg bg-bg-secondary p-2">
                   <div className="flex items-center gap-1.5">
                     <div className="h-2 w-2 rounded-full" style={{ backgroundColor: m.color }} />
-                    <span className="text-[11px] font-semibold" style={{ color: m.color }}>{m.label}</span>
+                    <span className="text-xs font-semibold" style={{ color: m.color }}>{m.label}</span>
                   </div>
-                  <p className="mt-0.5 text-[10px] text-text-muted">{m.desc}</p>
+                  <p className="mt-0.5 text-xs text-text-muted">{m.desc}</p>
                 </div>
               );
             })}
           </div>
-          <p className="text-[10px] text-text-muted">
+          <p className="text-xs text-text-muted">
             Sectors typically rotate clockwise: Leading &rarr; Weakening &rarr; Lagging &rarr; Improving &rarr; Leading.
             Favor sectors in the Leading and Improving quadrants.
           </p>
@@ -114,7 +114,7 @@ export function SectorRotationPage() {
                 <div key={q} className="rounded-xl border border-border bg-bg-card p-3 space-y-1">
                   <div className="flex items-center gap-1.5 text-text-muted">
                     <div className="h-2 w-2 rounded-full" style={{ backgroundColor: m.color }} />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider">{m.label}</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider">{m.label}</span>
                   </div>
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-text-primary">{quadrantCounts[q]}</span>

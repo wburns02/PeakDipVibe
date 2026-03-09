@@ -409,7 +409,7 @@ export function CommandPalette() {
             aria-label="Command palette search"
             autoComplete="off"
           />
-          <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-[10px] font-mono text-text-muted">
+          <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-xs font-mono text-text-muted">
             Esc
           </kbd>
         </div>
@@ -442,7 +442,7 @@ export function CommandPalette() {
                   )}
                 </div>
                 {i === selectedIdx && (
-                  <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-[10px] font-mono text-text-muted">
+                  <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-xs font-mono text-text-muted">
                     Enter
                   </kbd>
                 )}
@@ -457,11 +457,11 @@ export function CommandPalette() {
 
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-border px-4 py-2">
-          <span className="text-[11px] text-text-muted">
-            Navigate with <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-[10px] font-mono">↑↓</kbd> and <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-[10px] font-mono">Enter</kbd>
+          <span className="text-xs text-text-muted">
+            Navigate with <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-xs font-mono">↑↓</kbd> and <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-xs font-mono">Enter</kbd>
           </span>
-          <span className="text-[11px] text-text-muted">
-            <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-[10px] font-mono">Ctrl+K</kbd> to toggle
+          <span className="text-xs text-text-muted">
+            <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-xs font-mono">Ctrl+K</kbd> to toggle
           </span>
         </div>
       </div>

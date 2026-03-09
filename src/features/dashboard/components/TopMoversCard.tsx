@@ -96,9 +96,9 @@ export function TopMoversCard({ gainers, losers }: TopMoversCardProps) {
         </div>
         <Link
           to="/screener?sort_by=change&sort_dir=desc"
-          className="mt-3 flex items-center justify-center gap-1 text-xs text-accent hover:underline"
+          className="mt-3 flex items-center justify-center gap-1 text-sm text-accent hover:underline"
         >
-          View all in screener <ArrowRight className="h-3 w-3" />
+          View all in screener <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </Card>
       <Card title="Top Losers" subtitle="Biggest daily drops">
@@ -109,9 +109,9 @@ export function TopMoversCard({ gainers, losers }: TopMoversCardProps) {
         </div>
         <Link
           to="/screener?sort_by=change&sort_dir=asc"
-          className="mt-3 flex items-center justify-center gap-1 text-xs text-accent hover:underline"
+          className="mt-3 flex items-center justify-center gap-1 text-sm text-accent hover:underline"
         >
-          View all in screener <ArrowRight className="h-3 w-3" />
+          View all in screener <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </Card>
     </div>

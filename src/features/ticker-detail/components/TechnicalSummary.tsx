@@ -220,7 +220,7 @@ function PlainEnglishBlurb({
 
   return (
     <div className="mt-3 rounded-lg bg-bg-hover/50 px-3 py-2.5">
-      <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+      <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
         In plain English
       </p>
       <p className="text-xs leading-relaxed text-text-secondary">

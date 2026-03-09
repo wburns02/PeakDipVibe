@@ -186,7 +186,7 @@ function QuickStat({
     <div className="rounded-xl border border-border bg-bg-card p-3 space-y-1">
       <div className="flex items-center gap-1.5 text-text-muted">
         {icon}
-        <span className="text-[10px] font-semibold uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-semibold uppercase tracking-wider">{label}</span>
       </div>
       <p className={`text-lg font-bold ${color ?? "text-text-primary"}`}>{value}</p>
     </div>

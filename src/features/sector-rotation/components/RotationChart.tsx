@@ -225,7 +225,7 @@ export function RotationChart({ sectors, onSelect, selected }: Props) {
             <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: getColor(tooltip.sector.sector) }} />
             <span className="text-xs font-bold text-text-primary">{tooltip.sector.sector}</span>
           </div>
-          <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px]">
+          <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs">
             <span className="text-text-muted">RS:</span>
             <span className={tooltip.sector.relativeStrength >= 0 ? "text-green font-mono" : "text-red font-mono"}>
               {tooltip.sector.relativeStrength > 0 ? "+" : ""}{tooltip.sector.relativeStrength}
@@ -244,7 +244,7 @@ export function RotationChart({ sectors, onSelect, selected }: Props) {
               className="h-1.5 w-1.5 rounded-full"
               style={{ backgroundColor: getQuadrantMeta(tooltip.sector.quadrant).color }}
             />
-            <span className="text-[10px] font-medium" style={{ color: getQuadrantMeta(tooltip.sector.quadrant).color }}>
+            <span className="text-xs font-medium" style={{ color: getQuadrantMeta(tooltip.sector.quadrant).color }}>
               {getQuadrantMeta(tooltip.sector.quadrant).label}
             </span>
           </div>

@@ -11,7 +11,7 @@ export function RiskClusters({ clusters }: Props) {
   return (
     <div className="rounded-2xl border border-border bg-bg-card p-5">
       <h3 className="text-sm font-semibold text-text-primary">Risk Clusters</h3>
-      <p className="text-[11px] text-text-muted">Stocks that move together share the same risk</p>
+      <p className="text-xs text-text-muted">Stocks that move together share the same risk</p>
 
       <div className="mt-4 space-y-3">
         {clusters.map((c, i) => {
@@ -29,7 +29,7 @@ export function RiskClusters({ clusters }: Props) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div
-                    className="flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold"
+                    className="flex h-6 w-6 items-center justify-center rounded-md text-xs font-bold"
                     style={{ backgroundColor: color + "25", color }}
                   >
                     {c.tickers.length}
@@ -52,7 +52,7 @@ export function RiskClusters({ clusters }: Props) {
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-[10px] text-text-muted">{c.label}</p>
+              <p className="mt-1 text-xs text-text-muted">{c.label}</p>
             </div>
           );
         })}
@@ -60,7 +60,7 @@ export function RiskClusters({ clusters }: Props) {
 
       {clusters.filter((c) => c.tickers.length > 1).length === 0 && (
         <div className="mt-3 rounded-lg bg-green/10 p-2.5">
-          <p className="text-[11px] font-medium text-green">
+          <p className="text-xs font-medium text-green">
             No risk clusters detected — each stock moves independently
           </p>
         </div>

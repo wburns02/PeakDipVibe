@@ -187,19 +187,19 @@ export function RelativeStrengthPage() {
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-xl border border-border bg-bg-secondary p-3 text-center">
             <p className="text-2xl font-bold text-green">{leaders}</p>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
               Leaders (RS &gt; 80)
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3 text-center">
             <p className="text-2xl font-bold text-green">{improving}</p>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
               Improving
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3 text-center">
             <p className="text-2xl font-bold text-red">{declining}</p>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
               Declining
             </p>
           </div>
@@ -247,11 +247,11 @@ export function RelativeStrengthPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search..."
-            className="w-full rounded-lg border border-border bg-bg-secondary py-1.5 pl-7 pr-2 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-bg-secondary py-2.5 pl-7 pr-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent"
           />
         </div>
 
-        <span className="ml-auto text-[11px] text-text-muted">
+        <span className="ml-auto text-xs text-text-muted">
           {filtered.length} of {allRsStocks.length} stocks
         </span>
       </div>
@@ -291,7 +291,7 @@ export function RelativeStrengthPage() {
                       {selectedStock.ticker}
                     </Link>
                     <span
-                      className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                      className="rounded-full px-2 py-0.5 text-xs font-semibold"
                       style={{
                         backgroundColor: rsScoreColor(selectedStock.rsScore) + "20",
                         color: rsScoreColor(selectedStock.rsScore),
@@ -309,7 +309,7 @@ export function RelativeStrengthPage() {
 
               {/* RS Line Chart */}
               <div className="mb-3">
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
                   RS Line (Price / SMA-200)
                 </p>
                 {chartLoading ? (
@@ -326,25 +326,25 @@ export function RelativeStrengthPage() {
               {/* Key stats */}
               <div className="mb-3 grid grid-cols-2 gap-2">
                 <div className="rounded-lg bg-bg-primary p-2">
-                  <p className="text-[10px] text-text-muted">Price/SMA-50</p>
+                  <p className="text-xs text-text-muted">Price/SMA-50</p>
                   <p className={`text-sm font-bold ${selectedStock.ratio50 >= 0 ? "text-green" : "text-red"}`}>
                     {selectedStock.ratio50 >= 0 ? "+" : ""}{(selectedStock.ratio50 * 100).toFixed(1)}%
                   </p>
                 </div>
                 <div className="rounded-lg bg-bg-primary p-2">
-                  <p className="text-[10px] text-text-muted">Price/SMA-200</p>
+                  <p className="text-xs text-text-muted">Price/SMA-200</p>
                   <p className={`text-sm font-bold ${selectedStock.ratio200 >= 0 ? "text-green" : "text-red"}`}>
                     {selectedStock.ratio200 >= 0 ? "+" : ""}{(selectedStock.ratio200 * 100).toFixed(1)}%
                   </p>
                 </div>
                 <div className="rounded-lg bg-bg-primary p-2">
-                  <p className="text-[10px] text-text-muted">RSI</p>
+                  <p className="text-xs text-text-muted">RSI</p>
                   <p className={`text-sm font-bold ${selectedStock.rsi < 30 ? "text-green" : selectedStock.rsi > 70 ? "text-red" : "text-text-primary"}`}>
                     {selectedStock.rsi.toFixed(0)}
                   </p>
                 </div>
                 <div className="rounded-lg bg-bg-primary p-2">
-                  <p className="text-[10px] text-text-muted">Trend</p>
+                  <p className="text-xs text-text-muted">Trend</p>
                   <p className="flex items-center gap-1 text-sm font-bold">
                     {selectedStock.trend === "improving" ? (
                       <><TrendingUp className="h-3.5 w-3.5 text-green" /><span className="text-green">Up</span></>
@@ -361,14 +361,14 @@ export function RelativeStrengthPage() {
               <div className="flex flex-wrap gap-2">
                 <Link
                   to={`/dna/${selectedStock.ticker}`}
-                  className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-[11px] text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
+                  className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-2.5 text-sm text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
                 >
                   <Dna className="h-3 w-3" />
                   Stock DNA
                 </Link>
                 <Link
                   to={`/planner?ticker=${selectedStock.ticker}`}
-                  className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-[11px] text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
+                  className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-2.5 text-sm text-text-secondary transition-colors hover:bg-bg-hover hover:text-text-primary"
                 >
                   <ClipboardList className="h-3 w-3" />
                   Plan Trade
@@ -399,7 +399,7 @@ export function RelativeStrengthPage() {
           {/* Sector RS Rankings */}
           <div className="rounded-2xl border border-border bg-bg-secondary p-4">
             <h3 className="mb-3 text-sm font-semibold text-text-primary">Sector RS Rankings</h3>
-            <p className="mb-3 text-[10px] text-text-muted">Average RS score by sector</p>
+            <p className="mb-3 text-xs text-text-muted">Average RS score by sector</p>
             {sectorRs.length > 0 ? (
               <SectorRsBar sectors={sectorRs} />
             ) : (

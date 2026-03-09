@@ -89,7 +89,7 @@ export function ImpactCards({ categories, isLoading }: Props) {
               <p className="text-2xl font-bold text-text-primary">
                 {cat.win_rate_1d != null ? `${cat.win_rate_1d}%` : "—"}
               </p>
-              <p className="text-[11px] text-text-muted">
+              <p className="text-xs text-text-muted">
                 go up the next day
               </p>
             </div>

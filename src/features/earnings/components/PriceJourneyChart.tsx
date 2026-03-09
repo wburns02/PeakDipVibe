@@ -112,7 +112,7 @@ export function PriceJourneyChart() {
               type="button"
               key={s.value}
               onClick={() => setMoveSize(s.value)}
-              className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
+              className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
                 moveSize === s.value
                   ? "bg-accent/20 text-accent"
                   : "text-text-muted hover:text-text-secondary"
@@ -262,7 +262,7 @@ function JourneyTooltip({
   return (
     <div className="rounded-lg border border-border bg-bg-card p-3 shadow-lg">
       <p className="text-xs font-medium text-text-primary">{d.stage}</p>
-      <p className="whitespace-pre-line text-[10px] text-text-muted">
+      <p className="whitespace-pre-line text-xs text-text-muted">
         {d.timeLabel}
       </p>
       <p

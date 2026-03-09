@@ -39,17 +39,17 @@ export function RsLeaderboard({ stocks, selectedTicker, onSelect }: Props) {
   return (
     <div>
       {/* Table header */}
-      <div className="grid grid-cols-[2rem_4.5rem_1fr_5rem_6rem_4.5rem_3.5rem] items-center gap-1 border-b border-border px-2 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted sm:grid-cols-[2rem_5rem_1fr_6rem_7rem_5rem_4rem]">
+      <div className="grid grid-cols-[2rem_4.5rem_1fr_5rem_6rem_4.5rem_3.5rem] items-center gap-1 border-b border-border px-2 py-3 text-xs font-semibold uppercase tracking-wider text-text-muted sm:grid-cols-[2rem_5rem_1fr_6rem_7rem_5rem_4rem]">
         <span>#</span>
-        <button type="button" onClick={() => toggleSort("ticker")} className="flex items-center gap-0.5 hover:text-text-primary">
+        <button type="button" onClick={() => toggleSort("ticker")} className="flex items-center gap-0.5 py-2 hover:text-text-primary">
           Ticker <SortIcon col="ticker" />
         </button>
         <span className="hidden sm:block">Name</span>
         <span className="hidden sm:block">Sector</span>
-        <button type="button" onClick={() => toggleSort("rsScore")} className="flex items-center gap-0.5 hover:text-text-primary">
+        <button type="button" onClick={() => toggleSort("rsScore")} className="flex items-center gap-0.5 py-2 hover:text-text-primary">
           RS Score <SortIcon col="rsScore" />
         </button>
-        <button type="button" onClick={() => toggleSort("changePct")} className="flex items-center gap-0.5 hover:text-text-primary">
+        <button type="button" onClick={() => toggleSort("changePct")} className="flex items-center gap-0.5 py-2 hover:text-text-primary">
           Change <SortIcon col="changePct" />
         </button>
         <span>Trend</span>
@@ -68,7 +68,7 @@ export function RsLeaderboard({ stocks, selectedTicker, onSelect }: Props) {
               key={stock.ticker}
               type="button"
               onClick={() => onSelect(stock.ticker)}
-              className={`grid w-full grid-cols-[2rem_4.5rem_1fr_5rem_6rem_4.5rem_3.5rem] items-center gap-1 px-2 py-2 text-left text-xs transition-colors sm:grid-cols-[2rem_5rem_1fr_6rem_7rem_5rem_4rem] ${
+              className={`grid w-full grid-cols-[2rem_4.5rem_1fr_5rem_6rem_4.5rem_3.5rem] items-center gap-1 px-2 py-3 text-left text-xs transition-colors sm:grid-cols-[2rem_5rem_1fr_6rem_7rem_5rem_4rem] ${
                 isSelected
                   ? "bg-accent/10 border-l-2 border-l-accent"
                   : "hover:bg-bg-hover"
@@ -84,7 +84,7 @@ export function RsLeaderboard({ stocks, selectedTicker, onSelect }: Props) {
               </Link>
               <span className="hidden truncate text-text-secondary sm:block">{stock.name}</span>
               <span className="hidden sm:block">
-                <span className="rounded-full bg-bg-hover px-2 py-0.5 text-[10px] text-text-muted">
+                <span className="rounded-full bg-bg-hover px-2 py-0.5 text-xs text-text-muted">
                   {stock.sector.length > 15 ? stock.sector.slice(0, 13) + ".." : stock.sector}
                 </span>
               </span>

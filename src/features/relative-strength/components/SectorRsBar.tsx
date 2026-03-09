@@ -26,7 +26,7 @@ export function SectorRsBar({ sectors }: Props) {
                 {s.avgScore}
               </span>
             </div>
-            <span className="w-6 text-right text-[10px] text-text-muted">{s.count}</span>
+            <span className="w-6 text-right text-xs text-text-muted">{s.count}</span>
           </div>
         );
       })}

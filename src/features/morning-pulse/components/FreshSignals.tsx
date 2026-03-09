@@ -53,7 +53,7 @@ export function FreshSignals({ signals, loading }: Props) {
           <h2 className="text-lg font-bold text-text-primary">
             Fresh Signals
           </h2>
-          <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+          <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
             {recent.length} new
           </span>
         </div>
@@ -125,12 +125,12 @@ export function FreshSignals({ signals, loading }: Props) {
                     </span>
                   )}
                   {s.catalyst_type && (
-                    <span className="rounded bg-bg-hover px-1.5 py-0.5 text-[10px] text-text-muted">
+                    <span className="rounded bg-bg-hover px-1.5 py-0.5 text-xs text-text-muted">
                       {catalystLabel(s.catalyst_type)}
                     </span>
                   )}
                 </div>
-                <div className="mt-0.5 flex items-center gap-3 text-[11px] text-text-muted">
+                <div className="mt-0.5 flex items-center gap-3 text-xs text-text-muted">
                   {s.gap_up_pct != null && (
                     <span
                       className={
@@ -152,7 +152,7 @@ export function FreshSignals({ signals, loading }: Props) {
 
               {/* Time + outcome */}
               <div className="shrink-0 text-right">
-                <p className="text-[10px] text-text-muted">
+                <p className="text-xs text-text-muted">
                   {formatRelativeTime(s.signal_date)}
                 </p>
                 {s.outcome_1d != null && (

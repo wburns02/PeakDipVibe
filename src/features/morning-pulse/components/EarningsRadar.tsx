@@ -58,7 +58,7 @@ export function EarningsRadar({ earnings, loading }: Props) {
           <h2 className="text-lg font-bold text-text-primary">
             Earnings Radar
           </h2>
-          <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+          <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
             {earnings.length} upcoming
           </span>
         </div>
@@ -95,7 +95,7 @@ export function EarningsRadar({ earnings, loading }: Props) {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-[11px] text-text-muted">
+                    <div className="flex items-center gap-2 text-xs text-text-muted">
                       {e.sector && <span>{e.sector}</span>}
                       {e.market_cap && (
                         <>

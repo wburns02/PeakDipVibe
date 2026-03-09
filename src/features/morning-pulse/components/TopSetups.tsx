@@ -144,7 +144,7 @@ export function TopSetups({ signals, sectors, loading }: Props) {
                         ))}
                       </div>
                       <span
-                        className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                        className="rounded-full px-2 py-0.5 text-xs font-semibold"
                         style={{
                           color: setup.labelColor,
                           backgroundColor: `${setup.labelColor}15`,
@@ -152,7 +152,7 @@ export function TopSetups({ signals, sectors, loading }: Props) {
                       >
                         {setup.label}
                       </span>
-                      <span className="text-[10px] text-text-muted">
+                      <span className="text-xs text-text-muted">
                         Score: {setup.score}
                       </span>
                     </div>
@@ -199,13 +199,13 @@ export function TopSetups({ signals, sectors, loading }: Props) {
                     />
                   )}
                   {s.catalyst_type && (
-                    <div className="flex items-center gap-1 rounded-md bg-bg-hover px-2 py-1 text-[11px] text-text-muted">
+                    <div className="flex items-center gap-1 rounded-md bg-bg-hover px-2 py-1 text-xs text-text-muted">
                       <Zap className="h-3 w-3" />
                       {catalystLabel(s.catalyst_type)}
                     </div>
                   )}
                   {s.sector && (
-                    <div className="flex items-center gap-1 rounded-md bg-bg-hover px-2 py-1 text-[11px] text-text-muted">
+                    <div className="flex items-center gap-1 rounded-md bg-bg-hover px-2 py-1 text-xs text-text-muted">
                       {s.sector}
                       {sectorMap.has(s.sector) && (
                         <span
@@ -224,7 +224,7 @@ export function TopSetups({ signals, sectors, loading }: Props) {
                     {setup.reasons.map((r) => (
                       <span
                         key={r}
-                        className="rounded-md border border-accent/20 bg-accent/5 px-2 py-0.5 text-[10px] font-medium text-accent"
+                        className="rounded-md border border-accent/20 bg-accent/5 px-2 py-0.5 text-xs font-medium text-accent"
                       >
                         {r}
                       </span>
@@ -287,7 +287,7 @@ function MetricPill({
 }) {
   return (
     <div
-      className={`flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium ${
+      className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ${
         positive ? "bg-green/10 text-green" : "bg-red/10 text-red"
       }`}
     >

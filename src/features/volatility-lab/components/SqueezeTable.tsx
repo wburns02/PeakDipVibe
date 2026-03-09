@@ -144,7 +144,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
 
               {/* Change */}
               <span
-                className={`w-11 shrink-0 text-right text-[11px] font-medium ${
+                className={`w-11 shrink-0 text-right text-xs font-medium ${
                   stock.changePct >= 0 ? "text-green" : "text-red"
                 }`}
               >

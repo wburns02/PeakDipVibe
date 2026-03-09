@@ -28,7 +28,7 @@ export function UpcomingEarningsCard() {
       <div className="mb-3 flex items-center gap-2">
         <CalendarDays className="h-4 w-4 text-accent" />
         <h3 className="text-sm font-semibold text-text-primary">Upcoming Earnings</h3>
-        <span className="ml-auto text-[10px] text-text-muted">
+        <span className="ml-auto text-xs text-text-muted">
           Next {data.earnings.length} reports
         </span>
       </div>
@@ -45,7 +45,7 @@ export function UpcomingEarningsCard() {
             <Link
               key={e.ticker}
               to={`/ticker/${e.ticker}`}
-              className="flex items-center justify-between rounded-lg px-2 py-1.5 transition-colors hover:bg-bg-hover"
+              className="flex items-center justify-between rounded-lg px-2 py-2.5 transition-colors hover:bg-bg-hover"
             >
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-accent">{e.ticker}</span>

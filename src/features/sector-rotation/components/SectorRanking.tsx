@@ -61,13 +61,13 @@ function SectorRow({
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold text-text-primary">{s.sector}</span>
             <span
-              className="rounded-md px-1.5 py-0.5 text-[11px] font-semibold"
+              className="rounded-md px-1.5 py-0.5 text-xs font-semibold"
               style={{ backgroundColor: qMeta.color + "18", color: qMeta.color }}
             >
               {qMeta.label}
             </span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] text-text-muted">
+          <div className="flex items-center gap-3 text-xs text-text-muted">
             <span>{s.stockCount} stocks</span>
             <span>RSI {s.avgRsi.toFixed(0)}</span>
             <span>{s.pctAboveSma50.toFixed(0)}% &gt; 50-SMA</span>
@@ -80,7 +80,7 @@ function SectorRow({
             <div className={`text-xs font-semibold ${s.avgChangePct >= 0 ? "text-green" : "text-red"}`}>
               {s.avgChangePct >= 0 ? "+" : ""}{s.avgChangePct.toFixed(2)}%
             </div>
-            <div className="text-[10px] text-text-muted">avg chg</div>
+            <div className="text-xs text-text-muted">avg chg</div>
           </div>
 
           {/* Score badge */}
@@ -115,7 +115,7 @@ function SectorRow({
 
           {/* Breadth bars */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-[10px]">
+            <div className="flex items-center justify-between text-xs">
               <span className="text-text-muted">Breadth: % above 50-SMA</span>
               <span className="font-mono text-text-secondary">{s.pctAboveSma50.toFixed(0)}%</span>
             </div>
@@ -133,14 +133,14 @@ function SectorRow({
           {/* Top & Bottom stocks */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <h4 className="mb-1.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-green">
+              <h4 className="mb-1.5 flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-green">
                 <TrendingUp className="h-3 w-3" /> Top Movers
               </h4>
               {s.topStocks.map((st) => (
                 <Link
                   key={st.ticker}
                   to={`/ticker/${st.ticker}`}
-                  className="flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors hover:bg-bg-hover"
+                  className="flex items-center justify-between rounded-lg px-2 py-2.5 text-sm transition-colors hover:bg-bg-hover"
                 >
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-accent">{st.ticker}</span>
@@ -153,14 +153,14 @@ function SectorRow({
               ))}
             </div>
             <div>
-              <h4 className="mb-1.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-red">
+              <h4 className="mb-1.5 flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-red">
                 <TrendingDown className="h-3 w-3" /> Bottom Movers
               </h4>
               {s.bottomStocks.map((st) => (
                 <Link
                   key={st.ticker}
                   to={`/ticker/${st.ticker}`}
-                  className="flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors hover:bg-bg-hover"
+                  className="flex items-center justify-between rounded-lg px-2 py-2.5 text-sm transition-colors hover:bg-bg-hover"
                 >
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-accent">{st.ticker}</span>
@@ -177,7 +177,7 @@ function SectorRow({
           {/* Link to screener */}
           <Link
             to={`/screener?sector=${encodeURIComponent(s.sector)}`}
-            className="flex items-center gap-1.5 text-[11px] font-medium text-accent hover:underline"
+            className="flex items-center gap-1.5 text-sm font-medium text-accent hover:underline"
           >
             <ExternalLink className="h-3 w-3" />
             View all {s.stockCount} stocks in screener
@@ -194,7 +194,7 @@ function Metric({ label, value, suffix, neutral }: { label: string; value: numbe
     : value >= 0 ? "text-green" : "text-red";
   return (
     <div className="rounded-lg bg-bg-secondary px-3 py-2">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-text-muted">{label}</p>
+      <p className="text-xs font-medium uppercase tracking-wider text-text-muted">{label}</p>
       <p className={`text-sm font-bold font-mono ${color}`}>
         {!neutral && value > 0 ? "+" : ""}{typeof value === "number" ? value.toFixed(1) : value}{suffix ?? ""}
       </p>

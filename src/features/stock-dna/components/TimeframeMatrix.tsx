@@ -45,7 +45,7 @@ function TimeframeCard({ tf }: { tf: TimeframeBias }) {
       {/* Drivers */}
       <div className="flex flex-wrap gap-1">
         {tf.drivers.map((d, i) => (
-          <span key={i} className="rounded bg-bg-primary px-1.5 py-0.5 text-[10px] text-text-muted">
+          <span key={i} className="rounded bg-bg-primary px-1.5 py-0.5 text-xs text-text-muted">
             {d}
           </span>
         ))}

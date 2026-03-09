@@ -65,7 +65,7 @@ function ForwardCard({ event: e }: { event: ForwardLookEvent }) {
           </p>
         </div>
         <span
-          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+          className={`rounded-full px-2 py-0.5 text-xs font-bold ${
             e.outlook === "historically_strong"
               ? "bg-emerald-500/15 text-emerald-400"
               : e.outlook === "mixed"
@@ -83,13 +83,13 @@ function ForwardCard({ event: e }: { event: ForwardLookEvent }) {
           <p className="text-lg font-bold text-text-primary">
             {e.past_events}
           </p>
-          <p className="text-[10px] text-text-muted">past events</p>
+          <p className="text-xs text-text-muted">past events</p>
         </div>
         <div>
           <p className="text-lg font-bold text-text-primary">
             {e.avg_gap != null ? `+${e.avg_gap}%` : "—"}
           </p>
-          <p className="text-[10px] text-text-muted">avg gap</p>
+          <p className="text-xs text-text-muted">avg gap</p>
         </div>
         <div>
           <p
@@ -103,12 +103,12 @@ function ForwardCard({ event: e }: { event: ForwardLookEvent }) {
           >
             {bounceRate > 0 ? `${bounceRate}%` : "—"}
           </p>
-          <p className="text-[10px] text-text-muted">bounce rate</p>
+          <p className="text-xs text-text-muted">bounce rate</p>
         </div>
       </div>
 
       {/* Outcome strip */}
-      <div className="flex items-center gap-2 rounded bg-bg-hover/50 px-2 py-1 text-[10px] text-text-muted">
+      <div className="flex items-center gap-2 rounded bg-bg-hover/50 px-2 py-1 text-xs text-text-muted">
         <span>
           1d:{" "}
           <span

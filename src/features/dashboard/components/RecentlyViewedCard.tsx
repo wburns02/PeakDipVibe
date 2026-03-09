@@ -101,7 +101,7 @@ export function RecentlyViewedCard() {
         <h3 className="text-sm font-semibold text-text-primary">
           Recently Viewed
         </h3>
-        <span className="text-[10px] text-text-muted">7d performance</span>
+        <span className="text-xs text-text-muted">7d performance</span>
       </div>
       <div className="grid gap-0.5">
         {tickers.map((ticker) => (

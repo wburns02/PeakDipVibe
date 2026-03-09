@@ -93,10 +93,10 @@ function PriceAlertEditor({
           <X className="h-3.5 w-3.5" />
         </button>
       </div>
-      <p className="mb-2 text-[11px] text-text-muted">Current: {currentPrice != null ? formatCurrency(currentPrice) : "—"}</p>
+      <p className="mb-2 text-xs text-text-muted">Current: {currentPrice != null ? formatCurrency(currentPrice) : "—"}</p>
       <div className="space-y-2">
         <div>
-          <label className="text-[11px] text-text-muted">Alert above ($)</label>
+          <label className="text-xs text-text-muted">Alert above ($)</label>
           <input
             type="number"
             step="0.01"
@@ -108,7 +108,7 @@ function PriceAlertEditor({
           />
         </div>
         <div>
-          <label className="text-[11px] text-text-muted">Alert below ($)</label>
+          <label className="text-xs text-text-muted">Alert below ($)</label>
           <input
             type="number"
             step="0.01"
@@ -121,7 +121,7 @@ function PriceAlertEditor({
         </div>
       </div>
       {validationError && (
-        <p role="alert" className="mt-2 text-[11px] text-red">{validationError}</p>
+        <p role="alert" className="mt-2 text-xs text-red">{validationError}</p>
       )}
       <div className="mt-2.5 flex gap-2">
         <button
@@ -244,7 +244,7 @@ const WatchlistRow = memo(function WatchlistRow({ ticker, onRemove, alert, onSet
             <p className="hidden text-xs text-text-muted sm:block">{detail.sector}</p>
             {sectorRank && (
               <span
-                className={`inline-flex items-center gap-0.5 rounded px-1 py-px text-[10px] font-medium ${
+                className={`inline-flex items-center gap-0.5 rounded px-1 py-px text-xs font-medium ${
                   sectorRank.rank <= 3
                     ? "bg-amber/15 text-amber"
                     : sectorRank.rank <= Math.ceil(sectorRank.total * 0.25)
@@ -448,11 +448,11 @@ function WatchlistSummary({ tickers }: { tickers: string[] }) {
       {/* Stats row */}
       <div className="mt-3 grid grid-cols-3 gap-3">
         <div>
-          <p className="text-[11px] text-text-muted">Stocks</p>
+          <p className="text-xs text-text-muted">Stocks</p>
           <p className="text-lg font-semibold text-text-primary">{tickers.length}</p>
         </div>
         <div>
-          <p className="text-[11px] text-text-muted">Avg RSI</p>
+          <p className="text-xs text-text-muted">Avg RSI</p>
           <p className="text-lg font-semibold text-text-primary">
             {avgRsi != null ? (
               <span className={avgRsi < 30 ? "text-green" : avgRsi > 70 ? "text-red" : ""}>
@@ -462,7 +462,7 @@ function WatchlistSummary({ tickers }: { tickers: string[] }) {
           </p>
         </div>
         <div>
-          <p className="text-[11px] text-text-muted">7d Chg</p>
+          <p className="text-xs text-text-muted">7d Chg</p>
           <p className="text-lg font-semibold text-text-primary">
             {avgChange != null ? (
               <span className={avgChange >= 0 ? "text-green" : "text-red"}>
@@ -491,7 +491,7 @@ function WatchlistSummary({ tickers }: { tickers: string[] }) {
           </div>
           <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
             {sectorCounts.map(([sector, count]) => (
-              <span key={sector} className="flex items-center gap-1 text-[11px] text-text-secondary">
+              <span key={sector} className="flex items-center gap-1 text-xs text-text-secondary">
                 <span
                   className="inline-block h-2 w-2 rounded-full"
                   style={{ backgroundColor: SECTOR_COLORS[sector] || "#64748b" }}

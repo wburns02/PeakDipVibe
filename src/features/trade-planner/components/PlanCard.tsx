@@ -66,7 +66,7 @@ function PriceLadder({ plan }: { plan: TradePlan }) {
           style={{ left: `${pricePct}%` }}
         />
       </div>
-      <div className="flex justify-between text-[10px]">
+      <div className="flex justify-between text-xs">
         {levels.map((l) => (
           <div key={l.label} className="flex flex-col items-center gap-0.5">
             <div className={`h-1.5 w-1.5 rounded-full ${l.color}`} />
@@ -102,7 +102,7 @@ export function PlanCard({ plan, rank }: Props) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold text-text-primary">{plan.ticker}</span>
-            <span className={`rounded-md px-2 py-0.5 text-[10px] font-semibold ${style.bg} ${style.text}`}>
+            <span className={`rounded-md px-2 py-0.5 text-xs font-semibold ${style.bg} ${style.text}`}>
               {plan.action}
             </span>
             <BiasIcon score={plan.confluence.score} />
@@ -116,7 +116,7 @@ export function PlanCard({ plan, rank }: Props) {
             <div className="font-mono text-sm font-bold text-text-primary">
               ${plan.price.toFixed(2)}
             </div>
-            <div className={`text-[11px] font-medium ${plan.changePct >= 0 ? "text-green" : "text-red"}`}>
+            <div className={`text-xs font-medium ${plan.changePct >= 0 ? "text-green" : "text-red"}`}>
               {plan.changePct >= 0 ? "+" : ""}{plan.changePct.toFixed(2)}%
             </div>
           </div>
@@ -130,7 +130,7 @@ export function PlanCard({ plan, rank }: Props) {
             >
               {plan.opportunityScore}
             </div>
-            <span className="text-[11px] text-text-muted mt-0.5">score</span>
+            <span className="text-xs text-text-muted mt-0.5">score</span>
           </div>
           {expanded ? (
             <ChevronUp className="h-4 w-4 text-text-muted" />
@@ -162,7 +162,7 @@ export function PlanCard({ plan, rank }: Props) {
             {plan.confluence.signals.slice(0, 6).map((s) => (
               <span
                 key={s.name}
-                className={`rounded-md px-2 py-0.5 text-[10px] font-medium ${
+                className={`rounded-md px-2 py-0.5 text-xs font-medium ${
                   s.bias === "bullish"
                     ? "bg-green/10 text-green"
                     : s.bias === "bearish"
@@ -201,7 +201,7 @@ export function PlanCard({ plan, rank }: Props) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg bg-bg-secondary px-3 py-2">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-text-muted">{label}</p>
+      <p className="text-xs font-medium uppercase tracking-wider text-text-muted">{label}</p>
       <p className="text-sm font-semibold text-text-primary">{value}</p>
     </div>
   );

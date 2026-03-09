@@ -131,8 +131,8 @@ export function KeyboardShortcuts() {
 
         {/* Footer */}
         <div className="border-t border-border px-5 py-3">
-          <p className="text-center text-[11px] text-text-muted">
-            Press <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-[10px] font-mono">?</kbd> to toggle this overlay
+          <p className="text-center text-xs text-text-muted">
+            Press <kbd className="rounded border border-border bg-bg-primary px-1 py-0.5 text-xs font-mono">?</kbd> to toggle this overlay
           </p>
         </div>
       </div>

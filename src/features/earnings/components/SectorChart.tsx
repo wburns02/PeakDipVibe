@@ -61,7 +61,7 @@ export function SectorChart() {
       ) : sorted.length > 0 ? (
         <Card>
           {/* Table header */}
-          <div className="mb-2 grid grid-cols-[2rem_1fr_4.5rem_5.5rem_2.5rem] items-center gap-2 px-1 text-[10px] font-medium uppercase tracking-wider text-text-muted sm:grid-cols-[2rem_1fr_5rem_6rem_3rem]">
+          <div className="mb-2 grid grid-cols-[2rem_1fr_4.5rem_5.5rem_2.5rem] items-center gap-2 px-1 text-xs font-medium uppercase tracking-wider text-text-muted sm:grid-cols-[2rem_1fr_5rem_6rem_3rem]">
             <span>#</span>
             <span>Sector</span>
             <span className="text-right">Events</span>

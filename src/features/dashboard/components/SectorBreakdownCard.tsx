@@ -87,7 +87,7 @@ export const SectorBreakdownCard = memo(function SectorBreakdownCard({
               </span>
 
               {/* Ticker count */}
-              <span className="w-[28px] shrink-0 text-right text-[10px] text-text-muted">
+              <span className="w-[28px] shrink-0 text-right text-xs text-text-muted">
                 {s.ticker_count}
               </span>
             </button>

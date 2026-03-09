@@ -173,7 +173,7 @@ export function DivergenceScannerPage() {
             {isLoading ? "\u2014" : bullishCount}
           </p>
           {!isLoading && bullishCount > 0 && (
-            <p className="text-[10px] text-text-muted">potential reversals up</p>
+            <p className="text-xs text-text-muted">potential reversals up</p>
           )}
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
@@ -182,7 +182,7 @@ export function DivergenceScannerPage() {
             {isLoading ? "\u2014" : bearishCount}
           </p>
           {!isLoading && bearishCount > 0 && (
-            <p className="text-[10px] text-text-muted">potential reversals down</p>
+            <p className="text-xs text-text-muted">potential reversals down</p>
           )}
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
@@ -191,7 +191,7 @@ export function DivergenceScannerPage() {
             {isLoading ? "\u2014" : strongest?.ticker ?? "None"}
           </p>
           {!isLoading && strongest && (
-            <p className="text-[10px] text-text-muted">
+            <p className="text-xs text-text-muted">
               {strongest.type} &middot; {strongest.conviction}/5
             </p>
           )}
@@ -275,7 +275,7 @@ export function DivergenceScannerPage() {
 
       {/* Disclaimer */}
       {filtered.length > 0 && (
-        <p className="text-center text-[10px] text-text-muted">
+        <p className="text-center text-xs text-text-muted">
           Divergences are technical patterns, not guarantees. They can fail, especially in
           strong trends. Always combine with other analysis and manage risk appropriately.
         </p>

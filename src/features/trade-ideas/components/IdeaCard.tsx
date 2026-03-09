@@ -36,7 +36,7 @@ export function IdeaCard({ idea }: Props) {
       >
         {/* Setup badge */}
         <div
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white text-[10px] font-bold"
+          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white text-xs font-bold"
           style={{ backgroundColor: color }}
         >
           {idea.direction === "Long" ? "L" : "S"}

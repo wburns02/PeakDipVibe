@@ -208,7 +208,7 @@ export function SeasonalBreakdown({ ticker }: { ticker: string }) {
                 >
                   {m.label}
                   {m.month === currentMonth && (
-                    <span className="ml-1 text-[10px] text-accent">(now)</span>
+                    <span className="ml-1 text-xs text-accent">(now)</span>
                   )}
                 </td>
                 <td

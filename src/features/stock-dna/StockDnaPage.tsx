@@ -128,7 +128,7 @@ export function StockDnaPage() {
           <div className="absolute left-0 right-0 z-20 mt-1 max-h-64 overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-xl">
             {!searchQuery && (
               <div className="p-3">
-                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Popular</p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Popular</p>
                 <div className="flex flex-wrap gap-1.5">
                   {POPULAR_TICKERS.map((t) => (
                     <button
@@ -158,7 +158,7 @@ export function StockDnaPage() {
                   >
                     <span className="font-semibold text-sm text-accent">{r.ticker}</span>
                     <span className="truncate text-xs text-text-muted">{r.name}</span>
-                    <span className="ml-auto text-[10px] text-text-muted">{r.sector}</span>
+                    <span className="ml-auto text-xs text-text-muted">{r.sector}</span>
                   </button>
                 ))}
               </div>

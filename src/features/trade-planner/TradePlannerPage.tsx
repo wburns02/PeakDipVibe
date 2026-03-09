@@ -212,7 +212,7 @@ export function TradePlannerPage() {
                   >
                     <span className="font-semibold text-sm text-accent">{r.ticker}</span>
                     <span className="truncate text-xs text-text-muted">{r.name}</span>
-                    <span className="ml-auto text-[10px] text-text-muted">
+                    <span className="ml-auto text-xs text-text-muted">
                       {alreadyAdded ? "Added" : r.sector}
                     </span>
                   </button>
@@ -245,7 +245,7 @@ export function TradePlannerPage() {
                 onChange={(e) => handleAccountChange(e.target.value)}
                 className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm font-mono text-text-primary focus:border-accent focus:outline-none"
               />
-              <p className="text-[10px] text-text-muted">Total portfolio value for position sizing</p>
+              <p className="text-xs text-text-muted">Total portfolio value for position sizing</p>
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-text-muted">Risk Per Trade (%)</label>
@@ -258,7 +258,7 @@ export function TradePlannerPage() {
                 step={0.25}
                 className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm font-mono text-text-primary focus:border-accent focus:outline-none"
               />
-              <p className="text-[10px] text-text-muted">Max risk per trade as % of account (typically 0.5-2%)</p>
+              <p className="text-xs text-text-muted">Max risk per trade as % of account (typically 0.5-2%)</p>
             </div>
           </div>
         </div>
@@ -312,7 +312,7 @@ export function TradePlannerPage() {
                   key={s}
                   type="button"
                   onClick={() => setSortBy(s)}
-                  className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${
+                  className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
                     sortBy === s
                       ? "bg-accent/10 text-accent"
                       : "text-text-muted hover:text-text-primary"
@@ -331,7 +331,7 @@ export function TradePlannerPage() {
                   key={f}
                   type="button"
                   onClick={() => setFilterAction(f)}
-                  className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${
+                  className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
                     filterAction === f
                       ? "bg-accent/10 text-accent"
                       : "text-text-muted hover:text-text-primary"
@@ -342,7 +342,7 @@ export function TradePlannerPage() {
               ))}
             </div>
 
-            <span className="ml-auto text-[11px] text-text-muted">
+            <span className="ml-auto text-xs text-text-muted">
               {sortedPlans.length} of {plans.length} setups
             </span>
           </div>

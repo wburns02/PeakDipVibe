@@ -130,7 +130,7 @@ export function SignalCalendar() {
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-text-primary">{monthLabel}</p>
-          <p className="text-[10px] text-text-muted">
+          <p className="text-xs text-text-muted">
             {monthEventCount} event{monthEventCount !== 1 ? "s" : ""} this month
           </p>
         </div>
@@ -156,7 +156,7 @@ export function SignalCalendar() {
       </div>
 
       {/* Day headers */}
-      <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-medium text-text-muted">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-text-muted">
         {DAY_NAMES.map((d) => (
           <div key={d}>{d}</div>
         ))}
@@ -217,7 +217,7 @@ export function SignalCalendar() {
       </div>
 
       {/* Legend */}
-      <div className="mt-3 flex items-center gap-4 text-[10px] text-text-muted">
+      <div className="mt-3 flex items-center gap-4 text-xs text-text-muted">
         <div className="flex items-center gap-1">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent/60" />
           1-2 signals
@@ -235,7 +235,7 @@ export function SignalCalendar() {
       {/* Recent events list for this month */}
       {monthEvents.length > 0 && (
         <div className="mt-3 border-t border-border pt-3">
-          <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-text-muted">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">
             Top signals in {new Date(year, month).toLocaleDateString("en-US", { month: "long" })}
           </p>
           <div className="space-y-1.5">

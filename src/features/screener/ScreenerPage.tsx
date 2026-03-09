@@ -106,9 +106,9 @@ function FilterMatchTooltip({ reasons }: { reasons: string[] }) {
     <div className="group relative">
       <Info className="h-3.5 w-3.5 text-accent/60" />
       <div className="pointer-events-none absolute bottom-full right-0 z-30 mb-1.5 hidden w-48 rounded-lg border border-border bg-bg-card p-2 shadow-xl group-hover:block">
-        <p className="mb-1 text-[11px] font-semibold text-text-primary">Filter Match</p>
+        <p className="mb-1 text-xs font-semibold text-text-primary">Filter Match</p>
         {reasons.map((r) => (
-          <p key={r} className="text-[11px] text-text-secondary">
+          <p key={r} className="text-xs text-text-secondary">
             {r}
           </p>
         ))}
@@ -332,7 +332,7 @@ export function ScreenerPage() {
               Save
             </button>
             {isDuplicateName && (
-              <span className="text-[11px] text-red">Name taken</span>
+              <span className="text-xs text-red">Name taken</span>
             )}
             <button
               type="button"
@@ -371,14 +371,14 @@ export function ScreenerPage() {
               if (filters.death_cross) count++;
               if (count === 0) return null;
               return (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[10px] font-bold text-white">
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-bold text-white">
                   {count}
                 </span>
               );
             })()}
           </span>
           <span className="flex items-center gap-2">
-            <kbd className="hidden rounded border border-border bg-bg-hover px-1.5 py-0.5 text-[10px] font-medium text-text-muted sm:inline">F</kbd>
+            <kbd className="hidden rounded border border-border bg-bg-hover px-1.5 py-0.5 text-xs font-medium text-text-muted sm:inline">F</kbd>
             <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
           </span>
         </button>
@@ -684,7 +684,7 @@ export function ScreenerPage() {
                         {r.ticker}
                       </Link>
                       {r.exchange && (
-                        <span className={`ml-1 inline-block rounded px-1 py-0.5 text-[11px] font-semibold leading-none ${
+                        <span className={`ml-1 inline-block rounded px-1 py-0.5 text-xs font-semibold leading-none ${
                           r.exchange === "NMS" ? "bg-blue-500/15 text-blue-400" : "bg-emerald-500/15 text-emerald-400"
                         }`}>
                           {r.exchange === "NMS" ? "NASDAQ" : r.exchange === "NYQ" ? "NYSE" : r.exchange}

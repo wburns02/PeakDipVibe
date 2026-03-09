@@ -100,7 +100,7 @@ export function DiversificationScore({ data }: Props) {
   return (
     <div className="rounded-2xl border border-border bg-bg-card p-5">
       <h3 className="text-sm font-semibold text-text-primary">Diversification Score</h3>
-      <p className="text-[11px] text-text-muted">Based on average pairwise correlation</p>
+      <p className="text-xs text-text-muted">Based on average pairwise correlation</p>
 
       <div className="mt-3 flex flex-col items-center">
         <canvas ref={canvasRef} />
@@ -134,7 +134,7 @@ export function DiversificationScore({ data }: Props) {
             }}
           />
         </div>
-        <p className="text-[10px] text-text-muted">
+        <p className="text-xs text-text-muted">
           {avgCorrelation >= 0.6
             ? "High concentration risk — your stocks tend to move together"
             : avgCorrelation >= 0.3

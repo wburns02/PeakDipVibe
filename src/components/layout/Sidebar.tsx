@@ -195,7 +195,7 @@ function SectionGroup({
       <button
         type="button"
         onClick={onToggle}
-        className={`flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors hover:bg-bg-hover ${
+        className={`flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-bg-hover ${
           hasActive && !isOpen ? "text-accent" : "text-text-muted"
         }`}
       >
@@ -302,7 +302,7 @@ export function Sidebar() {
             </div>
             <div>
               <h1 className="text-sm font-bold text-text-primary">PeakDipVibe</h1>
-              <p className="text-[10px] text-text-muted">Stock Analytics</p>
+              <p className="text-xs text-text-muted">Stock Analytics</p>
             </div>
           </div>
           <button
@@ -343,9 +343,9 @@ export function Sidebar() {
         {sidebarWatchlist.length > 0 && (
           <div className="border-t border-border px-3 py-2">
             <div className="mb-1 flex items-center justify-between">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-text-muted">Watchlist</span>
+              <span className="text-xs font-medium uppercase tracking-wider text-text-muted">Watchlist</span>
               {watchlist.length > 5 && (
-                <Link to="/watchlist" onClick={() => setOpen(false)} className="text-[10px] text-accent hover:underline">
+                <Link to="/watchlist" onClick={() => setOpen(false)} className="text-xs text-accent hover:underline">
                   +{watchlist.length - 5} more
                 </Link>
               )}
@@ -375,7 +375,7 @@ export function Sidebar() {
               {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
               {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>
-            <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-[10px] font-mono text-text-muted" title="Keyboard shortcuts">?</kbd>
+            <kbd className="rounded border border-border bg-bg-primary px-1.5 py-0.5 text-xs font-mono text-text-muted" title="Keyboard shortcuts">?</kbd>
           </div>
           <div className="flex items-center gap-2 text-xs text-text-muted">
             <Activity className="h-3 w-3" />

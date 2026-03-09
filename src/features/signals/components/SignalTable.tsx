@@ -44,17 +44,17 @@ function StrengthBar({ signal }: { signal: PatternSignal }) {
       <div className="h-1.5 w-16 rounded-full bg-bg-hover">
         <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs text-text-secondary">{score}</span>
+      <span className="text-sm text-text-secondary">{score}</span>
 
       {/* Tooltip breakdown on hover */}
       {hasBreakdown && (
         <div className="pointer-events-none absolute top-full left-0 z-30 mt-2 hidden w-44 rounded-lg border border-border bg-bg-card p-2.5 shadow-xl group-hover:block">
-          <p className="mb-1.5 text-[10px] font-semibold text-text-primary">
+          <p className="mb-1.5 text-xs font-semibold text-text-primary">
             Score Breakdown
           </p>
           {components.map((c) => (
             <div key={c.label} className="mb-1 last:mb-0">
-              <div className="flex items-center justify-between text-[10px]">
+              <div className="flex items-center justify-between text-xs">
                 <span className="text-text-muted">{c.label}</span>
                 <span className="font-medium text-text-secondary">
                   {c.value?.toFixed(0) ?? 0}
@@ -91,7 +91,7 @@ function CopySignalButton({ signal }: { signal: PatternSignal }) {
     <button
       type="button"
       onClick={copy}
-      className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-text-secondary transition-colors"
+      className="rounded-md p-2.5 text-text-muted hover:bg-bg-hover hover:text-text-secondary transition-colors"
       title="Copy signal summary"
       aria-label={`Copy ${signal.ticker} signal to clipboard`}
     >
@@ -157,7 +157,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
         <div className="flex flex-col items-center justify-center py-12 text-text-muted">
           <Zap className="mb-3 h-10 w-10 opacity-40" />
           <p className="text-sm font-medium">No signals found</p>
-          <p className="mt-1 max-w-xs text-center text-xs">
+          <p className="mt-1 max-w-xs text-center text-sm">
             Try increasing the lookback period, lowering the minimum strength, or removing filters to see more results
           </p>
         </div>
@@ -166,9 +166,9 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
           <table className="w-full text-sm">
             <caption className="sr-only">Pattern signals showing gap-up and sell-off events with catalyst scoring</caption>
             <thead>
-              <tr className="border-b border-border text-left text-xs text-text-muted">
+              <tr className="border-b border-border text-left text-sm text-text-muted">
                 <th scope="col" className="pb-2" aria-sort={sortBy === "signal_date" ? "descending" : "none"}>
-                  <button type="button" onClick={() => onSort("signal_date")} className="flex items-center gap-1">
+                  <button type="button" onClick={() => onSort("signal_date")} className="flex items-center gap-1 py-2">
                     Date {sortIcon("signal_date")}
                   </button>
                 </th>
@@ -178,7 +178,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                   <span className="flex items-center">Bounce<GlossaryTerm term="bounce" /></span>
                 </th>
                 <th scope="col" className="pb-2" aria-sort={sortBy === "gap" ? "descending" : "none"}>
-                  <button type="button" onClick={() => onSort("gap")} className="flex items-center gap-1">
+                  <button type="button" onClick={() => onSort("gap")} className="flex items-center gap-1 py-2">
                     Gap<GlossaryTerm term="gap_up" /> {sortIcon("gap")}
                   </button>
                 </th>
@@ -189,12 +189,12 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                   <span className="flex items-center">Catalyst<GlossaryTerm term="catalyst" /></span>
                 </th>
                 <th scope="col" className="pb-2" aria-sort={sortBy === "strength" ? "descending" : "none"}>
-                  <button type="button" onClick={() => onSort("strength")} className="flex items-center gap-1">
+                  <button type="button" onClick={() => onSort("strength")} className="flex items-center gap-1 py-2">
                     Strength<GlossaryTerm term="signal_strength" /> {sortIcon("strength")}
                   </button>
                 </th>
                 <th scope="col" className="pb-2" aria-sort={sortBy === "outcome" ? "descending" : "none"}>
-                  <button type="button" onClick={() => onSort("outcome")} className="flex items-center gap-1">
+                  <button type="button" onClick={() => onSort("outcome")} className="flex items-center gap-1 py-2">
                     1d Return {sortIcon("outcome")}
                   </button>
                 </th>
@@ -205,11 +205,11 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
             <tbody>
               {signals.map((s) => (
                 <tr key={`${s.ticker}-${s.signal_date}`} className="border-b border-border/50 transition-colors hover:bg-bg-hover">
-                  <td className="py-2 text-text-secondary" title={s.signal_date}>
+                  <td className="py-3 text-text-secondary" title={s.signal_date}>
                     <span className="hidden sm:inline">{s.signal_date}</span>
                     <span className="sm:hidden">{formatRelativeTime(s.signal_date)}</span>
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     <Link to={`/ticker/${s.ticker}`} className="font-medium text-accent hover:underline">
                       {s.ticker}
                     </Link>
@@ -219,29 +219,29 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                       </span>
                     )}
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     <PatternMiniChart signal={s} />
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     <BounceBadge signal={s} />
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     {s.gap_up_pct != null ? (
                       <Badge variant="green">{formatPercent(s.gap_up_pct)}</Badge>
                     ) : "—"}
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     {s.selloff_pct != null ? (
                       <span className="text-red">{formatPercent(s.selloff_pct)}</span>
                     ) : "—"}
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     <CatalystBadge type={s.catalyst_type} />
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     <StrengthBar signal={s} />
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     {s.outcome_1d != null ? (
                       <span className={s.outcome_1d >= 0 ? "text-green" : "text-red"}>
                         {formatPercent(s.outcome_1d)}
@@ -250,15 +250,15 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                       <span className="text-text-muted">pending</span>
                     )}
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     <StatusBadge status={s.status} />
                   </td>
-                  <td className="py-2">
+                  <td className="py-3">
                     <div className="flex items-center gap-1">
                       <CopySignalButton signal={s} />
                       <Link
                         to={`/compare?tickers=${s.ticker}`}
-                        className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
+                        className="rounded-md p-2.5 text-text-muted hover:bg-bg-hover hover:text-accent transition-colors"
                         title={`Compare ${s.ticker}`}
                         aria-label={`Compare ${s.ticker} with other stocks`}
                       >
@@ -266,7 +266,7 @@ export function SignalTable({ signals, isLoading, sortBy, onSort }: SignalTableP
                       </Link>
                       <Link
                         to={`/simulator?ticker=${s.ticker}&date=${s.signal_date}`}
-                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-accent hover:bg-accent/10 transition-colors"
+                        className="inline-flex items-center gap-1 rounded-md px-2.5 py-2.5 text-sm text-accent hover:bg-accent/10 transition-colors"
                         title="Simulate this event"
                       >
                         <PlayCircle className="h-3.5 w-3.5" />

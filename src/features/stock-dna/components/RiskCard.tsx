@@ -33,11 +33,11 @@ export function RiskCard({ risk, price }: Props) {
             className="h-full bg-red/10 flex items-center justify-center"
             style={{ width: `${((price - risk.suggestedStop) / (risk.suggestedTarget - risk.suggestedStop)) * 100}%` }}
           >
-            <span className="text-[10px] font-medium text-red">Risk</span>
+            <span className="text-xs font-medium text-red">Risk</span>
           </div>
           {/* Reward zone */}
           <div className="h-full flex-1 bg-green/10 flex items-center justify-center">
-            <span className="text-[10px] font-medium text-green">Reward</span>
+            <span className="text-xs font-medium text-green">Reward</span>
           </div>
         </div>
         {/* Current price marker */}
@@ -53,25 +53,25 @@ export function RiskCard({ risk, price }: Props) {
         <div className="rounded-lg bg-red/5 border border-red/10 p-3 text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Shield className="h-3 w-3 text-red" />
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-red">Stop</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-red">Stop</span>
           </div>
           <p className="font-mono text-sm font-bold text-red">${risk.suggestedStop.toFixed(2)}</p>
-          <p className="text-[10px] text-text-muted">-{((1 - risk.suggestedStop / price) * 100).toFixed(1)}%</p>
+          <p className="text-xs text-text-muted">-{((1 - risk.suggestedStop / price) * 100).toFixed(1)}%</p>
         </div>
         <div className="rounded-lg bg-accent/5 border border-accent/10 p-3 text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-accent">Current</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-accent">Current</span>
           </div>
           <p className="font-mono text-sm font-bold text-accent">${price.toFixed(2)}</p>
-          <p className="text-[10px] text-text-muted">ATR: ${risk.atr.toFixed(2)}</p>
+          <p className="text-xs text-text-muted">ATR: ${risk.atr.toFixed(2)}</p>
         </div>
         <div className="rounded-lg bg-green/5 border border-green/10 p-3 text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Target className="h-3 w-3 text-green" />
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-green">Target</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-green">Target</span>
           </div>
           <p className="font-mono text-sm font-bold text-green">${risk.suggestedTarget.toFixed(2)}</p>
-          <p className="text-[10px] text-text-muted">+{((risk.suggestedTarget / price - 1) * 100).toFixed(1)}%</p>
+          <p className="text-xs text-text-muted">+{((risk.suggestedTarget / price - 1) * 100).toFixed(1)}%</p>
         </div>
       </div>
 

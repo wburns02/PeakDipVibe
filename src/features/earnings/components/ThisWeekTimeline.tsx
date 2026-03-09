@@ -159,7 +159,7 @@ function EventCard({ event }: { event: WeekEvent }) {
             <span className="text-lg font-bold text-accent">
               +{gap.toFixed(1)}%
             </span>
-            <span className="text-[10px] text-text-muted">{event.move_size}</span>
+            <span className="text-xs text-text-muted">{event.move_size}</span>
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
@@ -207,7 +207,7 @@ function EventCard({ event }: { event: WeekEvent }) {
         </p>
         <Link
           to={`/simulator?ticker=${event.ticker}&date=${event.signal_date}`}
-          className="shrink-0 rounded px-2 py-1 text-[10px] font-medium text-accent hover:bg-accent/10"
+          className="shrink-0 rounded px-2 py-1 text-xs font-medium text-accent hover:bg-accent/10"
         >
           Simulate →
         </Link>
@@ -216,7 +216,7 @@ function EventCard({ event }: { event: WeekEvent }) {
       {/* Similar Past Events */}
       {event.analogs && event.analogs.length > 0 && (
         <div className="mt-2 border-t border-border/50 pt-2">
-          <p className="mb-1 text-[10px] font-medium text-text-muted/70">
+          <p className="mb-1 text-xs font-medium text-text-muted/70">
             Similar past events:
           </p>
           <div className="flex flex-wrap gap-x-4 gap-y-0.5">
@@ -225,7 +225,7 @@ function EventCard({ event }: { event: WeekEvent }) {
               return (
                 <span
                   key={`${a.ticker}-${a.signal_date}`}
-                  className="text-[10px] text-text-muted"
+                  className="text-xs text-text-muted"
                 >
                   <span className="font-medium text-text-secondary">
                     {a.ticker}
@@ -240,7 +240,7 @@ function EventCard({ event }: { event: WeekEvent }) {
                     {o.toFixed(1)}%
                   </span>{" "}
                   <span
-                    className={`rounded px-1 py-px text-[11px] font-bold ${
+                    className={`rounded px-1 py-px text-xs font-bold ${
                       a.status === "confirmed"
                         ? "bg-emerald-500/15 text-emerald-400"
                         : a.status === "failed"

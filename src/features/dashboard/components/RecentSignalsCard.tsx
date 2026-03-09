@@ -37,7 +37,7 @@ export function RecentSignalsCard() {
         </div>
         <Link
           to="/signals"
-          className="flex items-center gap-1 text-xs text-accent hover:underline"
+          className="flex items-center gap-1 text-sm text-accent hover:underline"
         >
           View all <ArrowRight className="h-3 w-3" />
         </Link>
@@ -51,7 +51,7 @@ export function RecentSignalsCard() {
             <Link
               key={`${s.ticker}-${s.signal_date}`}
               to={`/ticker/${s.ticker}`}
-              className="flex items-center justify-between rounded-lg border border-border/50 bg-bg-primary px-3 py-2 transition-colors hover:bg-bg-hover"
+              className="flex items-center justify-between rounded-lg border border-border/50 bg-bg-primary px-3 py-2.5 transition-colors hover:bg-bg-hover"
             >
               <div className="flex items-center gap-3">
                 <span className="text-sm font-semibold text-accent">{s.ticker}</span>

@@ -109,7 +109,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
           {/* Ticker + Date */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Ticker</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Ticker</label>
               <input
                 type="text"
                 value={ticker}
@@ -120,7 +120,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Entry Date</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Entry Date</label>
               <input
                 type="date"
                 value={entryDate}
@@ -133,7 +133,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
           {/* Price + Shares */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Entry Price ($)</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Entry Price ($)</label>
               <input
                 type="number"
                 value={entryPrice}
@@ -145,7 +145,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Shares</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Shares</label>
               <input
                 type="number"
                 value={shares}
@@ -160,7 +160,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
           {/* Stop + Target */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Stop Loss ($)</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Stop Loss ($)</label>
               <input
                 type="number"
                 value={stopLoss}
@@ -172,7 +172,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Target ($)</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Target ($)</label>
               <input
                 type="number"
                 value={targetPrice}
@@ -187,14 +187,14 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
 
           {/* Tags */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Strategy Tags</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Strategy Tags</label>
             <div className="flex flex-wrap gap-1.5">
               {TRADE_TAGS.map((tag) => (
                 <button
                   key={tag}
                   type="button"
                   onClick={() => toggleTag(tag)}
-                  className={`rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
+                  className={`rounded-md px-2 py-1 text-xs font-medium transition-colors ${
                     tags.includes(tag)
                       ? "bg-accent/15 text-accent border border-accent/30"
                       : "bg-bg-primary text-text-muted border border-border hover:border-accent/20 hover:text-text-secondary"
@@ -208,7 +208,7 @@ export function TradeForm({ onClose, onSaved, prefill }: Props) {
 
           {/* Notes */}
           <div className="space-y-1">
-            <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Notes</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-text-muted">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

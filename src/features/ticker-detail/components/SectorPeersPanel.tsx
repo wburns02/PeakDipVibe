@@ -77,7 +77,7 @@ export const SectorPeersPanel = memo(function SectorPeersPanel({
         <h3 className="text-sm font-semibold text-text-primary">
           Sector Peers
         </h3>
-        <span className="text-[10px] text-text-muted">({sector})</span>
+        <span className="text-xs text-text-muted">({sector})</span>
       </div>
 
       <div className="space-y-0.5">
@@ -96,7 +96,7 @@ export const SectorPeersPanel = memo(function SectorPeersPanel({
                 {p.ticker}
               </span>
               <PeerSparkline ticker={p.ticker} />
-              <span className="min-w-0 flex-1 truncate text-[11px] text-text-muted">
+              <span className="min-w-0 flex-1 truncate text-xs text-text-muted">
                 {p.name}
               </span>
               <span
@@ -109,7 +109,7 @@ export const SectorPeersPanel = memo(function SectorPeersPanel({
                   : "-"}
               </span>
               <span
-                className={`w-[26px] shrink-0 text-right text-[11px] font-medium ${rsi.className}`}
+                className={`w-[26px] shrink-0 text-right text-xs font-medium ${rsi.className}`}
               >
                 {rsi.text}
               </span>
@@ -118,7 +118,7 @@ export const SectorPeersPanel = memo(function SectorPeersPanel({
         })}
       </div>
 
-      <div className="mt-2 flex items-center justify-between border-t border-border pt-2 text-[10px] text-text-muted">
+      <div className="mt-2 flex items-center justify-between border-t border-border pt-2 text-xs text-text-muted">
         <span>Change % | RSI</span>
         <Link
           to={`/screener?sector=${encodeURIComponent(sector)}`}

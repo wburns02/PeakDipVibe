@@ -26,7 +26,7 @@ export function OpenPositions({ trades, onUpdate }: Props) {
       <div className="flex items-center justify-between border-b border-border px-5 py-3">
         <h3 className="text-sm font-semibold text-text-primary">
           Open Positions
-          <span className="ml-2 rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+          <span className="ml-2 rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
             {open.length}
           </span>
         </h3>
@@ -83,11 +83,11 @@ function PositionRow({ trade, onUpdate }: { trade: TradeWithPnl; onUpdate: () =>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold text-text-primary">{trade.ticker}</span>
-            <span className="text-[10px] font-medium uppercase text-text-muted">
+            <span className="text-xs font-medium uppercase text-text-muted">
               {trade.side} &middot; {trade.shares} shares
             </span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] text-text-muted">
+          <div className="flex items-center gap-3 text-xs text-text-muted">
             <span>Entry: ${trade.entryPrice.toFixed(2)}</span>
             {trade.stopLoss && <span>Stop: ${trade.stopLoss.toFixed(2)}</span>}
             {trade.targetPrice && <span>Target: ${trade.targetPrice.toFixed(2)}</span>}
@@ -100,7 +100,7 @@ function PositionRow({ trade, onUpdate }: { trade: TradeWithPnl; onUpdate: () =>
           <div className={`font-mono text-sm font-bold ${pnlColor}`}>
             {trade.unrealizedPnl >= 0 ? "+" : ""}${trade.unrealizedPnl.toFixed(2)}
           </div>
-          <div className={`text-[11px] font-medium ${pnlColor}`}>
+          <div className={`text-xs font-medium ${pnlColor}`}>
             {trade.unrealizedPnlPct >= 0 ? "+" : ""}{trade.unrealizedPnlPct.toFixed(2)}%
           </div>
         </div>
@@ -137,7 +137,7 @@ function PositionRow({ trade, onUpdate }: { trade: TradeWithPnl; onUpdate: () =>
       {showClose && (
         <div className="mt-3 flex flex-wrap items-end gap-3 rounded-lg border border-border bg-bg-secondary p-3 animate-slideDown">
           <div className="space-y-1">
-            <label className="text-[10px] font-semibold text-text-muted">Exit Price</label>
+            <label className="text-xs font-semibold text-text-muted">Exit Price</label>
             <input
               type="number"
               value={exitPrice}
@@ -147,7 +147,7 @@ function PositionRow({ trade, onUpdate }: { trade: TradeWithPnl; onUpdate: () =>
             />
           </div>
           <div className="space-y-1">
-            <label className="text-[10px] font-semibold text-text-muted">Exit Date</label>
+            <label className="text-xs font-semibold text-text-muted">Exit Date</label>
             <input
               type="date"
               value={exitDate}

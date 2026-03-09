@@ -260,7 +260,7 @@ export function PortfolioXrayPage() {
 function QuickStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-bg-card p-3 text-center">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">{label}</p>
       <p className="mt-0.5 text-lg font-bold text-text-primary">{value}</p>
     </div>
   );

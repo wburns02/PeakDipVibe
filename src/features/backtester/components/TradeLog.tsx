@@ -129,7 +129,7 @@ export function TradeLog({ result }: { result: BacktestResult }) {
                 </td>
                 <td className="px-3 py-2 text-center">
                   <span
-                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${EXIT_COLORS[t.exitReason]}`}
+                    className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${EXIT_COLORS[t.exitReason]}`}
                   >
                     {EXIT_LABELS[t.exitReason]}
                   </span>

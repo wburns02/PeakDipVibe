@@ -90,7 +90,7 @@ export function ThisMonthRankings({
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-bg-hover text-[10px] font-bold text-text-muted">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-bg-hover text-xs font-bold text-text-muted">
                       {i + 1}
                     </span>
                     <span className="font-bold text-accent">
@@ -114,7 +114,7 @@ export function ThisMonthRankings({
                   avg return in {label}
                 </p>
 
-                <div className="mt-2 flex gap-3 text-[11px] text-text-muted">
+                <div className="mt-2 flex gap-3 text-xs text-text-muted">
                   <span>{m.win_rate}% win rate</span>
                   <span>{m.years} yrs</span>
                 </div>

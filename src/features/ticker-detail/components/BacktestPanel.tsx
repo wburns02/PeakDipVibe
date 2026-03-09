@@ -34,7 +34,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
       {/* Controls */}
       <div className="mb-4 flex flex-wrap gap-3">
         <div>
-          <label className="mb-1 block text-[10px] text-text-muted">Signal</label>
+          <label className="mb-1 block text-xs text-text-muted">Signal</label>
           <div className="flex gap-1">
             <button
               type="button"
@@ -57,7 +57,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-[10px] text-text-muted">Hold Period</label>
+          <label className="mb-1 block text-xs text-text-muted">Hold Period</label>
           <div className="flex gap-1">
             {HOLD_OPTIONS.map((d) => (
               <button
@@ -88,7 +88,7 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
             <div className="rounded-lg bg-bg-primary p-3 text-center">
               <Target className="mx-auto mb-1 h-4 w-4 text-accent" />
               <p className="text-lg font-bold text-text-primary">{data.summary.win_rate}%</p>
-              <p className="text-[10px] text-text-muted">Win Rate</p>
+              <p className="text-xs text-text-muted">Win Rate</p>
             </div>
             <div className="rounded-lg bg-bg-primary p-3 text-center">
               <TrendingUp className="mx-auto mb-1 h-4 w-4 text-green" />
@@ -96,12 +96,12 @@ export function BacktestPanel({ ticker }: BacktestPanelProps) {
                 {data.summary.avg_return > 0 ? "+" : ""}
                 {data.summary.avg_return}%
               </p>
-              <p className="text-[10px] text-text-muted">Avg Return</p>
+              <p className="text-xs text-text-muted">Avg Return</p>
             </div>
             <div className="rounded-lg bg-bg-primary p-3 text-center">
               <AlertTriangle className="mx-auto mb-1 h-4 w-4 text-amber" />
               <p className="text-lg font-bold text-text-primary">{data.summary.avg_drawdown}%</p>
-              <p className="text-[10px] text-text-muted">Avg Drawdown</p>
+              <p className="text-xs text-text-muted">Avg Drawdown</p>
             </div>
           </div>
 

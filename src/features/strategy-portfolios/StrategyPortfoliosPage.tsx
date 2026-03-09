@@ -204,7 +204,7 @@ function StockRow({ stock, rank }: { stock: ScoredStock; rank: number }) {
             <span className="text-sm font-bold text-accent">{stock.ticker}</span>
             <span className="truncate text-xs text-text-muted">{stock.name}</span>
           </div>
-          <div className="mt-0.5 flex items-center gap-3 text-[10px] text-text-muted">
+          <div className="mt-0.5 flex items-center gap-3 text-xs text-text-muted">
             <span>{stock.sector}</span>
             <span className="text-text-muted/50">•</span>
             <span>${stock.close?.toFixed(2)}</span>
@@ -215,7 +215,7 @@ function StockRow({ stock, rank }: { stock: ScoredStock; rank: number }) {
             <div className={`text-xs font-bold tabular-nums ${changePct >= 0 ? "text-green" : "text-red"}`}>
               {changePct >= 0 ? "+" : ""}{changePct.toFixed(2)}%
             </div>
-            <div className="text-[10px] text-text-muted">RSI {rsi.toFixed(0)}</div>
+            <div className="text-xs text-text-muted">RSI {rsi.toFixed(0)}</div>
           </div>
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10">
             <span className="text-xs font-bold text-accent">{stock.score}</span>
@@ -238,7 +238,7 @@ function StockRow({ stock, rank }: { stock: ScoredStock; rank: number }) {
               </div>
             ))}
           </div>
-          <div className="mt-3 grid grid-cols-4 gap-2 text-center text-[10px]">
+          <div className="mt-3 grid grid-cols-4 gap-2 text-center text-xs">
             <div className="rounded-lg bg-bg-hover p-1.5">
               <div className="text-text-muted">SMA-50</div>
               <div className={`font-bold ${stock.above_sma50 ? "text-green" : "text-red"}`}>
@@ -481,7 +481,7 @@ export function StrategyPortfoliosPage() {
             >
               <Icon className={`h-4 w-4 ${activeTab === tab.key ? "text-accent" : tab.color}`} />
               {tab.label}
-              <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+              <span className={`rounded-full px-1.5 py-0.5 text-xs font-bold ${
                 activeTab === tab.key
                   ? "bg-accent/20 text-accent"
                   : "bg-bg-hover text-text-muted"
@@ -543,7 +543,7 @@ export function StrategyPortfoliosPage() {
 
       {/* Disclaimer */}
       {activePortfolio.length > 0 && (
-        <p className="text-center text-[10px] text-text-muted">
+        <p className="text-center text-xs text-text-muted">
           Strategy scores are based on technical indicators only and are not investment advice.
           Always do your own research and manage risk appropriately. Past performance does not guarantee future results.
         </p>

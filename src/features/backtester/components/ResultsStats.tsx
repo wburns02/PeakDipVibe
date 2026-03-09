@@ -23,7 +23,7 @@ function StatCard({ icon, label, value, sub, positive }: StatCardProps) {
     <div className="rounded-xl border border-border bg-bg-card p-3">
       <div className="mb-1 flex items-center gap-2 text-text-muted">
         {icon}
-        <span className="text-[10px] font-medium uppercase tracking-wider">
+        <span className="text-xs font-medium uppercase tracking-wider">
           {label}
         </span>
       </div>
@@ -38,7 +38,7 @@ function StatCard({ icon, label, value, sub, positive }: StatCardProps) {
       >
         {value}
       </p>
-      {sub && <p className="mt-0.5 text-[11px] text-text-muted">{sub}</p>}
+      {sub && <p className="mt-0.5 text-xs text-text-muted">{sub}</p>}
     </div>
   );
 }
