@@ -154,7 +154,7 @@ export function VolatilityLabPage() {
         <button
           type="button"
           onClick={() => setGuideOpen((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <Info className="h-3.5 w-3.5" />
           How It Works
@@ -202,24 +202,24 @@ export function VolatilityLabPage() {
       {/* Stats Bar */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Stocks Scanned</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Stocks Scanned</p>
           <p className="mt-1 text-xl font-bold text-text-primary">
             {isLoading ? "\u2014" : squeezeStocks.length}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">In Squeeze</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">In Squeeze</p>
           <p className="mt-1 text-xl font-bold text-green">
             {isLoading ? "\u2014" : inSqueezeCount}
           </p>
           {!isLoading && squeezeStocks.length > 0 && (
-            <p className="text-[10px] text-text-muted">
+            <p className="text-[11px] text-text-muted">
               {Math.round((inSqueezeCount / squeezeStocks.length) * 100)}% of universe
             </p>
           )}
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Fired Today</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Fired Today</p>
           <p className="mt-1 text-xl font-bold text-orange-400">
             {isLoading ? "\u2014" : firedCount}
           </p>
@@ -228,11 +228,11 @@ export function VolatilityLabPage() {
           className="rounded-xl border p-3"
           style={{ borderColor: regime.color + "40", backgroundColor: regime.color + "08" }}
         >
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Vol Regime</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Vol Regime</p>
           <p className="mt-1 text-xl font-bold" style={{ color: regime.color }}>
             {isLoading ? "\u2014" : regime.label}
           </p>
-          {!isLoading && <p className="text-[10px] text-text-muted">{regime.desc}</p>}
+          {!isLoading && <p className="text-[11px] text-text-muted">{regime.desc}</p>}
         </div>
       </div>
 
@@ -259,7 +259,7 @@ export function VolatilityLabPage() {
               key={tab.key}
               type="button"
               onClick={() => setFilter(tab.key)}
-              className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+              className={`rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${
                 filter === tab.key
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-border text-text-muted hover:text-text-primary hover:bg-bg-hover"
@@ -318,7 +318,7 @@ export function VolatilityLabPage() {
 
       {/* Disclaimer */}
       {squeezeStocks.length > 0 && (
-        <p className="text-center text-[10px] text-text-muted">
+        <p className="text-center text-[11px] text-text-muted">
           Squeeze detection is based on Bollinger Band width percentile and is not financial advice.
           Squeezes can resolve in either direction. Always manage risk appropriately.
         </p>

@@ -271,19 +271,19 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
             <div className="grid grid-cols-2 gap-3">
               <div className="text-center">
                 <p className="text-2xl font-bold text-text-primary">{squeezeStats.count}</p>
-                <p className="text-[10px] text-text-muted">Squeezes (6mo)</p>
+                <p className="text-[11px] text-text-muted">Squeezes (6mo)</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-green">{squeezeStats.upRate}%</p>
-                <p className="text-[10px] text-text-muted">Resolved Up</p>
+                <p className="text-[11px] text-text-muted">Resolved Up</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-text-primary">{squeezeStats.avgMove}%</p>
-                <p className="text-[10px] text-text-muted">Avg Move</p>
+                <p className="text-[11px] text-text-muted">Avg Move</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-text-primary">{squeezeStats.avgDuration}d</p>
-                <p className="text-[10px] text-text-muted">Avg Duration</p>
+                <p className="text-[11px] text-text-muted">Avg Duration</p>
               </div>
             </div>
           </div>
@@ -305,10 +305,10 @@ export function SqueezeDetail({ stock, history, threshold }: Props) {
                       ) : (
                         <TrendingDown className="h-3 w-3 text-red" />
                       )}
-                      <span className="text-[10px] text-text-muted">{fmtDate(ev.fireDate)}</span>
+                      <span className="text-[11px] text-text-muted">{fmtDate(ev.fireDate)}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-text-muted">{ev.durationDays}d</span>
+                      <span className="text-[11px] text-text-muted">{ev.durationDays}d</span>
                       <span
                         className={`text-xs font-bold ${ev.direction === "up" ? "text-green" : "text-red"}`}
                       >

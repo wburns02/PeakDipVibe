@@ -130,7 +130,7 @@ export function StrategyLabPage() {
             <FolderOpen className="h-3.5 w-3.5" />
             Saved
             {savedStrategies.length > 0 && (
-              <span className="rounded-full bg-accent/10 px-1.5 text-[10px] font-semibold text-accent">
+              <span className="rounded-full bg-accent/10 px-1.5 text-[11px] font-semibold text-accent">
                 {savedStrategies.length}
               </span>
             )}
@@ -173,7 +173,7 @@ export function StrategyLabPage() {
                       {s.conditions.map((c, i) => (
                         <span
                           key={i}
-                          className="rounded bg-bg-primary px-1.5 py-0.5 text-[10px] text-text-muted"
+                          className="rounded bg-bg-primary px-1.5 py-0.5 text-[11px] text-text-muted"
                         >
                           {describeCondition(c)}
                         </span>
@@ -283,7 +283,7 @@ export function StrategyLabPage() {
               Conditions
             </span>
             {conditions.length > 0 && (
-              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent">
                 {conditions.length}
               </span>
             )}

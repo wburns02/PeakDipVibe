@@ -46,7 +46,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
             value={search}
             onChange={(e) => setSearch(e.target.value.replace(/[^a-zA-Z0-9 ]/g, ""))}
             placeholder="Filter..."
-            className="flex-1 bg-transparent text-xs text-text-primary placeholder:text-text-muted focus:outline-none"
+            className="flex-1 bg-transparent py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:outline-none"
           />
         </div>
         <div className="flex items-center gap-1">
@@ -61,7 +61,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
               key={key}
               type="button"
               onClick={() => setSortBy(key)}
-              className={`rounded-md px-2 py-1 text-[10px] font-medium transition-colors ${
+              className={`rounded-md px-2.5 py-2.5 text-xs font-medium transition-colors ${
                 sortBy === key
                   ? "bg-accent/10 text-accent"
                   : "text-text-muted hover:text-text-primary hover:bg-bg-hover"
@@ -88,7 +88,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
               }`}
             >
               {/* Rank */}
-              <span className="w-5 shrink-0 text-center text-[10px] font-mono text-text-muted">
+              <span className="w-5 shrink-0 text-center text-[11px] font-mono text-text-muted">
                 {i + 1}
               </span>
 
@@ -114,7 +114,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
                   />
                 </div>
                 <span
-                  className="w-6 text-right text-[10px] font-mono font-medium"
+                  className="w-6 text-right text-[11px] font-mono font-medium"
                   style={{ color }}
                 >
                   {stock.bbWidthPercentile}
@@ -144,7 +144,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
 
               {/* Change */}
               <span
-                className={`w-11 shrink-0 text-right text-[10px] font-medium ${
+                className={`w-11 shrink-0 text-right text-[11px] font-medium ${
                   stock.changePct >= 0 ? "text-green" : "text-red"
                 }`}
               >
@@ -162,7 +162,7 @@ export function SqueezeTable({ stocks, selected, onSelect }: Props) {
         )}
       </div>
 
-      <div className="border-t border-border px-3 py-1.5 text-center text-[9px] text-text-muted">
+      <div className="border-t border-border px-3 py-2 text-center text-[11px] text-text-muted">
         {sorted.length} stocks &middot; Lower percentile = tighter squeeze
       </div>
     </div>

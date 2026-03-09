@@ -33,7 +33,7 @@ export function PresetPicker({ onSelect }: Props) {
               {preset.description}
             </p>
             <div className="mt-auto flex items-center gap-1 pt-1">
-              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-accent">
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
                 {preset.conditions.length} condition{preset.conditions.length !== 1 ? "s" : ""}
               </span>
             </div>

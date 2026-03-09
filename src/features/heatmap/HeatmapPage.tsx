@@ -301,7 +301,7 @@ export function HeatmapPage() {
                 key={label}
                 type="button"
                 onClick={() => setExchangeFilter(val)}
-                className={`px-3 py-1.5 transition-colors first:rounded-l-lg last:rounded-r-lg ${
+                className={`px-3 py-2.5 transition-colors first:rounded-l-lg last:rounded-r-lg ${
                   exchangeFilter === val ? "bg-accent text-white" : "text-text-secondary hover:text-accent"
                 }`}
               >
@@ -314,7 +314,7 @@ export function HeatmapPage() {
             <button
               type="button"
               onClick={() => setSizeBy("mcap")}
-              className={`rounded-l-lg px-3 py-1.5 transition-colors ${
+              className={`rounded-l-lg px-3 py-2 transition-colors ${
                 sizeBy === "mcap" ? "bg-accent text-white" : "text-text-secondary hover:text-accent"
               }`}
             >
@@ -323,7 +323,7 @@ export function HeatmapPage() {
             <button
               type="button"
               onClick={() => setSizeBy("equal")}
-              className={`rounded-r-lg px-3 py-1.5 transition-colors ${
+              className={`rounded-r-lg px-3 py-2 transition-colors ${
                 sizeBy === "equal" ? "bg-accent text-white" : "text-text-secondary hover:text-accent"
               }`}
             >
@@ -338,7 +338,7 @@ export function HeatmapPage() {
         <button
           type="button"
           onClick={() => setSelectedSector(null)}
-          className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+          className={`shrink-0 rounded-full px-3 py-2.5 text-xs font-medium transition-colors ${
             !selectedSector ? "bg-accent text-white" : "bg-bg-card text-text-secondary border border-border hover:border-accent hover:text-accent"
           }`}
         >
@@ -349,7 +349,7 @@ export function HeatmapPage() {
             key={s}
             type="button"
             onClick={() => setSelectedSector(selectedSector === s ? null : s)}
-            className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-3 py-2.5 text-xs font-medium transition-colors ${
               selectedSector === s ? "text-white" : "bg-bg-card text-text-secondary border border-border hover:text-accent"
             }`}
             style={selectedSector === s ? { backgroundColor: SECTOR_COLORS[s] ?? "#6366f1" } : undefined}

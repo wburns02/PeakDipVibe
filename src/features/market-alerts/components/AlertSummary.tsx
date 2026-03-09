@@ -51,15 +51,15 @@ export function AlertSummary({ alerts, activeFilter, onFilterToggle }: Props) {
               : "border-border bg-bg-card hover:border-border"
           }`}
         >
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Total Alerts</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">Total Alerts</p>
           <p className="text-2xl font-bold text-text-primary">{alerts.length}</p>
         </button>
         <div className="rounded-xl border border-border bg-bg-card p-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Watchlist Hits</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">Watchlist Hits</p>
           <p className="text-2xl font-bold text-accent">{watchlistCount}</p>
         </div>
         <div className="rounded-xl border border-border bg-bg-card p-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Critical</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">Critical</p>
           <p className="text-2xl font-bold text-red">
             {alerts.filter((a) => a.severity === "critical").length}
           </p>
@@ -80,7 +80,7 @@ export function AlertSummary({ alerts, activeFilter, onFilterToggle }: Props) {
               key={type}
               type="button"
               onClick={() => onFilterToggle(isActive ? null : type)}
-              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-medium transition-all ${
                 isActive
                   ? "border-transparent shadow-sm"
                   : "border-border bg-bg-card hover:border-border"
@@ -90,7 +90,7 @@ export function AlertSummary({ alerts, activeFilter, onFilterToggle }: Props) {
               <Icon className="h-3.5 w-3.5" style={{ color: meta.color }} />
               <span className={isActive ? "" : "text-text-secondary"}>{ALERT_TYPE_LABELS[type]}</span>
               <span
-                className="ml-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold"
+                className="ml-0.5 rounded-full px-1.5 py-0.5 text-[11px] font-bold"
                 style={{ backgroundColor: meta.color + "20", color: meta.color }}
               >
                 {count}

@@ -986,7 +986,7 @@ export function SimulatorPage() {
                     page: 1,
                   }))
                 }
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                className={`rounded-full px-3 py-2.5 text-xs font-medium transition-colors ${
                   filters.gap_size === s
                     ? "bg-accent text-white"
                     : "bg-bg-hover text-text-secondary hover:bg-bg-hover/80"
@@ -1016,7 +1016,7 @@ export function SimulatorPage() {
                     page: 1,
                   }))
                 }
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                className={`rounded-full px-3 py-2.5 text-xs font-medium transition-colors ${
                   filters.outcome === o
                     ? o === "Bounced"
                       ? "bg-emerald-500/20 text-emerald-400"
@@ -1041,7 +1041,7 @@ export function SimulatorPage() {
                   page: 1,
                 }))
               }
-              className="rounded-full border border-border bg-bg-hover px-3 py-1 text-xs font-medium text-text-secondary focus:border-accent focus:outline-none"
+              className="rounded-full border border-border bg-bg-hover px-3 py-2.5 text-xs font-medium text-text-secondary focus:border-accent focus:outline-none"
             >
               <option value="">All Sectors</option>
               {sectors?.map((s) => (
@@ -1070,7 +1070,7 @@ export function SimulatorPage() {
                   />
                 </div>
               </div>
-              <span className="shrink-0 text-[10px] text-text-muted">
+              <span className="shrink-0 text-[11px] text-text-muted">
                 {library.events.filter((e) => e.has_analysis).length > 0
                   ? `${library.events.filter((e) => e.has_analysis).length}/${library.events.length} on this page analyzed`
                   : "Analysis in progress..."}
@@ -1210,12 +1210,12 @@ export function SimulatorPage() {
               <h3 className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
                 <History className="h-4 w-4 text-accent" />
                 Past Simulations
-                <span className="text-[10px] font-normal text-text-muted">({simHistory.length})</span>
+                <span className="text-[11px] font-normal text-text-muted">({simHistory.length})</span>
               </h3>
               <button
                 type="button"
                 onClick={clearHistory}
-                className="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] text-text-muted hover:bg-bg-hover hover:text-red-400"
+                className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] text-text-muted hover:bg-bg-hover hover:text-red-400"
               >
                 <Trash2 className="h-3 w-3" />
                 Clear
@@ -1232,9 +1232,9 @@ export function SimulatorPage() {
                   <div className="flex items-center gap-3">
                     <div>
                       <span className="text-sm font-bold text-accent">{h.ticker}</span>
-                      <span className="ml-1.5 text-[10px] text-text-muted">{h.interval}</span>
+                      <span className="ml-1.5 text-[11px] text-text-muted">{h.interval}</span>
                     </div>
-                    <span className="text-[10px] text-text-muted">
+                    <span className="text-[11px] text-text-muted">
                       {new Date(h.signalDate + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </span>
                   </div>
@@ -1242,10 +1242,10 @@ export function SimulatorPage() {
                     <span className={`text-xs font-bold tabular-nums ${h.pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                       {h.pnl >= 0 ? "+" : ""}{fmtCurrency(h.pnl)}
                     </span>
-                    <span className={`text-[10px] tabular-nums ${h.pnlPct >= 0 ? "text-emerald-400/70" : "text-red-400/70"}`}>
+                    <span className={`text-[11px] tabular-nums ${h.pnlPct >= 0 ? "text-emerald-400/70" : "text-red-400/70"}`}>
                       {h.pnlPct >= 0 ? "+" : ""}{h.pnlPct.toFixed(1)}%
                     </span>
-                    <span className="text-[10px] text-text-muted">
+                    <span className="text-[11px] text-text-muted">
                       {h.totalBuys}B/{h.totalSells}S
                     </span>
                   </div>
@@ -1314,13 +1314,13 @@ export function SimulatorPage() {
                   <p className="text-xl font-bold text-emerald-400">
                     +{(intradaySim.gap_up_pct ?? 0).toFixed(1)}%
                   </p>
-                  <p className="text-[10px] text-text-muted">Gap Up</p>
+                  <p className="text-[11px] text-text-muted">Gap Up</p>
                 </div>
                 <div className="text-center">
                   <p className="text-xl font-bold text-red-400">
                     -{(intradaySim.selloff_pct ?? 0).toFixed(1)}%
                   </p>
-                  <p className="text-[10px] text-text-muted">Selloff</p>
+                  <p className="text-[11px] text-text-muted">Selloff</p>
                 </div>
               </div>
             </div>
@@ -1328,9 +1328,9 @@ export function SimulatorPage() {
 
           {/* Phase Indicator Bar */}
           <div className="flex items-center gap-1.5 rounded-xl border border-border bg-bg-card px-4 py-2.5">
-            <span className="mr-1 text-[10px] font-medium text-text-muted">Phase:</span>
+            <span className="mr-1 text-[11px] font-medium text-text-muted">Phase:</span>
             {/* Phase 1: Pre-Event */}
-            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-colors ${
+            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors ${
               currentPhase === 1
                 ? "bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/40"
                 : currentBarIndex > phases.phase1End
@@ -1345,7 +1345,7 @@ export function SimulatorPage() {
             </div>
             <ChevronRight className="h-3 w-3 text-text-muted/50" />
             {/* Phase 2: During Event */}
-            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-colors ${
+            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors ${
               currentPhase === 2
                 ? "bg-red-500/20 text-red-400 ring-1 ring-red-500/40"
                 : currentBarIndex >= phases.phase3Start
@@ -1360,7 +1360,7 @@ export function SimulatorPage() {
             </div>
             <ChevronRight className="h-3 w-3 text-text-muted/50" />
             {/* Phase 3: Post-Event */}
-            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold transition-colors ${
+            <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors ${
               currentPhase === 3
                 ? "bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40"
                 : "bg-bg-hover text-text-muted"
@@ -1400,7 +1400,7 @@ export function SimulatorPage() {
                           default: "bg-bg-hover text-text-secondary",
                         };
                         return (
-                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${colorMap[cc.variant] ?? colorMap.default}`}>
+                          <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider ${colorMap[cc.variant] ?? colorMap.default}`}>
                             {cc.label}
                           </span>
                         );
@@ -1509,7 +1509,7 @@ export function SimulatorPage() {
                   <span className="text-xs font-semibold text-text-primary">
                     Trade Parameters
                   </span>
-                  <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-accent">
+                  <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
                     {simParams.stopLoss > 0 && `SL -${simParams.stopLoss}%`}
                     {simParams.takeProfit1 > 0 && ` · TP1 +${simParams.takeProfit1}%`}
                     {simParams.takeProfit2 > 0 && ` · TP2 +${simParams.takeProfit2}%`}
@@ -1528,7 +1528,7 @@ export function SimulatorPage() {
               {paramsExpanded && (
                 <div className="mt-2 grid grid-cols-2 gap-3 rounded-lg border border-border/50 bg-bg-hover/30 p-3 sm:grid-cols-5">
                   <div>
-                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-red-400">
+                    <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-red-400">
                       <Shield className="h-3 w-3" />
                       Stop-Loss %
                     </label>
@@ -1544,7 +1544,7 @@ export function SimulatorPage() {
                     <p className="mt-0.5 text-[9px] text-text-muted">0 = off</p>
                   </div>
                   <div>
-                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-emerald-400">
+                    <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-emerald-400">
                       <Target className="h-3 w-3" />
                       TP1 % (50%)
                     </label>
@@ -1560,7 +1560,7 @@ export function SimulatorPage() {
                     <p className="mt-0.5 text-[9px] text-text-muted">Sells half</p>
                   </div>
                   <div>
-                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-emerald-400">
+                    <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-emerald-400">
                       <Target className="h-3 w-3" />
                       TP2 % (rest)
                     </label>
@@ -1576,7 +1576,7 @@ export function SimulatorPage() {
                     <p className="mt-0.5 text-[9px] text-text-muted">Sells rest</p>
                   </div>
                   <div>
-                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-amber-400">
+                    <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-amber-400">
                       <TrendingDown className="h-3 w-3" />
                       Trail Stop %
                     </label>
@@ -1592,7 +1592,7 @@ export function SimulatorPage() {
                     <p className="mt-0.5 text-[9px] text-text-muted">From peak</p>
                   </div>
                   <div>
-                    <label className="mb-1 flex items-center gap-1 text-[10px] font-medium text-accent">
+                    <label className="mb-1 flex items-center gap-1 text-[11px] font-medium text-accent">
                       <DollarSign className="h-3 w-3" />
                       Position %
                     </label>
@@ -1614,19 +1614,19 @@ export function SimulatorPage() {
             {/* Portfolio Display */}
             <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-lg bg-bg-hover/50 p-2.5">
-                <p className="text-[10px] font-medium text-text-muted">Cash</p>
+                <p className="text-[11px] font-medium text-text-muted">Cash</p>
                 <p className="text-sm font-bold text-text-primary">
                   {fmtCurrency(cash)}
                 </p>
               </div>
               <div className="rounded-lg bg-bg-hover/50 p-2.5">
-                <p className="text-[10px] font-medium text-text-muted">
+                <p className="text-[11px] font-medium text-text-muted">
                   Shares
                 </p>
                 <p className="text-sm font-bold text-text-primary">{shares}</p>
               </div>
               <div className="rounded-lg bg-bg-hover/50 p-2.5">
-                <p className="text-[10px] font-medium text-text-muted">
+                <p className="text-[11px] font-medium text-text-muted">
                   Portfolio
                 </p>
                 <p className="text-sm font-bold text-text-primary">
@@ -1634,7 +1634,7 @@ export function SimulatorPage() {
                 </p>
               </div>
               <div className="rounded-lg bg-bg-hover/50 p-2.5">
-                <p className="text-[10px] font-medium text-text-muted">P&L</p>
+                <p className="text-[11px] font-medium text-text-muted">P&L</p>
                 <p
                   className={`text-sm font-bold ${pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}
                 >
@@ -1647,7 +1647,7 @@ export function SimulatorPage() {
 
             {/* Position info bar (when holding shares) */}
             {shares > 0 && avgCost > 0 && (
-              <div className="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-border/40 bg-bg-hover/20 px-3 py-1.5 text-[10px] text-text-muted">
+              <div className="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-border/40 bg-bg-hover/20 px-3 py-1.5 text-[11px] text-text-muted">
                 <span>Avg Cost: <strong className="text-text-primary">{fmtCurrency(avgCost)}</strong></span>
                 <span>Unrealized: <strong className={currentPrice >= avgCost ? "text-emerald-400" : "text-red-400"}>
                   {currentPrice >= avgCost ? "+" : ""}{fmtCurrency((currentPrice - avgCost) * shares)} ({((currentPrice - avgCost) / avgCost * 100).toFixed(1)}%)
@@ -1773,7 +1773,7 @@ export function SimulatorPage() {
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
-                <span className="ml-2 text-[10px] tabular-nums text-text-muted">
+                <span className="ml-2 text-[11px] tabular-nums text-text-muted">
                   {currentBarIndex + 1} / {totalBars}
                 </span>
                 {/* Speed control */}
@@ -1785,7 +1785,7 @@ export function SimulatorPage() {
                       onClick={() => setSpeedIndex(i)}
                       aria-label={`Set replay speed to ${opt.label}`}
                       aria-pressed={i === speedIndex}
-                      className={`rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
+                      className={`rounded px-1.5 py-0.5 text-[11px] font-medium transition-colors ${
                         i === speedIndex
                           ? "bg-accent text-white"
                           : "text-text-muted hover:text-text-primary"
@@ -1852,7 +1852,7 @@ export function SimulatorPage() {
             )}
 
             {/* Keyboard shortcuts hint */}
-            <div className="mt-2 hidden items-center gap-3 text-[10px] text-text-muted md:flex">
+            <div className="mt-2 hidden items-center gap-3 text-[11px] text-text-muted md:flex">
               <span>Shortcuts:</span>
               <kbd className="rounded bg-bg-hover px-1.5 py-0.5 font-mono">Space</kbd><span>Play/Pause</span>
               <kbd className="rounded bg-bg-hover px-1.5 py-0.5 font-mono">&larr;&rarr;</kbd><span>Step</span>
@@ -2061,7 +2061,7 @@ export function SimulatorPage() {
               </ResponsiveContainer>
             </div>
             {showCone && coneData.length > 0 && (
-              <p className="mt-1 text-center text-[10px] text-text-muted">
+              <p className="mt-1 text-center text-[11px] text-text-muted">
                 Purple cone = projected range from 500 Monte Carlo simulations
                 based on realized volatility. Inner band = 25th-75th percentile,
                 outer = 10th-90th.
@@ -2126,7 +2126,7 @@ export function SimulatorPage() {
                 </ResponsiveContainer>
               </div>
               {/* Quick stats row */}
-              <div className="mt-2 flex flex-wrap gap-3 text-[10px] text-text-muted">
+              <div className="mt-2 flex flex-wrap gap-3 text-[11px] text-text-muted">
                 {(() => {
                   const maxVal = Math.max(...equityCurve.map((e) => e.value));
                   const minVal = Math.min(...equityCurve.map((e) => e.value));
@@ -2152,14 +2152,14 @@ export function SimulatorPage() {
                 <h3 className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
                   <Brain className="h-4 w-4 text-purple-400" />
                   AI Reasoning
-                  <span className="rounded-full bg-purple-500/15 px-2 py-0.5 text-[10px] font-medium text-purple-400">
+                  <span className="rounded-full bg-purple-500/15 px-2 py-0.5 text-[11px] font-medium text-purple-400">
                     {aiData.total_events_referenced} events analyzed · {aiData.bounce_rate}% bounce rate
                   </span>
                 </h3>
                 <button
                   type="button"
                   onClick={() => setShowAI((v) => !v)}
-                  className={`rounded-md px-2 py-1 text-[10px] font-medium transition-colors ${
+                  className={`rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
                     showAI ? "bg-purple-500/15 text-purple-400" : "bg-bg-hover text-text-muted"
                   }`}
                 >
@@ -2175,7 +2175,7 @@ export function SimulatorPage() {
                       {aiData.references.map((ref) => (
                         <div
                           key={`${ref.ticker}-${ref.signal_date}`}
-                          className="flex items-center gap-1.5 rounded-full border border-border/50 bg-bg-hover/30 px-2.5 py-1 text-[10px]"
+                          className="flex items-center gap-1.5 rounded-full border border-border/50 bg-bg-hover/30 px-2.5 py-1 text-[11px]"
                         >
                           <span className="font-bold text-text-primary">{ref.ticker}</span>
                           <span className="text-text-muted">{ref.gap_up_pct > 0 ? "+" : ""}{ref.gap_up_pct}%</span>
@@ -2203,10 +2203,10 @@ export function SimulatorPage() {
                       <div className={`mb-3 rounded-lg border p-3 ${actionColor}`}>
                         <div className="flex items-center gap-2">
                           <Bot className="h-4 w-4 text-purple-400" />
-                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${actionBadge}`}>
+                          <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${actionBadge}`}>
                             {currentDecision.action}
                           </span>
-                          <span className="text-[10px] text-text-muted">
+                          <span className="text-[11px] text-text-muted">
                             {currentDecision.confidence}% confidence · {currentDecision.phase}
                           </span>
                         </div>
@@ -2225,7 +2225,7 @@ export function SimulatorPage() {
                       .map((d, i) => (
                         <div
                           key={i}
-                          className={`flex items-center gap-2 rounded-md px-2.5 py-1 text-[10px] ${
+                          className={`flex items-center gap-2 rounded-md px-2.5 py-1 text-[11px] ${
                             d.bar_index === currentBarIndex ? "bg-bg-hover/50" : ""
                           }`}
                         >
@@ -2257,7 +2257,7 @@ export function SimulatorPage() {
               <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-text-primary">
                 <BarChart3 className="h-4 w-4" />
                 Trade History
-                <span className="ml-auto text-[10px] font-normal text-text-muted">
+                <span className="ml-auto text-[11px] font-normal text-text-muted">
                   {totalBuys} buy{totalBuys !== 1 ? "s" : ""}, {totalSells} sell{totalSells !== 1 ? "s" : ""}
                 </span>
               </h3>
@@ -2294,7 +2294,7 @@ export function SimulatorPage() {
                           </span>
                         )}
                         {tradePnl !== null && (
-                          <span className={`text-[10px] font-bold tabular-nums ${tradePnl >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                          <span className={`text-[11px] font-bold tabular-nums ${tradePnl >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                             {tradePnl >= 0 ? "+" : ""}{fmtCurrency(tradePnl)}
                           </span>
                         )}
@@ -2320,13 +2320,13 @@ export function SimulatorPage() {
 
                 <div className="mx-auto mt-4 grid max-w-md grid-cols-2 gap-3">
                   <div className="rounded-lg bg-bg-hover/50 p-3">
-                    <p className="text-[10px] text-text-muted">Started With</p>
+                    <p className="text-[11px] text-text-muted">Started With</p>
                     <p className="text-sm font-bold text-text-primary">
                       {fmtCurrency(startingCash)}
                     </p>
                   </div>
                   <div className="rounded-lg bg-bg-hover/50 p-3">
-                    <p className="text-[10px] text-text-muted">Final Value</p>
+                    <p className="text-[11px] text-text-muted">Final Value</p>
                     <p
                       className={`text-sm font-bold ${pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}
                     >
@@ -2334,7 +2334,7 @@ export function SimulatorPage() {
                     </p>
                   </div>
                   <div className="rounded-lg bg-bg-hover/50 p-3">
-                    <p className="text-[10px] text-text-muted">P&L</p>
+                    <p className="text-[11px] text-text-muted">P&L</p>
                     <p
                       className={`text-sm font-bold ${pnl >= 0 ? "text-emerald-400" : "text-red-400"}`}
                     >
@@ -2344,7 +2344,7 @@ export function SimulatorPage() {
                     </p>
                   </div>
                   <div className="rounded-lg bg-bg-hover/50 p-3">
-                    <p className="text-[10px] text-text-muted">Trades</p>
+                    <p className="text-[11px] text-text-muted">Trades</p>
                     <p className="text-sm font-bold text-text-primary">
                       {totalBuys} buy{totalBuys !== 1 && "s"}, {totalSells} sell
                       {totalSells !== 1 && "s"}
@@ -2479,12 +2479,12 @@ function EventBrowserCard({
           <span className="text-lg font-bold text-accent">
             +{gap.toFixed(1)}%
           </span>
-          <span className="ml-1.5 rounded bg-bg-hover px-1.5 py-0.5 text-[10px] font-medium text-text-muted">
+          <span className="ml-1.5 rounded bg-bg-hover px-1.5 py-0.5 text-[11px] font-medium text-text-muted">
             {ev.gap_size}
           </span>
         </div>
         <div
-          className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${outcomeBg}`}
+          className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-bold ${outcomeBg}`}
         >
           <OutcomeIcon className="h-3 w-3" />
           {outcome}
@@ -2516,14 +2516,14 @@ function EventBrowserCard({
       </p>
 
       <div className="mt-2 flex items-center justify-between">
-        <p className="text-[10px] text-text-muted/50">
+        <p className="text-[11px] text-text-muted/50">
           {new Date(ev.signal_date + "T12:00:00").toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
             year: "numeric",
           })}
         </p>
-        <span className={`text-[10px] font-bold ${difficultyColor}`}>
+        <span className={`text-[11px] font-bold ${difficultyColor}`}>
           {difficulty}
         </span>
       </div>

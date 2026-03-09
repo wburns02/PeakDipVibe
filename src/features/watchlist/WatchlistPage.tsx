@@ -93,10 +93,10 @@ function PriceAlertEditor({
           <X className="h-3.5 w-3.5" />
         </button>
       </div>
-      <p className="mb-2 text-[10px] text-text-muted">Current: {currentPrice != null ? formatCurrency(currentPrice) : "—"}</p>
+      <p className="mb-2 text-[11px] text-text-muted">Current: {currentPrice != null ? formatCurrency(currentPrice) : "—"}</p>
       <div className="space-y-2">
         <div>
-          <label className="text-[10px] text-text-muted">Alert above ($)</label>
+          <label className="text-[11px] text-text-muted">Alert above ($)</label>
           <input
             type="number"
             step="0.01"
@@ -104,11 +104,11 @@ function PriceAlertEditor({
             onChange={(e) => setAbove(e.target.value)}
             placeholder={currentPrice ? (currentPrice * 1.05).toFixed(2) : "0.00"}
             aria-invalid={!!validationError || undefined}
-            className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-1 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
+            className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
           />
         </div>
         <div>
-          <label className="text-[10px] text-text-muted">Alert below ($)</label>
+          <label className="text-[11px] text-text-muted">Alert below ($)</label>
           <input
             type="number"
             step="0.01"
@@ -116,19 +116,19 @@ function PriceAlertEditor({
             onChange={(e) => setBelow(e.target.value)}
             placeholder={currentPrice ? (currentPrice * 0.95).toFixed(2) : "0.00"}
             aria-invalid={!!validationError || undefined}
-            className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-1 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
+            className="mt-0.5 w-full rounded-md border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary placeholder:text-text-muted/50 focus:border-accent focus:outline-none"
           />
         </div>
       </div>
       {validationError && (
-        <p role="alert" className="mt-2 text-[10px] text-red">{validationError}</p>
+        <p role="alert" className="mt-2 text-[11px] text-red">{validationError}</p>
       )}
       <div className="mt-2.5 flex gap-2">
         <button
           type="button"
           onClick={handleSave}
           disabled={!!validationError}
-          className="flex-1 rounded-md bg-accent px-2 py-1 text-xs font-medium text-white hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-1 rounded-md bg-accent px-2 py-2 text-xs font-medium text-white hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Save
         </button>
@@ -136,7 +136,7 @@ function PriceAlertEditor({
           <button
             type="button"
             onClick={() => { onRemove(ticker); onClose(); }}
-            className="rounded-md border border-border px-2 py-1 text-xs text-red hover:bg-red/10"
+            className="rounded-md border border-border px-2 py-2 text-xs text-red hover:bg-red/10"
           >
             Clear
           </button>
@@ -553,7 +553,7 @@ export function WatchlistPage() {
 
             {/* Quick-add popular stocks */}
             <div className="mt-5">
-              <p className="mb-2 text-center text-[10px] uppercase tracking-wide text-text-muted">Quick add</p>
+              <p className="mb-2 text-center text-[11px] uppercase tracking-wide text-text-muted">Quick add</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {["AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "TSLA"].map((t) => (
                   <button
@@ -563,7 +563,7 @@ export function WatchlistPage() {
                       add(t);
                       showToast(`${t} added to watchlist`);
                     }}
-                    className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:border-accent hover:bg-accent/10"
+                    className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2.5 text-xs font-medium text-accent transition-colors hover:border-accent hover:bg-accent/10"
                   >
                     <Star className="h-3 w-3" />
                     {t}

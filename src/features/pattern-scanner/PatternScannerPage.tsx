@@ -144,7 +144,7 @@ export function PatternScannerPage() {
         <button
           type="button"
           onClick={() => setGuideOpen((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2.5 text-xs text-text-secondary transition-colors hover:bg-bg-hover"
         >
           <Info className="h-3.5 w-3.5" />
           How It Works
@@ -198,25 +198,25 @@ export function PatternScannerPage() {
       {/* Stats bar */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Patterns</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Patterns</p>
           <p className="mt-1 text-xl font-bold text-text-primary">
             {isLoading ? "\u2014" : allPatterns.length}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Bullish</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Bullish</p>
           <p className="mt-1 text-xl font-bold text-green">
             {isLoading ? "\u2014" : bullishCount}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Bearish</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Bearish</p>
           <p className="mt-1 text-xl font-bold text-red">
             {isLoading ? "\u2014" : bearishCount}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-bg-secondary p-3">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Most Common</p>
+          <p className="text-[11px] uppercase tracking-wider text-text-muted">Most Common</p>
           <p className="mt-1 text-lg font-bold text-accent truncate">
             {isLoading
               ? "\u2014"
@@ -225,7 +225,7 @@ export function PatternScannerPage() {
                 : "None"}
           </p>
           {!isLoading && topPattern && (
-            <p className="text-[10px] text-text-muted">{topPattern[1]} detected</p>
+            <p className="text-[11px] text-text-muted">{topPattern[1]} detected</p>
           )}
         </div>
       </div>
@@ -253,7 +253,7 @@ export function PatternScannerPage() {
               key={tab.key}
               type="button"
               onClick={() => setFilter(tab.key)}
-              className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+              className={`rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${
                 filter === tab.key
                   ? "text-white"
                   : "border-border text-text-muted hover:text-text-primary hover:bg-bg-hover"
@@ -281,7 +281,7 @@ export function PatternScannerPage() {
         <select
           value={patternFilter}
           onChange={(e) => setPatternFilter(e.target.value as PatternType | "all")}
-          className="rounded-lg border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+          className="rounded-lg border border-border bg-bg-secondary px-2 py-2.5 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
         >
           <option value="all">All Patterns</option>
           {PATTERN_TYPES.map((pt) => (
@@ -295,7 +295,7 @@ export function PatternScannerPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortMode)}
-          className="rounded-lg border border-border bg-bg-secondary px-2 py-1.5 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+          className="rounded-lg border border-border bg-bg-secondary px-2 py-2.5 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
         >
           <option value="conviction">Sort: Conviction</option>
           <option value="potential">Sort: Potential %</option>
@@ -346,7 +346,7 @@ export function PatternScannerPage() {
 
       {/* Disclaimer */}
       {filtered.length > 0 && (
-        <p className="text-center text-[10px] text-text-muted">
+        <p className="text-center text-[11px] text-text-muted">
           Chart patterns are probabilistic, not predictive. They represent historical tendencies,
           not guarantees. Always combine with other analysis and manage risk appropriately.
         </p>

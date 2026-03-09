@@ -441,23 +441,23 @@ export function StrategyPortfoliosPage() {
       {stats && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[10px] uppercase tracking-wider text-text-muted">Stocks Analyzed</p>
+            <p className="text-[11px] uppercase tracking-wider text-text-muted">Stocks Analyzed</p>
             <p className="mt-1 text-xl font-bold text-text-primary">{stats.total}</p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[10px] uppercase tracking-wider text-text-muted">Above SMA-50</p>
+            <p className="text-[11px] uppercase tracking-wider text-text-muted">Above SMA-50</p>
             <p className="mt-1 text-xl font-bold text-green">
               {((stats.aboveSma50 / stats.total) * 100).toFixed(0)}%
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[10px] uppercase tracking-wider text-text-muted">Above SMA-200</p>
+            <p className="text-[11px] uppercase tracking-wider text-text-muted">Above SMA-200</p>
             <p className="mt-1 text-xl font-bold text-green">
               {((stats.aboveSma200 / stats.total) * 100).toFixed(0)}%
             </p>
           </div>
           <div className="rounded-xl border border-border bg-bg-secondary p-3">
-            <p className="text-[10px] uppercase tracking-wider text-text-muted">Avg RSI</p>
+            <p className="text-[11px] uppercase tracking-wider text-text-muted">Avg RSI</p>
             <p className="mt-1 text-xl font-bold text-text-primary">{stats.avgRsi.toFixed(1)}</p>
           </div>
         </div>

@@ -102,7 +102,7 @@ export function SignalsPage() {
           <button
             type="button"
             onClick={() => downloadCSV(signals)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-card px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
             title={`Export ${signals.length} signals to CSV`}
             aria-label={`Export ${signals.length} signals to CSV`}
           >
@@ -161,7 +161,7 @@ export function SignalsPage() {
                 min={1}
                 max={365}
                 aria-label="Lookback period in days"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
               />
             </div>
 
@@ -196,7 +196,7 @@ export function SignalsPage() {
                 value={filters.status ?? ""}
                 onChange={(e) => setFilter("status", e.target.value)}
                 aria-label="Filter by signal status"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
               >
                 {STATUS_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -215,7 +215,7 @@ export function SignalsPage() {
                 value={filters.catalyst_type ?? ""}
                 onChange={(e) => setFilter("catalyst_type", e.target.value)}
                 aria-label="Filter by catalyst type"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
               >
                 {CATALYST_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -234,7 +234,7 @@ export function SignalsPage() {
                 value={filters.sector ?? ""}
                 onChange={(e) => setFilter("sector", e.target.value)}
                 aria-label="Filter by sector"
-                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-1.5 text-xs text-text-primary"
+                className="w-full rounded-lg border border-border bg-bg-primary px-2 py-2 text-xs text-text-primary"
               >
                 <option value="">All Sectors</option>
                 {sectors?.map((s) => (
@@ -269,7 +269,7 @@ export function SignalsPage() {
             type="button"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
             Previous
@@ -281,7 +281,7 @@ export function SignalsPage() {
             type="button"
             onClick={() => setPage((p) => p + 1)}
             disabled={!hasMore}
-            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1 rounded-lg border border-border bg-bg-card px-3 py-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Next
             <ChevronRight className="h-3.5 w-3.5" />
