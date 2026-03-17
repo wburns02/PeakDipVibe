@@ -123,9 +123,9 @@ export function DashboardPage() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Market Dashboard</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Welcome to PeakDipVibe!</h1>
           <p className="mt-1 text-sm text-text-muted">
-            US market analytics powered by 7 years of daily OHLCV data
+            See how the stock market is doing today — search for any company to learn more
           </p>
         </div>
         {status?.last_update && (() => {
@@ -151,7 +151,7 @@ export function DashboardPage() {
           ref={inputRef}
           type="text"
           autoComplete="off"
-          placeholder="Search tickers... (e.g. AAPL, Microsoft)  Press /"
+          placeholder="Search for a company (e.g. Apple, Tesla, Nike)  Press /"
           value={searchInput}
           onChange={(e) => {
             setSearchInput(e.target.value.replace(/[^a-zA-Z0-9 .\-]/g, ""));

@@ -23,43 +23,43 @@ interface TourStep {
 const TOUR_STEPS: TourStep[] = [
   {
     icon: <Rocket className="h-8 w-8 text-accent" />,
-    title: "Welcome to PeakDipVibe!",
+    title: "Hey there! Welcome!",
     description:
-      "This app helps you understand what happens when stocks make big moves. We track gap-ups, sell-offs, and recoveries across major US exchanges — so you can learn patterns that repeat.",
-    tip: "Everything here is educational. No real money, no financial advice.",
+      "PeakDipVibe is like a weather app, but for the stock market! Instead of checking if it'll rain tomorrow, you can see which companies are having a great day and which ones aren't. No real money involved — it's all just for learning and fun.",
+    tip: "Think of stocks like trading cards — each one has stats, and we help you compare them!",
   },
   {
     icon: <Search className="h-8 w-8 text-accent" />,
-    title: "Search & Dashboard",
+    title: "Find Any Company",
     description:
-      "The Dashboard is your home base. Search for any stock to see its technicals, signals, and price chart. The sector heatmap and top movers give you a quick market pulse.",
-    tip: 'Try pressing "/" anywhere to jump to the search bar.',
+      "The Home page is your starting point. Type any company name — like Apple, Tesla, or Nike — into the search bar to learn about it. You'll see colorful charts, today's biggest winners and losers, and a map showing which industries are doing well.",
+    tip: "Try searching for your favorite brand — they might be on the stock market!",
   },
   {
     icon: <Zap className="h-8 w-8 text-amber" />,
-    title: "News Catalyst Scanner",
+    title: "Catch the Big Moves",
     description:
-      "The Signals page detects gap-up + sell-off patterns driven by earnings, upgrades, and positive news. Filter by strength, catalyst type, and sector to find interesting setups.",
-    tip: "Look for signals with strength 60+ and V-Bounce badges.",
+      "The Signals page is like a news alert. It shows you stocks that just made a big jump or a big drop — and tells you WHY it happened (like a great earnings report or exciting news). The bigger the \"strength\" number, the bigger the move!",
+    tip: "Green badges = the stock bounced back. Red = it kept falling.",
   },
   {
     icon: <TrendingUp className="h-8 w-8 text-green" />,
-    title: "Earnings Events",
+    title: "Earnings = Report Card Day",
     description:
-      "The Earnings page shows the big pattern: stocks jump on good news, dip as profit-takers sell, then often recover. Follow the price journey chart to see the average path.",
+      "Every few months, companies share their \"report card\" (called earnings). If a company did better than expected, its stock usually jumps up! This page tracks what happens before and after those big announcements.",
   },
   {
     icon: <BarChart3 className="h-8 w-8 text-purple-400" />,
-    title: "Trading Simulator",
+    title: "Practice with Play Money",
     description:
-      "Pick any real stock event and replay it in 15/30/60-minute bars. Practice buying the dip and selling the recovery with virtual money. Toggle the Probability Cone to see projected ranges.",
-    tip: "Keyboard shortcuts: Space (play), B (buy), S (sell), ←→ (step).",
+      "The Simulator lets you pretend to buy and sell stocks using fake money. Watch the price move in real time and try to buy low and sell high — like a video game! You can't lose any real money, so experiment all you want.",
+    tip: "Press Space to play, B to buy, S to sell, and arrow keys to step through time.",
   },
   {
     icon: <Filter className="h-8 w-8 text-cyan-400" />,
-    title: "Screener, Compare & Watchlist",
+    title: "Build Your Favorites List",
     description:
-      "Use the Screener to filter stocks by technicals. Compare up to 4 tickers side-by-side. Add favorites to your Watchlist for quick access.",
+      "Use the Star button on any stock to add it to your Favorites. You can compare stocks side by side, use the Stock Finder to search with filters (like finding all tech companies), and check back anytime to see how your picks are doing!",
   },
 ];
 

@@ -57,6 +57,7 @@ interface NavItem {
   to: string;
   icon: LucideIcon;
   label: string;
+  desc?: string;
 }
 
 interface NavSection {
@@ -66,63 +67,63 @@ interface NavSection {
 }
 
 const pinnedItems: NavItem[] = [
-  { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/pulse", icon: Sunrise, label: "Morning Pulse" },
+  { to: "/", icon: LayoutDashboard, label: "Home", desc: "See how the market is doing" },
+  { to: "/pulse", icon: Sunrise, label: "Today's Briefing", desc: "What happened today, in plain English" },
 ];
 
 const navSections: NavSection[] = [
   {
     id: "trading",
-    title: "Trading",
+    title: "My Stuff",
     items: [
-      { to: "/ideas", icon: Lightbulb, label: "Trade Ideas" },
-      { to: "/planner", icon: ClipboardList, label: "Trade Planner" },
-      { to: "/journal", icon: BookOpen, label: "Journal" },
-      { to: "/alerts", icon: Bell, label: "Alerts" },
-      { to: "/portfolios", icon: Briefcase, label: "Portfolios" },
+      { to: "/ideas", icon: Lightbulb, label: "Trade Ideas", desc: "Interesting stocks picked for you" },
+      { to: "/planner", icon: ClipboardList, label: "Game Plan", desc: "Plan your next move" },
+      { to: "/journal", icon: BookOpen, label: "Journal", desc: "Keep a diary of your picks" },
+      { to: "/alerts", icon: Bell, label: "Alerts", desc: "Get notified about big moves" },
+      { to: "/portfolios", icon: Briefcase, label: "Portfolios", desc: "Groups of stocks to follow" },
     ],
   },
   {
     id: "discover",
-    title: "Discover",
+    title: "Explore",
     items: [
-      { to: "/signals", icon: Zap, label: "Signals" },
-      { to: "/earnings", icon: Newspaper, label: "Earnings" },
-      { to: "/screener", icon: SlidersHorizontal, label: "Screener" },
-      { to: "/dna", icon: Dna, label: "Stock DNA" },
-      { to: "/strategy", icon: FlaskConical, label: "Strategy Lab" },
+      { to: "/signals", icon: Zap, label: "Signals", desc: "Stocks making big moves right now" },
+      { to: "/earnings", icon: Newspaper, label: "Earnings", desc: "When companies share their report cards" },
+      { to: "/screener", icon: SlidersHorizontal, label: "Stock Finder", desc: "Search for stocks with filters" },
+      { to: "/dna", icon: Dna, label: "Stock DNA", desc: "A health checkup for any stock" },
+      { to: "/strategy", icon: FlaskConical, label: "Strategy Lab", desc: "Build your own stock-finding recipe" },
     ],
   },
   {
     id: "analyze",
-    title: "Analyze",
+    title: "Practice",
     items: [
-      { to: "/simulator", icon: PlayCircle, label: "Simulator" },
-      { to: "/backtest", icon: TestTubeDiagonal, label: "Backtester" },
-      { to: "/internals", icon: HeartPulse, label: "Internals" },
-      { to: "/strength", icon: Trophy, label: "RS Rankings" },
-      { to: "/rotation", icon: RefreshCw, label: "Rotation" },
+      { to: "/simulator", icon: PlayCircle, label: "Simulator", desc: "Practice buying & selling — no real money!" },
+      { to: "/backtest", icon: TestTubeDiagonal, label: "Time Machine", desc: "Test ideas against the past" },
+      { to: "/internals", icon: HeartPulse, label: "Market Health", desc: "Is the overall market feeling good?" },
+      { to: "/strength", icon: Trophy, label: "Leaderboard", desc: "Which stocks are winning the race" },
+      { to: "/rotation", icon: RefreshCw, label: "Money Flow", desc: "See where investors are moving money" },
     ],
   },
   {
     id: "technical",
-    title: "Technical",
+    title: "Deep Dive",
     items: [
-      { to: "/volatility", icon: Gauge, label: "Volatility Lab" },
-      { to: "/divergences", icon: ArrowDownUp, label: "Divergences" },
-      { to: "/patterns", icon: Shapes, label: "Patterns" },
-      { to: "/radar", icon: Radar, label: "Momentum Radar" },
-      { to: "/seasonality", icon: CalendarRange, label: "Seasonality" },
+      { to: "/volatility", icon: Gauge, label: "Bumpy or Calm?", desc: "See which stocks are about to make a big move" },
+      { to: "/divergences", icon: ArrowDownUp, label: "Hidden Clues", desc: "When a stock's price and momentum disagree" },
+      { to: "/patterns", icon: Shapes, label: "Chart Shapes", desc: "Patterns that often repeat in price charts" },
+      { to: "/radar", icon: Radar, label: "Momentum Map", desc: "All stocks on one radar screen" },
+      { to: "/seasonality", icon: CalendarRange, label: "Best Months", desc: "Which months are best for each stock" },
     ],
   },
   {
     id: "portfolio",
-    title: "Portfolio",
+    title: "My Stocks",
     items: [
-      { to: "/compare", icon: BarChart3, label: "Compare" },
-      { to: "/xray", icon: Scan, label: "X-Ray" },
-      { to: "/heatmap", icon: Grid3x3, label: "Heatmap" },
-      { to: "/watchlist", icon: Star, label: "Watchlist" },
+      { to: "/compare", icon: BarChart3, label: "Compare", desc: "Put stocks side by side" },
+      { to: "/xray", icon: Scan, label: "X-Ray", desc: "See how your stocks relate to each other" },
+      { to: "/heatmap", icon: Grid3x3, label: "Color Map", desc: "See the whole market in one colorful picture" },
+      { to: "/watchlist", icon: Star, label: "Favorites", desc: "Stocks you want to keep an eye on" },
     ],
   },
 ];
@@ -161,14 +162,21 @@ function NavLink({
       onMouseEnter={() => preloadRoute[item.to]?.()}
       onFocus={() => preloadRoute[item.to]?.()}
       aria-current={active ? "page" : undefined}
-      className={`mb-0.5 flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-[13px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
+      className={`mb-0.5 flex items-center gap-2.5 rounded-lg px-3 py-1.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
         active
           ? "bg-accent/10 text-accent font-medium"
           : "text-text-secondary hover:bg-bg-hover hover:text-text-primary"
       }`}
     >
-      <Icon className="h-3.5 w-3.5 shrink-0" />
-      {item.label}
+      <Icon className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+      <div className="min-w-0">
+        <span className="block text-[13px] leading-tight">{item.label}</span>
+        {item.desc && (
+          <span className="block text-[10px] leading-tight text-text-muted opacity-70 truncate">
+            {item.desc}
+          </span>
+        )}
+      </div>
     </Link>
   );
 }

@@ -9,11 +9,11 @@ import {
 } from "lucide-react";
 
 const items = [
-  { to: "/pulse", icon: Sunrise, label: "Pulse" },
+  { to: "/pulse", icon: Sunrise, label: "Today" },
   { to: "/", icon: LayoutDashboard, label: "Home" },
-  { to: "/signals", icon: Zap, label: "Signals" },
-  { to: "/simulator", icon: PlayCircle, label: "Simulate" },
-  { to: "/watchlist", icon: Star, label: "Watch" },
+  { to: "/signals", icon: Zap, label: "Alerts" },
+  { to: "/simulator", icon: PlayCircle, label: "Practice" },
+  { to: "/watchlist", icon: Star, label: "Favorites" },
 ];
 
 export function BottomNav() {
