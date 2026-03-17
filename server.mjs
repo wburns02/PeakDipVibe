@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 const DIST = join(import.meta.dirname, "dist");
 const DATA = join(import.meta.dirname, "data");
 
-// Upstream API proxy (public HTTPS endpoint on soc-api via Tailscale Funnel)
-const UPSTREAM_HOST = "soc-api.tailad2d5f.ts.net";
+// Upstream API proxy (public HTTPS endpoint on R730 via Tailscale Funnel)
+const UPSTREAM_HOST = "r730.tailad2d5f.ts.net";
 const UPSTREAM_PREFIX = "/stock-api";
 
 const MIME = {
