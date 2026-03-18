@@ -10,6 +10,7 @@ import { SectorFlow } from "./components/SectorFlow";
 import { EarningsRadar } from "./components/EarningsRadar";
 import { WatchlistHealth } from "./components/WatchlistHealth";
 import { FreshSignals } from "./components/FreshSignals";
+import { PreMarketPreview } from "./components/PreMarketPreview";
 
 export function MorningPulsePage() {
   usePageTitle("Morning Pulse");
@@ -24,6 +25,7 @@ export function MorningPulsePage() {
   });
 
   const mood = computeMarketMood(breadth, overview?.sectors);
+  const isPreMarket = !breadthLoading && breadth?.total_stocks === 0;
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-6 pb-24 md:pb-6">
@@ -37,10 +39,19 @@ export function MorningPulsePage() {
         <MarketMoodGauge mood={mood} loading={breadthLoading} />
       </section>
 
+      {/* Pre-market preview: futures, yesterday's recap, stocks to watch */}
+      {isPreMarket && (
+        <section className="pulse-section" style={{ animationDelay: "60ms" }}>
+          <PreMarketPreview />
+        </section>
+      )}
+
       {/* Key Numbers */}
-      <section className="pulse-section" style={{ animationDelay: "80ms" }}>
-        <KeyNumbers breadth={breadth} loading={breadthLoading} />
-      </section>
+      {!isPreMarket && (
+        <section className="pulse-section" style={{ animationDelay: "80ms" }}>
+          <KeyNumbers breadth={breadth} loading={breadthLoading} />
+        </section>
+      )}
 
       {/* Top Setups */}
       <section className="pulse-section" style={{ animationDelay: "160ms" }}>
