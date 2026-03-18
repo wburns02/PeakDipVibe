@@ -118,9 +118,10 @@ function resolveApiData(urlPath, query) {
 }
 
 /**
- * Proxy an API request to the upstream R730 stock API via soc-api Tailscale Funnel.
+ * Proxy an API request to the upstream R730 stock API via Tailscale Funnel.
+ * Retries once on failure with a short delay to handle concurrent request bursts.
  */
-function proxyToUpstream(req, res, urlPath, queryString) {
+function proxyToUpstream(req, res, urlPath, queryString, attempt = 1) {
   const upstreamPath = UPSTREAM_PREFIX + urlPath + (queryString ? "?" + queryString : "");
 
   const proxyReq = httpsRequest(
@@ -136,6 +137,12 @@ function proxyToUpstream(req, res, urlPath, queryString) {
       timeout: 30000,
     },
     (proxyRes) => {
+      // If upstream returned a server error and we haven't retried yet, retry
+      if (proxyRes.statusCode >= 500 && attempt < 2) {
+        proxyRes.resume(); // drain the response
+        setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1), 500);
+        return;
+      }
       const headers = {
         "Content-Type": proxyRes.headers["content-type"] || "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -147,18 +154,25 @@ function proxyToUpstream(req, res, urlPath, queryString) {
   );
 
   proxyReq.on("error", (err) => {
-    console.error(`Proxy error: ${err.message}`);
+    if (attempt < 2) {
+      setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1), 500);
+      return;
+    }
+    console.error(`Proxy error (attempt ${attempt}): ${err.message}`);
     res.writeHead(502, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "upstream unavailable", detail: err.message }));
   });
 
   proxyReq.on("timeout", () => {
     proxyReq.destroy();
+    if (attempt < 2) {
+      setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1), 500);
+      return;
+    }
     res.writeHead(504, { "Content-Type": "application/json" });
     res.end('{"error":"upstream timeout"}');
   });
 
-  // For GET requests, just end the proxy request (no body to forward)
   proxyReq.end();
 }
 
