@@ -11,6 +11,43 @@ const DATA = join(import.meta.dirname, "data");
 const UPSTREAM_HOST = "r730.tailad2d5f.ts.net";
 const UPSTREAM_PREFIX = "/stock-api";
 
+// Request queue to limit concurrent upstream connections (Tailscale Funnel bottleneck)
+const MAX_CONCURRENT = 4;
+let activeRequests = 0;
+const pendingQueue = [];
+
+function enqueueProxy(req, res, urlPath, queryString) {
+  if (activeRequests < MAX_CONCURRENT) {
+    activeRequests++;
+    proxyToUpstream(req, res, urlPath, queryString, 1, () => {
+      activeRequests--;
+      if (pendingQueue.length > 0) {
+        const next = pendingQueue.shift();
+        activeRequests++;
+        proxyToUpstream(next.req, next.res, next.urlPath, next.queryString, 1, () => {
+          activeRequests--;
+          // Drain queue recursively
+          if (pendingQueue.length > 0) {
+            const n = pendingQueue.shift();
+            activeRequests++;
+            proxyToUpstream(n.req, n.res, n.urlPath, n.queryString, 1, () => { activeRequests--; drainQueue(); });
+          }
+        });
+      }
+    });
+  } else {
+    pendingQueue.push({ req, res, urlPath, queryString });
+  }
+}
+
+function drainQueue() {
+  while (pendingQueue.length > 0 && activeRequests < MAX_CONCURRENT) {
+    const next = pendingQueue.shift();
+    activeRequests++;
+    proxyToUpstream(next.req, next.res, next.urlPath, next.queryString, 1, () => { activeRequests--; drainQueue(); });
+  }
+}
+
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
@@ -121,7 +158,7 @@ function resolveApiData(urlPath, query) {
  * Proxy an API request to the upstream R730 stock API via Tailscale Funnel.
  * Retries once on failure with a short delay to handle concurrent request bursts.
  */
-function proxyToUpstream(req, res, urlPath, queryString, attempt = 1) {
+function proxyToUpstream(req, res, urlPath, queryString, attempt = 1, done = () => {}) {
   const upstreamPath = UPSTREAM_PREFIX + urlPath + (queryString ? "?" + queryString : "");
 
   const proxyReq = httpsRequest(
@@ -139,8 +176,8 @@ function proxyToUpstream(req, res, urlPath, queryString, attempt = 1) {
     (proxyRes) => {
       // If upstream returned a server error and we haven't retried yet, retry
       if (proxyRes.statusCode >= 500 && attempt < 2) {
-        proxyRes.resume(); // drain the response
-        setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1), 500);
+        proxyRes.resume();
+        setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1, done), 500);
         return;
       }
       const headers = {
@@ -150,27 +187,30 @@ function proxyToUpstream(req, res, urlPath, queryString, attempt = 1) {
       };
       res.writeHead(proxyRes.statusCode, headers);
       proxyRes.pipe(res);
+      proxyRes.on("end", done);
     },
   );
 
   proxyReq.on("error", (err) => {
     if (attempt < 2) {
-      setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1), 500);
+      setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1, done), 500);
       return;
     }
     console.error(`Proxy error (attempt ${attempt}): ${err.message}`);
     res.writeHead(502, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "upstream unavailable", detail: err.message }));
+    done();
   });
 
   proxyReq.on("timeout", () => {
     proxyReq.destroy();
     if (attempt < 2) {
-      setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1), 500);
+      setTimeout(() => proxyToUpstream(req, res, urlPath, queryString, attempt + 1, done), 500);
       return;
     }
     res.writeHead(504, { "Content-Type": "application/json" });
     res.end('{"error":"upstream timeout"}');
+    done();
   });
 
   proxyReq.end();
@@ -219,8 +259,8 @@ const server = createServer((req, res) => {
       return;
     }
 
-    // No cached data — proxy to upstream API
-    proxyToUpstream(req, res, urlPath, queryString || "");
+    // No cached data — queue proxy to upstream API (limits concurrency)
+    enqueueProxy(req, res, urlPath, queryString || "");
     return;
   }
 
