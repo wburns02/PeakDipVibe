@@ -133,7 +133,7 @@ function proxyToUpstream(req, res, urlPath, queryString) {
         accept: "application/json",
         "user-agent": "PeakDipVibe-Server/1.0",
       },
-      timeout: 15000,
+      timeout: 30000,
     },
     (proxyRes) => {
       const headers = {
