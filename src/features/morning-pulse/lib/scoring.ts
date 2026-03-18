@@ -31,6 +31,22 @@ export function computeMarketMood(
     };
   }
 
+  // Pre-market or no data yet — show a friendly waiting state
+  if (breadth.total_stocks === 0) {
+    return {
+      score: 50,
+      label: "Waiting for Market",
+      color: "#6366f1",
+      summary: "The market hasn't opened yet today. Breadth data will appear once trading begins at 9:30 AM ET.",
+      factors: [
+        { label: "A/D Ratio", value: "—", positive: true },
+        { label: "Above 50-SMA", value: "—", positive: true },
+        { label: "Above 200-SMA", value: "—", positive: true },
+        { label: "Avg RSI", value: "—", positive: true },
+      ],
+    };
+  }
+
   let score = 50;
   const factors: MarketMood["factors"] = [];
 
@@ -84,9 +100,9 @@ export function computeMarketMood(
     color = "#ef4444";
   }
 
-  const advPct = Math.round(
-    (breadth.advancers / breadth.total_stocks) * 100,
-  );
+  const advPct = breadth.total_stocks > 0
+    ? Math.round((breadth.advancers / breadth.total_stocks) * 100)
+    : 0;
   const sorted = sectors
     ? [...sectors].sort((a, b) => b.avg_change_pct - a.avg_change_pct)
     : [];

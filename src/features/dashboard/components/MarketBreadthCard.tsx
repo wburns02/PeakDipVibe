@@ -10,9 +10,12 @@ export function MarketBreadthCard() {
   if (isLoading) return <Skeleton className="h-40" />;
   if (!breadth) return null;
 
+  const preMarket = breadth.total_stocks === 0;
   const bullish = breadth.advance_decline_ratio >= 1;
-  const adLabel = bullish ? "Bullish" : "Bearish";
-  const adColor = bullish ? "text-green" : "text-red";
+  const adLabel = preMarket ? "Pre-Market" : bullish ? "Bullish" : "Bearish";
+  const adColor = preMarket ? "text-accent" : bullish ? "text-green" : "text-red";
+  const advPct = preMarket ? 0 : (breadth.advancers / breadth.total_stocks) * 100;
+  const decPct = preMarket ? 0 : (breadth.decliners / breadth.total_stocks) * 100;
 
   return (
     <Card>
@@ -27,25 +30,27 @@ export function MarketBreadthCard() {
         <div className="mb-1 flex items-center justify-between text-xs">
           <span className="flex items-center gap-1 text-green">
             <TrendingUp className="h-3 w-3" />
-            {breadth.advancers} Advancers
+            {preMarket ? "—" : breadth.advancers} Advancers
           </span>
           <span className="flex items-center gap-1 text-red">
-            {breadth.decliners} Decliners
+            {preMarket ? "—" : breadth.decliners} Decliners
             <TrendingDown className="h-3 w-3" />
           </span>
         </div>
         <div className="flex h-2.5 overflow-hidden rounded-full bg-bg-hover">
           <div
             className="bg-green transition-all duration-500"
-            style={{ width: `${(breadth.advancers / breadth.total_stocks) * 100}%` }}
+            style={{ width: `${advPct}%` }}
           />
           <div
             className="bg-red transition-all duration-500"
-            style={{ width: `${(breadth.decliners / breadth.total_stocks) * 100}%` }}
+            style={{ width: `${decPct}%` }}
           />
         </div>
         <p className="mt-1 text-center text-xs text-text-muted">
-          A/D Ratio: {breadth.advance_decline_ratio.toFixed(2)} ({breadth.total_stocks} stocks)
+          {preMarket
+            ? "Market hasn't opened yet — data updates at 9:30 AM ET"
+            : `A/D Ratio: ${breadth.advance_decline_ratio.toFixed(2)} (${breadth.total_stocks} stocks)`}
         </p>
       </div>
 

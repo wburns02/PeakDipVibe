@@ -25,46 +25,51 @@ export function KeyNumbers({ breadth, loading }: Props) {
     );
   }
 
+  // Pre-market: show dashes instead of zeros
+  const preMarket = breadth.total_stocks === 0;
+
   const items = [
     {
       icon: TrendingUp,
       label: "Advancers",
-      value: breadth.advancers.toString(),
-      color: "text-green",
-      bg: "bg-green/10",
+      value: preMarket ? "—" : breadth.advancers.toString(),
+      color: preMarket ? "text-text-muted" : "text-green",
+      bg: preMarket ? "bg-bg-hover" : "bg-green/10",
     },
     {
       icon: TrendingDown,
       label: "Decliners",
-      value: breadth.decliners.toString(),
-      color: "text-red",
-      bg: "bg-red/10",
+      value: preMarket ? "—" : breadth.decliners.toString(),
+      color: preMarket ? "text-text-muted" : "text-red",
+      bg: preMarket ? "bg-bg-hover" : "bg-red/10",
     },
     {
       icon: Activity,
       label: "A/D Ratio",
-      value: breadth.advance_decline_ratio.toFixed(2),
-      color:
+      value: preMarket ? "—" : breadth.advance_decline_ratio.toFixed(2),
+      color: preMarket ? "text-text-muted" :
         breadth.advance_decline_ratio >= 1 ? "text-green" : "text-red",
-      bg:
+      bg: preMarket ? "bg-bg-hover" :
         breadth.advance_decline_ratio >= 1 ? "bg-green/10" : "bg-red/10",
     },
     {
       icon: BarChart3,
       label: "> 50 SMA",
-      value: `${breadth.pct_above_sma50.toFixed(0)}%`,
-      color: breadth.pct_above_sma50 >= 50 ? "text-green" : "text-red",
-      bg: breadth.pct_above_sma50 >= 50 ? "bg-green/10" : "bg-red/10",
+      value: preMarket ? "—" : `${breadth.pct_above_sma50.toFixed(0)}%`,
+      color: preMarket ? "text-text-muted" :
+        breadth.pct_above_sma50 >= 50 ? "text-green" : "text-red",
+      bg: preMarket ? "bg-bg-hover" :
+        breadth.pct_above_sma50 >= 50 ? "bg-green/10" : "bg-red/10",
     },
     {
       icon: Gauge,
       label: "Avg RSI",
-      value: breadth.avg_rsi?.toFixed(1) ?? "—",
-      color:
+      value: preMarket ? "—" : (breadth.avg_rsi?.toFixed(1) ?? "—"),
+      color: preMarket ? "text-text-muted" :
         breadth.avg_rsi && breadth.avg_rsi >= 45 && breadth.avg_rsi <= 70
           ? "text-green"
           : "text-amber",
-      bg:
+      bg: preMarket ? "bg-bg-hover" :
         breadth.avg_rsi && breadth.avg_rsi >= 45 && breadth.avg_rsi <= 70
           ? "bg-green/10"
           : "bg-amber/10",
@@ -72,9 +77,11 @@ export function KeyNumbers({ breadth, loading }: Props) {
     {
       icon: AlertTriangle,
       label: "Oversold",
-      value: `${breadth.pct_oversold.toFixed(1)}%`,
-      color: breadth.pct_oversold > 10 ? "text-amber" : "text-text-secondary",
-      bg: breadth.pct_oversold > 10 ? "bg-amber/10" : "bg-bg-hover",
+      value: preMarket ? "—" : `${breadth.pct_oversold.toFixed(1)}%`,
+      color: preMarket ? "text-text-muted" :
+        breadth.pct_oversold > 10 ? "text-amber" : "text-text-secondary",
+      bg: preMarket ? "bg-bg-hover" :
+        breadth.pct_oversold > 10 ? "bg-amber/10" : "bg-bg-hover",
     },
   ];
 
