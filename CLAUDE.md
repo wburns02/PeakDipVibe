@@ -18,7 +18,7 @@
 - Production: `https://stocks.ecbtx.com` (Railway: `profound-intuition-production-cce9.up.railway.app`)
 - Backend API (Tailscale, R730): `http://100.82.237.57:8001/api`
 - Local API: `http://localhost:8001/api`
-- Deploy frontend: `railway up -d` from PeakDipVibe directory (auto-deploy from GitHub NOT working)
+- Deploy frontend: `git push origin main` → Railway auto-deploys from GitHub
 
 ## API Architecture (2026-03-06)
 - **Production**: Earnings data served as pre-computed JSON from `data/earnings/` via `server.mjs`
