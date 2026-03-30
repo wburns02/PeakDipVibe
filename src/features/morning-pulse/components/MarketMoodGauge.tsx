@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { MarketMood } from "../lib/scoring";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useMoodHistory, type MoodEntry } from "@/hooks/useMoodHistory";
+import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 const RADIUS = 80;
 const STROKE = 12;
@@ -15,8 +17,87 @@ interface Props {
   loading?: boolean;
 }
 
+function MoodTrendChart({ history }: { history: MoodEntry[] }) {
+  if (history.length < 2) return null;
+
+  const W = 320;
+  const H = 80;
+  const PAD_X = 28;
+  const PAD_Y = 12;
+  const chartW = W - PAD_X * 2;
+  const chartH = H - PAD_Y * 2;
+
+  const min = Math.min(...history.map((e) => e.score)) - 5;
+  const max = Math.max(...history.map((e) => e.score)) + 5;
+  const range = Math.max(max - min, 10);
+
+  const points = history.map((e, i) => ({
+    x: PAD_X + (i / (history.length - 1)) * chartW,
+    y: PAD_Y + chartH - ((e.score - min) / range) * chartH,
+    ...e,
+  }));
+
+  const pathD = points
+    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
+    .join(" ");
+
+  const first = history[0].score;
+  const last = history[history.length - 1].score;
+  const delta = last - first;
+  const lineColor = delta > 2 ? "#22c55e" : delta < -2 ? "#ef4444" : "#f59e0b";
+
+  const formatDay = (dateStr: string) => {
+    const d = new Date(dateStr + "T12:00:00");
+    return d.toLocaleDateString("en-US", { weekday: "short" });
+  };
+
+  return (
+    <div className="mt-5 w-full max-w-sm">
+      <div className="mb-2 flex items-center justify-between">
+        <h4 className="text-xs font-semibold text-text-muted">Weekly Trend</h4>
+        <div className="flex items-center gap-1 text-xs" style={{ color: lineColor }}>
+          {delta > 0 ? <TrendingUp className="h-3 w-3" /> : delta < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
+          <span className="font-semibold">{delta > 0 ? "+" : ""}{delta}</span>
+          <span className="text-text-muted">pts</span>
+        </div>
+      </div>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="w-full">
+        {/* Grid lines */}
+        {[0, 0.5, 1].map((frac) => {
+          const y = PAD_Y + frac * chartH;
+          const val = Math.round(max - frac * range);
+          return (
+            <g key={frac}>
+              <line x1={PAD_X} x2={W - PAD_X} y1={y} y2={y} stroke="currentColor" className="text-border" strokeWidth={0.5} strokeDasharray="4 4" />
+              <text x={PAD_X - 4} y={y + 3} textAnchor="end" className="fill-text-muted" fontSize={9}>{val}</text>
+            </g>
+          );
+        })}
+
+        {/* Line */}
+        <path d={pathD} fill="none" stroke={lineColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+
+        {/* Dots + day labels */}
+        {points.map((p, i) => (
+          <g key={p.date}>
+            <circle cx={p.x} cy={p.y} r={3} fill={lineColor} />
+            <text x={p.x} y={H - 1} textAnchor="middle" className="fill-text-muted" fontSize={8}>
+              {i === 0 || i === points.length - 1 || history.length <= 7 ? formatDay(p.date) : ""}
+            </text>
+            <title>{p.date}: {p.score}</title>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 export function MarketMoodGauge({ mood, loading }: Props) {
   const [animated, setAnimated] = useState(0);
+  const scoreToRecord = loading ? null : mood.score;
+  const { getHistory } = useMoodHistory(scoreToRecord);
+
+  const history = useMemo(() => getHistory(7), [getHistory, mood.score]);
 
   useEffect(() => {
     if (loading) return;
@@ -136,6 +217,9 @@ export function MarketMoodGauge({ mood, loading }: Props) {
           ))}
         </div>
       )}
+
+      {/* Weekly trend chart */}
+      <MoodTrendChart history={history} />
     </div>
   );
 }
