@@ -283,8 +283,11 @@ const server = createServer((req, res) => {
     return;
   }
 
-  // SPA fallback — serve index.html
-  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+  // SPA fallback — serve index.html (no-cache so deploys take effect immediately)
+  res.writeHead(200, {
+    "Content-Type": "text/html; charset=utf-8",
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+  });
   res.end(indexHtml);
 });
 

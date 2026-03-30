@@ -17,8 +17,26 @@ interface Props {
   loading?: boolean;
 }
 
-function MoodTrendChart({ history }: { history: MoodEntry[] }) {
-  if (history.length < 2) return null;
+function MoodTrendChart({ history, currentScore }: { history: MoodEntry[]; currentScore: number }) {
+  // Always show — even with 0 history, show today's score as a single point
+  const entries = history.length > 0 ? history : [{ date: new Date().toISOString().slice(0, 10), score: currentScore }];
+
+  if (entries.length === 1) {
+    return (
+      <div className="mt-5 w-full max-w-sm">
+        <div className="mb-2 flex items-center justify-between">
+          <h4 className="text-xs font-semibold text-text-muted">Weekly Trend</h4>
+          <span className="text-xs text-text-muted">Tracking started today</span>
+        </div>
+        <div className="flex items-center justify-center rounded-lg border border-dashed border-border py-4">
+          <div className="text-center">
+            <span className="text-2xl font-bold text-accent">{entries[0].score}</span>
+            <p className="mt-1 text-xs text-text-muted">Today's score — trend builds daily</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const W = 320;
   const H = 80;
@@ -27,12 +45,12 @@ function MoodTrendChart({ history }: { history: MoodEntry[] }) {
   const chartW = W - PAD_X * 2;
   const chartH = H - PAD_Y * 2;
 
-  const min = Math.min(...history.map((e) => e.score)) - 5;
-  const max = Math.max(...history.map((e) => e.score)) + 5;
+  const min = Math.min(...entries.map((e) => e.score)) - 5;
+  const max = Math.max(...entries.map((e) => e.score)) + 5;
   const range = Math.max(max - min, 10);
 
-  const points = history.map((e, i) => ({
-    x: PAD_X + (i / (history.length - 1)) * chartW,
+  const points = entries.map((e, i) => ({
+    x: PAD_X + (i / (entries.length - 1)) * chartW,
     y: PAD_Y + chartH - ((e.score - min) / range) * chartH,
     ...e,
   }));
@@ -41,8 +59,8 @@ function MoodTrendChart({ history }: { history: MoodEntry[] }) {
     .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
     .join(" ");
 
-  const first = history[0].score;
-  const last = history[history.length - 1].score;
+  const first = entries[0].score;
+  const last = entries[entries.length - 1].score;
   const delta = last - first;
   const lineColor = delta > 2 ? "#22c55e" : delta < -2 ? "#ef4444" : "#f59e0b";
 
@@ -82,7 +100,7 @@ function MoodTrendChart({ history }: { history: MoodEntry[] }) {
           <g key={p.date}>
             <circle cx={p.x} cy={p.y} r={3} fill={lineColor} />
             <text x={p.x} y={H - 1} textAnchor="middle" className="fill-text-muted" fontSize={8}>
-              {i === 0 || i === points.length - 1 || history.length <= 7 ? formatDay(p.date) : ""}
+              {i === 0 || i === points.length - 1 || entries.length <= 7 ? formatDay(p.date) : ""}
             </text>
             <title>{p.date}: {p.score}</title>
           </g>
@@ -219,7 +237,7 @@ export function MarketMoodGauge({ mood, loading }: Props) {
       )}
 
       {/* Weekly trend chart */}
-      <MoodTrendChart history={history} />
+      <MoodTrendChart history={history} currentScore={mood.score} />
     </div>
   );
 }
