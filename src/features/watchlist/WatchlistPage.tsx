@@ -520,8 +520,14 @@ function AddStockSearch({ onAdd, watchlist }: { onAdd: (ticker: string) => void;
 
   const filtered = useMemo(() => {
     if (!results) return [];
-    return results.filter((t) => !watchlist.includes(t.ticker)).slice(0, 8);
-  }, [results, watchlist]);
+    const q = debouncedQuery.trim().toUpperCase();
+    return results
+      .filter((t) => !watchlist.includes(t.ticker))
+      .filter((t) =>
+        !q || t.ticker.includes(q) || (t.name?.toUpperCase().includes(q) ?? false)
+      )
+      .slice(0, 8);
+  }, [results, watchlist, debouncedQuery]);
 
   useEffect(() => { setSelectedIdx(0); }, [filtered]);
 
