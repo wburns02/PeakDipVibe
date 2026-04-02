@@ -39,6 +39,19 @@ export const MarketBreadthSchema = z.object({
   pct_overbought: z.number(),
 });
 
+export const BreadthHistoryEntrySchema = z.object({
+  date: z.string(),
+  score: z.number(),
+  advancers: z.number().optional(),
+  decliners: z.number().optional(),
+  ad_ratio: z.number().optional(),
+  pct_above_sma50: z.number().optional(),
+  avg_rsi: z.number().nullable().optional(),
+  source: z.string().optional(),
+});
+
+export type BreadthHistoryEntry = z.infer<typeof BreadthHistoryEntrySchema>;
+
 export const StatusResponseSchema = z.object({
   total_tickers: z.number(),
   total_prices: z.number(),

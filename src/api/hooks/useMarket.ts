@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
 import { STALE_FRESH, STALE_WARM } from "../queryConfig";
 import {
+  BreadthHistoryEntrySchema,
   MarketBreadthSchema,
   MarketOverviewSchema,
   SectorPerformanceSchema,
@@ -91,5 +92,18 @@ export function usePipelineStatus() {
       return StatusResponseSchema.parse(data);
     },
     staleTime: STALE_FRESH,
+  });
+}
+
+export function useMarketBreadthHistory(days = 30) {
+  return useQuery({
+    queryKey: ["market-breadth-history", days],
+    queryFn: async () => {
+      const { data } = await api.get("/market/breadth-history", {
+        params: { days },
+      });
+      return z.array(BreadthHistoryEntrySchema).parse(data);
+    },
+    staleTime: STALE_WARM,
   });
 }
