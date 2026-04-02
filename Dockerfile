@@ -18,5 +18,8 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server.mjs ./server.mjs
 COPY --from=builder /app/data ./data
 
+# Ensure data directory is writable for runtime breadth cache updates
+RUN chmod -R 777 ./data
+
 EXPOSE 3000
 CMD ["node", "server.mjs"]
