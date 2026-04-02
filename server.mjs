@@ -522,6 +522,61 @@ const server = createServer((req, res) => {
       return;
     }
 
+    // ─── Signals: try upstream first, filter stale cached data ───
+    if (urlPath === "/api/signals/patterns" || urlPath === "/api/signals/patterns/stats") {
+      const upstreamPath = `${UPSTREAM_PREFIX}${urlPath}${queryString ? "?" + queryString : ""}`;
+      const upstreamUrl = `https://${UPSTREAM_HOST}${upstreamPath}`;
+
+      // Try R730 upstream first
+      fetchJSON(upstreamUrl, 8000).then((data) => {
+        if (data) {
+          // Cache the fresh data to file
+          const dataFile = resolveApiData(urlPath, queryString || "");
+          if (dataFile) {
+            try { writeFileSync(dataFile, JSON.stringify(data)); } catch {}
+          }
+          res.writeHead(200, {
+            "Content-Type": "application/json; charset=utf-8",
+            "Cache-Control": "public, max-age=300",
+            "Access-Control-Allow-Origin": "*",
+            "X-Signals-Source": "r730-live",
+          });
+          res.end(JSON.stringify(data));
+        }
+      }).catch(() => {
+        // R730 unavailable — serve cached data with staleness filter
+        const dataFile = resolveApiData(urlPath, queryString || "");
+        if (dataFile && existsSync(dataFile)) {
+          let data = JSON.parse(readFileSync(dataFile, "utf-8"));
+
+          // Filter stale signals: remove entries older than the requested days window
+          if (Array.isArray(data)) {
+            const params = new URLSearchParams(queryString || "");
+            const days = parseInt(params.get("days") || "14", 10);
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - days);
+            const cutoffStr = cutoff.toISOString().slice(0, 10);
+            data = data.filter((s) => (s.signal_date || s.date || "") >= cutoffStr);
+          }
+
+          res.writeHead(200, {
+            "Content-Type": "application/json; charset=utf-8",
+            "Cache-Control": "public, max-age=300",
+            "Access-Control-Allow-Origin": "*",
+            "X-Signals-Source": "cached-filtered",
+          });
+          res.end(JSON.stringify(data));
+        } else {
+          res.writeHead(200, {
+            "Content-Type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+          });
+          res.end("[]");
+        }
+      });
+      return;
+    }
+
     // ─── All other API routes: serve cached JSON, fallback to upstream proxy ───
     const dataFile = resolveApiData(urlPath, queryString || "");
     if (dataFile) {
