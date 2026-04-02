@@ -1,7 +1,8 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import type { MarketMood } from "../lib/scoring";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { useMoodHistory, type MoodEntry } from "@/hooks/useMoodHistory";
+import { useMarketBreadthHistory } from "@/api/hooks/useMarket";
+import type { BreadthHistoryEntry } from "@/api/types/market";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 const RADIUS = 80;
@@ -17,11 +18,14 @@ interface Props {
   loading?: boolean;
 }
 
-function MoodTrendChart({ history, currentScore }: { history: MoodEntry[]; currentScore: number }) {
-  // Always show — even with 0 history, show today's score as a single point
-  const entries = history.length > 0 ? history : [{ date: new Date().toISOString().slice(0, 10), score: currentScore }];
+function MoodTrendChart({ history, currentScore }: { history: BreadthHistoryEntry[]; currentScore: number }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const hasToday = history.some((e) => e.date === today);
+  const entries = hasToday
+    ? history
+    : [...history, { date: today, score: currentScore }];
 
-  if (entries.length === 1) {
+  if (entries.length <= 1) {
     return (
       <div className="mt-5 w-full max-w-sm">
         <div className="mb-2 flex items-center justify-between">
@@ -30,8 +34,8 @@ function MoodTrendChart({ history, currentScore }: { history: MoodEntry[]; curre
         </div>
         <div className="flex items-center justify-center rounded-lg border border-dashed border-border py-4">
           <div className="text-center">
-            <span className="text-2xl font-bold text-accent">{entries[0].score}</span>
-            <p className="mt-1 text-xs text-text-muted">Today's score — trend builds daily</p>
+            <span className="text-2xl font-bold text-accent">{entries[0]?.score ?? currentScore}</span>
+            <p className="mt-1 text-xs text-text-muted">First score recorded — trend builds daily</p>
           </div>
         </div>
       </div>
@@ -80,7 +84,6 @@ function MoodTrendChart({ history, currentScore }: { history: MoodEntry[]; curre
         </div>
       </div>
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="w-full">
-        {/* Grid lines */}
         {[0, 0.5, 1].map((frac) => {
           const y = PAD_Y + frac * chartH;
           const val = Math.round(max - frac * range);
@@ -91,11 +94,7 @@ function MoodTrendChart({ history, currentScore }: { history: MoodEntry[]; curre
             </g>
           );
         })}
-
-        {/* Line */}
         <path d={pathD} fill="none" stroke={lineColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-
-        {/* Dots + day labels */}
         {points.map((p, i) => (
           <g key={p.date}>
             <circle cx={p.x} cy={p.y} r={3} fill={lineColor} />
@@ -112,10 +111,7 @@ function MoodTrendChart({ history, currentScore }: { history: MoodEntry[]; curre
 
 export function MarketMoodGauge({ mood, loading }: Props) {
   const [animated, setAnimated] = useState(0);
-  const scoreToRecord = loading ? null : mood.score;
-  const { getHistory } = useMoodHistory(scoreToRecord);
-
-  const history = useMemo(() => getHistory(7), [getHistory, mood.score]);
+  const { data: history } = useMarketBreadthHistory(7);
 
   useEffect(() => {
     if (loading) return;
@@ -127,7 +123,7 @@ export function MarketMoodGauge({ mood, loading }: Props) {
     function tick(now: number) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setAnimated(Math.round(eased * target));
       if (progress < 1) frame = requestAnimationFrame(tick);
     }
@@ -164,80 +160,31 @@ export function MarketMoodGauge({ mood, loading }: Props) {
               <stop offset="100%" stopColor="#22c55e" />
             </linearGradient>
           </defs>
-
-          {/* Background arc */}
-          <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={RADIUS}
-            fill="none"
-            stroke="currentColor"
-            className="text-bg-hover"
-            strokeWidth={STROKE}
-            strokeDasharray={`${ARC_LENGTH} ${GAP_LENGTH}`}
-            strokeLinecap="round"
-            transform={`rotate(135, ${CENTER}, ${CENTER})`}
-          />
-
-          {/* Foreground arc */}
-          <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={RADIUS}
-            fill="none"
-            stroke="url(#gaugeGrad)"
-            strokeWidth={STROKE}
-            strokeDasharray={`${ARC_LENGTH} ${GAP_LENGTH}`}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            transform={`rotate(135, ${CENTER}, ${CENTER})`}
-            style={{ transition: "stroke-dashoffset 0.1s linear" }}
-          />
+          <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="currentColor" className="text-bg-hover" strokeWidth={STROKE} strokeDasharray={`${ARC_LENGTH} ${GAP_LENGTH}`} strokeLinecap="round" transform={`rotate(135, ${CENTER}, ${CENTER})`} />
+          <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="url(#gaugeGrad)" strokeWidth={STROKE} strokeDasharray={`${ARC_LENGTH} ${GAP_LENGTH}`} strokeDashoffset={offset} strokeLinecap="round" transform={`rotate(135, ${CENTER}, ${CENTER})`} style={{ transition: "stroke-dashoffset 0.1s linear" }} />
         </svg>
-
-        {/* Center content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-4xl font-bold text-text-primary">
-            {animated}
-          </span>
+          <span className="text-4xl font-bold text-text-primary">{animated}</span>
           <span className="text-xs text-text-muted">/100</span>
-          <span
-            className="mt-1 rounded-full px-3 py-0.5 text-xs font-semibold"
-            style={{ color: mood.color, backgroundColor: `${mood.color}15` }}
-          >
+          <span className="mt-1 rounded-full px-3 py-0.5 text-xs font-semibold" style={{ color: mood.color, backgroundColor: `${mood.color}15` }}>
             {mood.label}
           </span>
         </div>
       </div>
-
-      {/* Summary */}
       {mood.summary && (
-        <p className="mt-3 max-w-md text-center text-sm leading-relaxed text-text-secondary">
-          {mood.summary}
-        </p>
+        <p className="mt-3 max-w-md text-center text-sm leading-relaxed text-text-secondary">{mood.summary}</p>
       )}
-
-      {/* Contributing factors */}
       {mood.factors.length > 0 && (
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           {mood.factors.map((f) => (
-            <div
-              key={f.label}
-              className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2.5 text-sm ${
-                f.positive
-                  ? "border-green/20 bg-green/5 text-green"
-                  : "border-red/20 bg-red/5 text-red"
-              }`}
-            >
+            <div key={f.label} className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2.5 text-sm ${f.positive ? "border-green/20 bg-green/5 text-green" : "border-red/20 bg-red/5 text-red"}`}>
               <span className="text-text-muted">{f.label}</span>
               <span className="font-semibold">{f.value}</span>
             </div>
           ))}
         </div>
       )}
-
-      {/* Weekly trend chart */}
-      <MoodTrendChart history={history} currentScore={mood.score} />
+      <MoodTrendChart history={history ?? []} currentScore={mood.score} />
     </div>
   );
 }
