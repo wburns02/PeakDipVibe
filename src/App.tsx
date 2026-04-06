@@ -87,9 +87,13 @@ const MomentumRadarPage = lazy(() =>
 const StrategyPortfoliosPage = lazy(() =>
   import("@/features/strategy-portfolios/StrategyPortfoliosPage").then((m) => ({ default: m.StrategyPortfoliosPage })),
 );
+const TrackerPage = lazy(() =>
+  import("@/features/tracker/TrackerPage").then((m) => ({ default: m.TrackerPage })),
+);
 
 /** Preload map — call on hover/focus for instant navigation. */
 export const preloadRoute: Record<string, () => void> = {
+  "/tracker": () => { import("@/features/tracker/TrackerPage"); },
   "/pulse": () => { import("@/features/morning-pulse/MorningPulsePage"); },
   "/signals": () => { import("@/features/signals/SignalsPage"); },
   "/earnings": () => { import("@/features/earnings/EarningsPage"); },
@@ -137,6 +141,7 @@ export default function App() {
             <Route element={<AppShell />}>
               <Route index element={<DashboardPage />} />
               <Route path="/pulse" element={<Suspense fallback={<PageSpinner />}><MorningPulsePage /></Suspense>} />
+              <Route path="/tracker" element={<Suspense fallback={<PageSpinner />}><TrackerPage /></Suspense>} />
               <Route path="/signals" element={<Suspense fallback={<PageSpinner />}><SignalsPage /></Suspense>} />
               <Route path="/earnings" element={<Suspense fallback={<PageSpinner />}><EarningsPage /></Suspense>} />
               <Route path="/simulator" element={<Suspense fallback={<PageSpinner />}><SimulatorPage /></Suspense>} />

@@ -59,9 +59,9 @@ export const TrackerStatsSchema = z.object({
   total_events: z.number(),
   win_rate_5d: z.number().nullable(),
   avg_pounce_score: z.number().nullable(),
-  by_catalyst: z.array(z.record(z.unknown())).nullable(),
-  by_sector: z.array(z.record(z.unknown())).nullable(),
-  by_gap_bucket: z.array(z.record(z.unknown())).nullable(),
+  by_catalyst: z.array(z.record(z.string(), z.unknown())).nullable(),
+  by_sector: z.array(z.record(z.string(), z.unknown())).nullable(),
+  by_gap_bucket: z.array(z.record(z.string(), z.unknown())).nullable(),
 });
 
 export type TrackerStats = z.infer<typeof TrackerStatsSchema>;

@@ -39,6 +39,7 @@ import {
   Radar,
   ChevronRight,
   Briefcase,
+  Target,
   type LucideIcon,
 } from "lucide-react";
 
@@ -67,6 +68,7 @@ interface NavSection {
 }
 
 const pinnedItems: NavItem[] = [
+  { to: "/tracker", icon: Target, label: "Peak/Dip Tracker", desc: "Catch the dip after the peak" },
   { to: "/", icon: LayoutDashboard, label: "Home", desc: "See how the market is doing" },
   { to: "/pulse", icon: Sunrise, label: "Today's Briefing", desc: "What happened today, in plain English" },
 ];
