@@ -522,6 +522,47 @@ const server = createServer((req, res) => {
       return;
     }
 
+    // ─── Tracker: proxy to upstream, cache results ───
+    if (urlPath.startsWith("/api/tracker/")) {
+      const upstreamPath = `${UPSTREAM_PREFIX}${urlPath}${queryString ? "?" + queryString : ""}`;
+      const upstreamUrl = `https://${UPSTREAM_HOST}${upstreamPath}`;
+
+      fetchJSON(upstreamUrl, 10000).then((data) => {
+        res.writeHead(200, {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "public, max-age=60",
+          "Access-Control-Allow-Origin": "*",
+          "X-Tracker-Source": "r730-live",
+        });
+        res.end(JSON.stringify(data));
+      }).catch(() => {
+        // R730 unavailable — check for cached tracker data
+        const route = urlPath.replace(/^\/api\//, "");
+        const direct = join(DATA, route + ".json");
+        if (existsSync(direct)) {
+          const json = readFileSync(direct);
+          res.writeHead(200, {
+            "Content-Type": "application/json; charset=utf-8",
+            "Cache-Control": "public, max-age=300",
+            "Access-Control-Allow-Origin": "*",
+            "X-Tracker-Source": "cached-file",
+          });
+          res.end(json);
+        } else {
+          const isEmpty = urlPath.includes("/summary");
+          res.writeHead(200, {
+            "Content-Type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+          });
+          res.end(isEmpty
+            ? '{"active_count":0,"avg_active_score":null,"recovering_count":0,"total_events":0,"overall_win_rate_5d":null,"resolved_count":0,"best_active_ticker":null,"best_active_score":null}'
+            : "[]"
+          );
+        }
+      });
+      return;
+    }
+
     // ─── Signals: try upstream first, filter stale cached data ───
     if (urlPath === "/api/signals/patterns" || urlPath === "/api/signals/patterns/stats") {
       const upstreamPath = `${UPSTREAM_PREFIX}${urlPath}${queryString ? "?" + queryString : ""}`;
