@@ -1,17 +1,35 @@
 import { useState, useMemo } from "react";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { useTrackerEvents, useTrackerSummary } from "@/api/hooks/useTracker";
+import {
+  useTrackerEvents,
+  useTrackerSummary,
+  useTrackerPredictions,
+  useReadinessScore,
+} from "@/api/hooks/useTracker";
 import { SummaryBar } from "./components/SummaryBar";
 import { EventCard } from "./components/EventCard";
+import { PredictionCard } from "./components/PredictionCard";
+import { ReadinessPanel } from "./components/ReadinessPanel";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { Target, Flame, TrendingUp, History, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Target,
+  Flame,
+  TrendingUp,
+  History,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Bot,
+} from "lucide-react";
 
-type TabId = "active" | "recovering" | "history";
+type TabId = "active" | "recovering" | "watch" | "history" | "performance";
 
 const TABS: { id: TabId; label: string; icon: typeof Flame; stage?: string }[] = [
   { id: "active", label: "Active Dips", icon: Flame, stage: "dip_zone" },
   { id: "recovering", label: "Recovering", icon: TrendingUp, stage: "recovering" },
+  { id: "watch", label: "Pre-Earnings Watch", icon: Eye },
   { id: "history", label: "All History", icon: History },
+  { id: "performance", label: "Bot Performance", icon: Bot },
 ];
 
 const PAGE_SIZE = 20;
@@ -22,6 +40,12 @@ export function TrackerPage() {
   const [page, setPage] = useState(0);
 
   const { data: summary, isLoading: summaryLoading } = useTrackerSummary();
+  const { data: predictions, isLoading: predictionsLoading } =
+    useTrackerPredictions();
+  const { data: userReadiness, isLoading: userReadinessLoading } =
+    useReadinessScore("user");
+  const { data: aiReadiness, isLoading: aiReadinessLoading } =
+    useReadinessScore("ai");
 
   // For "active" tab, include peaked + selling_off + dip_zone
   const stageFilter = activeTab === "active"
@@ -53,7 +77,9 @@ export function TrackerPage() {
   const tabCounts = {
     active: summary?.active_count ?? 0,
     recovering: summary?.recovering_count ?? 0,
+    watch: predictions?.length ?? 0,
     history: summary?.total_events ?? 0,
+    performance: 0,
   };
 
   return (
@@ -112,40 +138,89 @@ export function TrackerPage() {
         })}
       </div>
 
-      {/* Event list */}
-      <div className="space-y-3">
-        {eventsLoading ? (
-          Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))
-        ) : filteredEvents.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border py-12 text-center">
-            <Target className="mx-auto h-10 w-10 text-text-muted" />
-            <h3 className="mt-3 text-lg font-semibold text-text-primary">
-              {activeTab === "active"
-                ? "No Active Dips"
-                : activeTab === "recovering"
-                  ? "No Recovering Events"
-                  : "No Events Found"}
+      {/* Tab content */}
+      {activeTab === "watch" ? (
+        <div className="space-y-3">
+          {predictionsLoading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-20 rounded-xl" />
+            ))
+          ) : !predictions?.length ? (
+            <div className="rounded-xl border border-dashed border-border py-12 text-center">
+              <Eye className="mx-auto h-10 w-10 text-text-muted" />
+              <h3 className="mt-3 text-lg font-semibold text-text-primary">
+                No Upcoming Earnings
+              </h3>
+              <p className="mt-1 text-sm text-text-muted">
+                Predictions appear when earnings are scheduled in the next 14
+                days.
+              </p>
+            </div>
+          ) : (
+            predictions.map((p) => (
+              <PredictionCard key={p.ticker} prediction={p} />
+            ))
+          )}
+        </div>
+      ) : activeTab === "performance" ? (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-text-muted">
+              Your Readiness
             </h3>
-            <p className="mt-1 text-sm text-text-muted">
-              {activeTab === "active"
-                ? "No earnings gap-ups are currently selling off. Check back around earnings season."
-                : activeTab === "recovering"
-                  ? "No events currently in recovery phase."
-                  : "Run the historical backfill to populate events."}
-            </p>
-          </div>
-        ) : (
-          filteredEvents.map((event, i) => (
-            <EventCard
-              key={event.id}
-              event={event}
-              defaultExpanded={activeTab === "active" && i === 0}
+            <ReadinessPanel
+              score={userReadiness}
+              loading={userReadinessLoading}
+              actor="user"
             />
-          ))
-        )}
-      </div>
+          </div>
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-text-muted">
+              AI Bot Readiness
+            </h3>
+            <ReadinessPanel
+              score={aiReadiness}
+              loading={aiReadinessLoading}
+              actor="ai"
+            />
+          </div>
+        </div>
+      ) : (
+        /* Event list (Active Dips, Recovering, History) */
+        <div className="space-y-3">
+          {eventsLoading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))
+          ) : filteredEvents.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border py-12 text-center">
+              <Target className="mx-auto h-10 w-10 text-text-muted" />
+              <h3 className="mt-3 text-lg font-semibold text-text-primary">
+                {activeTab === "active"
+                  ? "No Active Dips"
+                  : activeTab === "recovering"
+                    ? "No Recovering Events"
+                    : "No Events Found"}
+              </h3>
+              <p className="mt-1 text-sm text-text-muted">
+                {activeTab === "active"
+                  ? "No earnings gap-ups are currently selling off. Check back around earnings season."
+                  : activeTab === "recovering"
+                    ? "No events currently in recovery phase."
+                    : "Run the historical backfill to populate events."}
+              </p>
+            </div>
+          ) : (
+            filteredEvents.map((event, i) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                defaultExpanded={activeTab === "active" && i === 0}
+              />
+            ))
+          )}
+        </div>
+      )}
 
       {/* Pagination (history tab only) */}
       {activeTab === "history" && filteredEvents.length > 0 && (

@@ -6,6 +6,8 @@ import {
   PeakDipEventSchema,
   TrackerSummarySchema,
   TrackerStatsSchema,
+  PredictionSchema,
+  ReadinessScoreSchema,
   type TrackerFilters,
 } from "../types/tracker";
 
@@ -44,6 +46,30 @@ export function useTrackerStats(days = 365) {
     queryFn: async () => {
       const { data } = await api.get("/tracker/stats", { params: { days } });
       return TrackerStatsSchema.parse(data);
+    },
+    staleTime: STALE_WARM,
+  });
+}
+
+export function useTrackerPredictions() {
+  return useQuery({
+    queryKey: ["tracker", "predictions"],
+    queryFn: async () => {
+      const { data } = await api.get("/tracker/predictions");
+      return z.array(PredictionSchema).parse(data);
+    },
+    staleTime: STALE_WARM,
+  });
+}
+
+export function useReadinessScore(actor: string = "user") {
+  return useQuery({
+    queryKey: ["tracker", "readiness", actor],
+    queryFn: async () => {
+      const { data } = await api.get("/tracker/readiness", {
+        params: { actor },
+      });
+      return ReadinessScoreSchema.parse(data);
     },
     staleTime: STALE_WARM,
   });

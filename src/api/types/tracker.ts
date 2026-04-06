@@ -75,3 +75,37 @@ export interface TrackerFilters {
   limit?: number;
   offset?: number;
 }
+
+export const PredictionSchema = z.object({
+  ticker: z.string(),
+  name: z.string().nullable(),
+  sector: z.string().nullable(),
+  earnings_date: z.string(),
+  days_until: z.number(),
+  dip_probability: z.number(),
+  historical_events: z.number(),
+  historical_win_rate: z.number().nullable(),
+  avg_gap_pct: z.number().nullable(),
+  avg_selloff_pct: z.number().nullable(),
+  avg_return_5d: z.number().nullable(),
+  market_regime: z.string().nullable(),
+  strategy: z.string().nullable(),
+});
+
+export type Prediction = z.infer<typeof PredictionSchema>;
+
+export const ReadinessScoreSchema = z.object({
+  actor: z.string(),
+  total_trades: z.number(),
+  overall_score: z.number(),
+  win_rate_score: z.number(),
+  risk_mgmt_score: z.number(),
+  entry_score: z.number(),
+  exit_score: z.number(),
+  selectivity_score: z.number(),
+  consistency_score: z.number(),
+  graduation_level: z.string(),
+  notes: z.string().nullable(),
+});
+
+export type ReadinessScore = z.infer<typeof ReadinessScoreSchema>;
