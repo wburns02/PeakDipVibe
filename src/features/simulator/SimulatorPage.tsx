@@ -27,6 +27,7 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { MiniLesson } from "@/components/education/MiniLesson";
 import type { LibraryEvent, IntradayBar, AIDecision } from "@/api/types/earnings";
 import { getCatalystConfig } from "@/lib/catalystTypes";
+import { ReadinessWidget } from "./components/ReadinessWidget";
 import {
   Shuffle,
   Search,
@@ -939,6 +940,11 @@ export function SimulatorPage() {
             Picks a random big stock jump for you to trade
           </p>
         </section>
+
+        {/* Readiness score */}
+        <div className="mx-auto max-w-xs">
+          <ReadinessWidget />
+        </div>
 
         {/* Search + Filters */}
         <Card>
