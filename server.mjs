@@ -285,6 +285,85 @@ function appendBreadthHistory(breadthData) {
   saveHistory(entries.slice(-MAX_HISTORY_DAYS));
 }
 
+// ─── Active dip real-time polling ───
+let activeDipCache = { data: null, ts: 0 };
+const ACTIVE_DIP_TTL = 15 * 60 * 1000; // 15 minutes
+
+function isMarketHours() {
+  const now = new Date();
+  const et = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const h = et.getHours();
+  const m = et.getMinutes();
+  const day = et.getDay();
+  if (day === 0 || day === 6) return false;
+  const mins = h * 60 + m;
+  return mins >= 9 * 60 + 30 && mins <= 16 * 60;
+}
+
+async function pollActiveDips() {
+  const now = Date.now();
+  if (activeDipCache.data && (now - activeDipCache.ts) < ACTIVE_DIP_TTL) {
+    return activeDipCache.data;
+  }
+
+  const eventsPath = join(DATA, "tracker/events.json");
+  if (!existsSync(eventsPath)) return null;
+
+  let events;
+  try {
+    events = JSON.parse(readFileSync(eventsPath, "utf-8"));
+  } catch { return null; }
+
+  if (!Array.isArray(events) || events.length === 0) return events;
+
+  const activeTickers = events
+    .filter((e) => ["peaked", "selling_off", "dip_zone", "recovering"].includes(e.stage))
+    .map((e) => e.ticker)
+    .slice(0, 20);
+
+  if (activeTickers.length === 0 || !isMarketHours()) {
+    activeDipCache = { data: events, ts: now };
+    return events;
+  }
+
+  const quotes = await Promise.allSettled(
+    activeTickers.map(async (ticker) => {
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=1d&interval=1m&includePrePost=false`;
+      const data = await fetchJSON(url, 8000);
+      const meta = data?.chart?.result?.[0]?.meta;
+      if (!meta) return null;
+      return {
+        ticker,
+        current_price: meta.regularMarketPrice,
+        day_high: meta.regularMarketDayHigh,
+        day_low: meta.regularMarketDayLow,
+        volume: meta.regularMarketVolume,
+      };
+    })
+  );
+
+  const quoteMap = {};
+  for (const r of quotes) {
+    if (r.status === "fulfilled" && r.value) {
+      quoteMap[r.value.ticker] = r.value;
+    }
+  }
+
+  for (const event of events) {
+    const quote = quoteMap[event.ticker];
+    if (quote) {
+      event._live_price = quote.current_price;
+      event._live_high = quote.day_high;
+      event._live_volume = quote.volume;
+      event._polled_at = new Date().toISOString();
+    }
+  }
+
+  activeDipCache = { data: events, ts: now };
+  console.log(`[active-dips] Polled ${Object.keys(quoteMap).length} tickers`);
+  return events;
+}
+
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
@@ -535,8 +614,29 @@ const server = createServer((req, res) => {
           "X-Tracker-Source": "r730-live",
         });
         res.end(JSON.stringify(data));
-      }).catch(() => {
-        // R730 unavailable — check for cached tracker data
+      }).catch(async () => {
+        // R730 unavailable — use polled data or cached files
+        if (urlPath === "/api/tracker/events") {
+          const polled = await pollActiveDips();
+          if (polled) {
+            const params = new URLSearchParams(queryString || "");
+            const stageFilter = params.get("stage");
+            let filtered = polled;
+            if (stageFilter) {
+              filtered = polled.filter((e) => e.stage === stageFilter);
+            }
+            const limit = parseInt(params.get("limit") || "50", 10);
+            res.writeHead(200, {
+              "Content-Type": "application/json; charset=utf-8",
+              "Cache-Control": "public, max-age=60",
+              "Access-Control-Allow-Origin": "*",
+              "X-Tracker-Source": "cached-polled",
+            });
+            res.end(JSON.stringify(filtered.slice(0, limit)));
+            return;
+          }
+        }
+
         const route = urlPath.replace(/^\/api\//, "");
         const direct = join(DATA, route + ".json");
         if (existsSync(direct)) {
