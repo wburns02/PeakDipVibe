@@ -8,7 +8,7 @@ const DIST = join(import.meta.dirname, "dist");
 const DATA = join(import.meta.dirname, "data");
 
 // Upstream API proxy (public HTTPS endpoint on R730 via Tailscale Funnel)
-const UPSTREAM_HOST = "r730.tailad2d5f.ts.net";
+const UPSTREAM_HOST = "optiplex-5080.tailad2d5f.ts.net";
 const UPSTREAM_PREFIX = "/stock-api";
 
 // Request queue to limit concurrent upstream connections (Tailscale Funnel bottleneck)
